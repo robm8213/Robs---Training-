@@ -378,7 +378,7 @@ const athleteSessionHtml = DAYS.map(day=>{
   if(!ss.length) return "";
   return `<div class="card"><h2>${day}</h2>${ss.map(sess=>athleteSessionLogger(day,sess)).join("")}</div>`;
 }).join("");
-checkinForm.innerHTML=`${athleteSessionHtml}<div class="card"><h2>Weekly Training Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}
+trainingSessions.innerHTML=athleteSessionHtml;checkinForm.innerHTML=`${athleteSessionHtml}<div class="card"><h2>Weekly Training Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}
 <div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div>
 <div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div>
 <div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`
