@@ -14,23 +14,23 @@ header{height:72px;padding:0 18px;display:flex;align-items:center;justify-conten
 .modepill{font-size:11px;padding:8px 10px;border-radius:999px;background:#10263b;color:#91c2ff;font-weight:800}
 .layout{display:grid;grid-template-columns:220px 1fr}.sidebar{border-right:1px solid #15232e;padding:18px 12px;position:sticky;top:72px;height:calc(100vh - 72px)}
 .navbtn{display:flex;gap:10px;width:100%;border:0;background:none;color:#a0b0bd;padding:12px;border-radius:10px;text-align:left;font-weight:700;cursor:pointer}.navbtn.active,.navbtn:hover{background:#122232;color:#7db5ff}
-.content{padding:22px;max-width:980px;width:100%;margin:auto}.screen{display:none}.screen.active{display:block}
+.content{padding:22px;max-width:980px;width:100%;margin:auto}.screen{display:none;width:100%}.screen.active{display:block}
 h1{font-size:30px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:0}.sub{font-size:12px;color:var(--mut)}
-.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;width:100%}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .stat{background:#0a1620;border:1px solid var(--line);border-radius:14px;padding:14px}.stat b{font-size:24px;display:block;margin-top:4px}
 .badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#11385f;color:#8fc3ff;font-weight:900}.badge.green{background:#123a25;color:#8ff0ae}.badge.amber{background:#493613;color:#ffd47d}
 .btn{border:0;border-radius:11px;background:var(--blue);color:#fff;font-weight:900;padding:11px 13px;font-size:14px;cursor:pointer}.btn.secondary{background:#172837}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.full{width:100%}
 input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;color:#fff;border-radius:9px;padding:10px;font:inherit}textarea{min-height:82px}.label{font-size:11px;color:var(--mut);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.7px}
-.day{border-left:4px solid var(--blue)}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
+.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
 .sessionCard{border:1px solid #294052;border-radius:14px;padding:14px;margin:12px 0;background:#0b1822}.sessionline{padding:11px 0;border-top:1px solid var(--line)}.sessionline:first-child{border-top:0}
 .builderRow{display:grid;grid-template-columns:1.5fr 76px 76px 76px 76px 38px;gap:7px;align-items:center;padding:6px 0}.builderHead{font-size:10px;color:var(--mut);text-transform:uppercase}.builderRow input{padding:8px 5px}
 .question{border-top:1px solid var(--line);padding:12px 0}.question:first-child{border-top:0}.answerbox{margin-top:8px}.flag{border-left:4px solid var(--amber)}
 .mobilebar{display:none}
 @media(max-width:760px){
-.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(7,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
-.grid4{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
+.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
 </style>
 </head>
@@ -48,6 +48,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <button class="navbtn" data-screen="athletes" onclick="nav('athletes')">♟ Athletes</button>
 <button class="navbtn" data-screen="checkin" onclick="nav('checkin')">☑ Weekly Check-In</button>
 <button class="navbtn" data-screen="review" onclick="nav('review')">☷ Check-In Review</button>
+<button class="navbtn" data-screen="testing" onclick="nav('testing')">⏱ Testing</button>
 <button class="navbtn" data-screen="settings" onclick="nav('settings')">⚙ Settings</button>
 </aside>
 <main class="content">
@@ -112,6 +113,26 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <div id="checkinHistory"></div>
 </section>
 
+
+<section id="testing" class="screen">
+<div class="sub" id="testingSub">PERFORMANCE TESTING</div><h1 id="testingTitle">Testing</h1>
+<div class="notice" id="testingNotice">Erg and gym testing results are kept separately from weekly training.</div>
+<div id="coachTestingSetup">
+  <div class="card">
+    <h2>Testing Setup</h2>
+    <div class="sub">Set the tests athletes can complete. Starter tests are included for Erg and Gym.</div>
+    <div class="grid2" style="margin-top:10px">
+      <div><div class="label">Category</div><select id="testCategory"><option>Erg</option><option>Gym</option></select></div>
+      <div><div class="label">Test name</div><input id="testName" placeholder="e.g. 2k Erg"></div>
+      <div><div class="label">Score unit</div><input id="testUnit" placeholder="e.g. time, watts, kg"></div>
+      <div><div class="label">Coach target / notes</div><input id="testTarget" placeholder="Optional"></div>
+    </div>
+    <button class="btn full" style="margin-top:12px" onclick="addTestingItem()">+ Add Test</button>
+  </div>
+</div>
+<div id="testingContent"></div>
+</section>
+
 <section id="settings" class="screen">
 <div class="card">
   <h2>Shared Athlete Access</h2>
@@ -134,6 +155,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
 <button data-screen="checkin" onclick="nav('checkin')"><span>☑</span>Check-In</button>
 <button data-screen="programs" onclick="nav('programs')"><span>▣</span>History</button>
+<button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
 <button data-screen="settings" onclick="nav('settings')"><span>⚙️</span>Settings</button>
 </div>
 </div>
@@ -159,20 +181,29 @@ const DEFAULT_RACE=[
 {q:"What could we improve OUTSIDE the boat?",type:"text"},
 {q:"What should our #1 focus be heading into the next race?",type:"focus"}
 ];
+
+const DEFAULT_TESTS=[
+{id:"erg2k",category:"Erg",name:"2k Erg",unit:"time",target:"Record total time and average split"},
+{id:"erg500",category:"Erg",name:"500m Erg",unit:"time",target:"Record total time"},
+{id:"gym_squat",category:"Gym",name:"Back Squat",unit:"kg",target:"Record best completed working set"},
+{id:"gym_deadlift",category:"Gym",name:"Deadlift",unit:"kg",target:"Record best completed working set"},
+{id:"gym_bench",category:"Gym",name:"Bench Press",unit:"kg",target:"Record best completed working set"}
+];
+
 const emptyDays=()=>Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
 let data=JSON.parse(localStorage.getItem("rt_v8")||"null")||{
 meta:{season:"2026/27",blockName:"Pre-Season / Base Building",blockNo:1,weekNo:1,date:"",name:"Block 1 - Week 1"},
-days:emptyDays(),athletes:[],archive:[],checkins:[],weeklyQuestions:DEFAULT_WEEKLY,raceQuestions:DEFAULT_RACE
+days:emptyDays(),athletes:[],archive:[],checkins:[],weeklyQuestions:DEFAULT_WEEKLY,raceQuestions:DEFAULT_RACE,tests:DEFAULT_TESTS,testResults:[]
 };
-if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];
+if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];
 DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});
 let coachMode=true;let activeAthlete="";
 function persist(){localStorage.setItem("rt_v8",JSON.stringify(data))}
 function saveRender(){persist();renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function nav(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
-function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});nav(coachMode?"dashboard":"checkin")}
-function renderAll(){renderDashboard();renderPlanner();renderHistory();renderAthletes();renderCheckin();renderReview();renderQuestionEditors()}
+function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
+function renderAll(){renderDashboard();renderPlanner();renderHistory();renderAthletes();renderCheckin();renderTesting();renderReview();renderQuestionEditors()}
 function renderDashboard(){
 sAth.textContent=data.athletes.length;sBlock.textContent=data.meta.blockNo;sWeek.textContent=data.meta.weekNo;
 const pd=DAYS.filter(d=>data.days[d].sessions.some(s=>s.title||s.type||s.instructions||s.exercises?.length)).length;sDays.textContent=pd+"/7";
@@ -353,17 +384,20 @@ async function submitAthleteCloud(kind,payload){
 }
 function configureAthleteNavigation(){
   const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]');
+  const desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]');
+  const desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]');
   document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");
   if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training";}
-  const desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]');
+  if(desktopTesting)desktopTesting.style.display="";
   if(desktopCheckin)desktopCheckin.style.display="";
-
   const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]');
+  const mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]');
+  const mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]');
   document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");
   if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training";}
-  const mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]');
+  if(mobileTesting)mobileTesting.style.display="block";
   if(mobileCheckin)mobileCheckin.style.display="block";
-  const bar=document.querySelector('.mobilebar'); if(bar)bar.style.gridTemplateColumns="repeat(2,1fr)";
+  const bar=document.querySelector('.mobilebar');if(bar)bar.style.gridTemplateColumns="repeat(3,1fr)";
 }
 async function loadAthleteInvite(token){
   try{
@@ -374,6 +408,8 @@ async function loadAthleteInvite(token){
     data.athletes=[j.athlete];
     data.checkins=[];
     data.sessionLogs=[];
+    data.testResults=[];
+    if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));
     activeAthlete=j.athlete.id;
     coachMode=false;
     configureAthleteNavigation();
@@ -404,24 +440,47 @@ function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="
 
 function athleteSessionLogger(day,s){
  const c=isCardio(s.type);
- const prior = latestPriorSessionForAthlete(activeAthlete,s);
- return `<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>
+ const prior=latestPriorSessionForAthlete(activeAthlete,s);
+ return `<div class="sessionCard">
+ <div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>
  ${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}
  ${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}
- ${(s.exercises||[]).map((x,j)=>{
+ ${(s.exercises||[]).length?(s.exercises||[]).map((x,j)=>{
+   const previous=prior?.results?.[j]||{};
+   const substitution=`<div class="substituteBox">
+     <label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label>
+     <div id="subbox_${day}_${s.id}_${j}" style="display:none">
+       <div class="grid2"><div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise"></div>
+       <div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. knee injury / equipment unavailable"></div></div>
+     </div>
+   </div>`;
    if(c){
-     const last=prior?.results?.[j]||{};
-     return `<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b><div class="sub">Target: ${esc(x.b||"—")} ${x.a?"• Time "+esc(x.a):""} ${x.c?"• Rest "+esc(x.c):""} ${x.d?"• Sets "+esc(x.d):""} ${x.d?"• Sets "+esc(x.d):""}</div>
-     <div class="grid2" style="margin-top:8px"><div><div class="label">Your goal split</div><input id="goal_${day}_${s.id}_${j}" placeholder="e.g. 1:42.5" value=""></div><div><div class="label">Actual / average split</div><input id="actual_${day}_${s.id}_${j}" placeholder="${last.actualSplit?esc(last.actualSplit):"Enter after session"}"></div></div></div>`
-   } else {
-     const sets=parseInt(x.a)||1;
-     const last=prior?.results?.[j]?.setWeights||[];
-     return `<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b><div class="sub">${esc(x.a||"—")} sets × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
-     ${last.length?`<div class="sub" style="margin-top:6px">Last time: ${last.map(v=>esc(v)+"kg").join(" / ")}</div>`:""}
-     <div class="grid2" style="margin-top:8px">${Array.from({length:sets},(_,k)=>`<div><div class="label">Set ${k+1} weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${last[k]||""}"></div>`).join("")}</div></div>`
+     return `<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b>
+       <div class="sub">Coach target: ${esc(x.b||"—")} ${x.a?"• Time "+esc(x.a):""} ${x.c?"• Rest "+esc(x.c):""} ${x.d?"• Sets "+esc(x.d):""}</div>
+       ${previous.actualTime||previous.actualSplit?`<div class="mini" style="margin-top:5px">Last result: ${previous.actualTime?esc(previous.actualTime)+" time":""}${previous.actualTime&&previous.actualSplit?" • ":""}${previous.actualSplit?esc(previous.actualSplit)+" pace/split":""}</div>`:""}
+       <div class="grid2" style="margin-top:8px">
+         <div><div class="label">Actual time</div><input id="time_${day}_${s.id}_${j}" placeholder="e.g. 6:18.4"></div>
+         <div><div class="label">Actual / avg pace or split</div><input id="actual_${day}_${s.id}_${j}" placeholder="e.g. 1:34.6"></div>
+         <div><div class="label">Completed sets / pieces</div><input id="done_${day}_${s.id}_${j}" type="number" min="0" placeholder="${esc(x.d||"")}"></div>
+         <div><div class="label">RPE (1–10)</div><input id="rpe_${day}_${s.id}_${j}" type="number" min="1" max="10" placeholder="Optional"></div>
+       </div>${substitution}</div>`;
    }
- }).join("")}
- <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session</button></div>`;
+   const sets=Math.max(1,parseInt(x.a)||1);
+   const lastWeights=previous.setWeights||[];
+   const lastReps=previous.setReps||[];
+   return `<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b>
+     <div class="sub">Coach prescription: ${esc(x.a||"—")} sets × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
+     ${(lastWeights.length||lastReps.length)?`<div class="mini" style="margin-top:5px">Last time: ${Array.from({length:Math.max(lastWeights.length,lastReps.length)},(_,k)=>`${lastWeights[k]?esc(lastWeights[k])+"kg":""}${lastWeights[k]&&lastReps[k]?" × ":""}${lastReps[k]?esc(lastReps[k])+" reps":""}`).filter(Boolean).join(" / ")}</div>`:""}
+     <div class="testingGrid" style="margin-top:8px">${Array.from({length:sets},(_,k)=>`<div class="card" style="margin:0;padding:10px"><b>Set ${k+1}</b><div class="grid2"><div><div class="label">Weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${lastWeights[k]||""}"></div><div><div class="label">Actual reps</div><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${lastReps[k]||x.b||""}"></div></div></div>`).join("")}</div>
+     ${substitution}</div>`;
+ }).join(""):'<div class="empty">Coach session details entered with no exercises/pieces.</div>'}
+ <div class="label">Athlete session notes</div><textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
+ <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button></div>`;
+}
+function toggleSubstitute(day,id,j){
+ const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked;
+ const box=document.getElementById(`subbox_${day}_${id}_${j}`);
+ if(box)box.style.display=on?"block":"none";
 }
 function latestPriorSessionForAthlete(athleteId,s){
  const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===athleteId && l.sessionTitle===(s.title||s.type||"Session") && l.type===s.type);
@@ -429,20 +488,80 @@ function latestPriorSessionForAthlete(athleteId,s){
 }
 function saveAthleteSession(day,id){
  if(!data.sessionLogs)data.sessionLogs=[];
- const s=data.days[day].sessions.find(x=>x.id===id); if(!s||!activeAthlete)return;
+ const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;
  const c=isCardio(s.type);
  const results=(s.exercises||[]).map((x,j)=>{
+   const substituted=document.getElementById(`sub_${day}_${id}_${j}`)?.checked||false;
+   const base={name:x.name||"",substituted,substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""};
    if(c){
-     return {name:x.name||"",goalSplit:document.getElementById(`goal_${day}_${id}_${j}`)?.value||"",actualSplit:document.getElementById(`actual_${day}_${id}_${j}`)?.value||""};
+     return {...base,actualTime:document.getElementById(`time_${day}_${id}_${j}`)?.value||"",actualSplit:document.getElementById(`actual_${day}_${id}_${j}`)?.value||"",completedSets:document.getElementById(`done_${day}_${id}_${j}`)?.value||"",rpe:document.getElementById(`rpe_${day}_${id}_${j}`)?.value||""};
    }
-   const sets=parseInt(x.a)||1;
-   return {name:x.name||"",setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||"")};
+   const sets=Math.max(1,parseInt(x.a)||1);
+   return {...base,setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),setReps:Array.from({length:sets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||"")};
  });
- const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,results};data.sessionLogs.push(log);submitAthleteCloud("session",log);
- persist(); alert("Session results saved");
+ const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",results};
+ data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Session results saved");
 }
 function submitCheckin(){
 const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];const ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")
+}
+
+
+function addTestingItem(){
+ if(!coachMode)return;
+ const category=document.getElementById("testCategory")?.value||"Erg";
+ const name=document.getElementById("testName")?.value.trim();
+ if(!name)return alert("Enter a test name.");
+ data.tests.push({id:"test_"+Date.now().toString(36),category,name,unit:document.getElementById("testUnit")?.value.trim()||"score",target:document.getElementById("testTarget")?.value.trim()||""});
+ document.getElementById("testName").value="";document.getElementById("testUnit").value="";document.getElementById("testTarget").value="";
+ persist();renderTesting();syncCoachCloud(false);
+}
+function removeTestingItem(id){
+ if(!coachMode)return;
+ if(!confirm("Remove this test? Existing athlete results will remain in history."))return;
+ data.tests=data.tests.filter(t=>t.id!==id);persist();renderTesting();syncCoachCloud(false);
+}
+function latestTestResult(athleteId,testId){
+ return (data.testResults||[]).filter(r=>r.athleteId===athleteId&&r.testId===testId).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))[0]||null;
+}
+function testingCard(t){
+ const last=latestTestResult(activeAthlete,t.id);
+ return `<div class="card"><div class="row"><div><span class="badge">${esc(t.category)}</span><h2 style="margin-top:8px">${esc(t.name)}</h2></div>${coachMode?`<button class="btn red" onclick="removeTestingItem('${t.id}')">Remove</button>`:""}</div>
+ ${t.target?`<div class="sub">Coach target / notes: ${esc(t.target)}</div>`:""}
+ ${coachMode?`<div class="mini" style="margin-top:10px">Unit: ${esc(t.unit||"score")}</div>`:
+ `<div class="grid2" style="margin-top:10px"><div><div class="label">Your score (${esc(t.unit||"score")})</div><input id="testscore_${t.id}" placeholder="Enter result"></div><div><div class="label">Date</div><input id="testdate_${t.id}" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>
+  <div class="label">Notes</div><textarea id="testnote_${t.id}" placeholder="Optional notes"></textarea>
+  ${last?`<div class="mini">Previous: ${esc(last.score)} ${esc(t.unit||"")} • ${esc(last.date||"")}</div>`:""}
+  <button class="btn full green" style="margin-top:10px" onclick="saveTestResult('${t.id}')">Save Test Score</button>`}
+ </div>`;
+}
+function renderTesting(){
+ const setup=document.getElementById("coachTestingSetup"),content=document.getElementById("testingContent");
+ if(!content)return;
+ if(setup)setup.style.display=coachMode?"block":"none";
+ const title=document.getElementById("testingTitle"),sub=document.getElementById("testingSub"),notice=document.getElementById("testingNotice");
+ if(title)title.textContent=coachMode?"Testing":"My Testing";
+ if(sub)sub.textContent=coachMode?"PERFORMANCE TESTING":"ATHLETE PERFORMANCE";
+ if(notice)notice.textContent=coachMode?"Set Erg and Gym tests, then review athlete scores below.":"Enter your Erg and Gym testing scores. Your coach will see submitted results.";
+ const tests=data.tests||[];
+ if(coachMode){
+   const results=(data.testResults||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
+   const groups=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Tests</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests in this category.</div>'}</div>`).join("");
+   const history=results.length?`<div class="card"><h2>Latest Athlete Test Scores</h2>${results.map(r=>{const a=data.athletes.find(x=>x.id===r.athleteId);const t=tests.find(x=>x.id===r.testId);return `<div class="testResult"><b>${esc(a?.name||r.athleteName||"Athlete")} — ${esc(t?.name||r.testName||"Test")}</b><div class="sub">${esc(r.score)} ${esc(t?.unit||r.unit||"")} • ${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`}).join("")}</div>`:'<div class="card empty">No testing scores submitted yet.</div>';
+   content.innerHTML=groups+history;
+ }else{
+   if(!activeAthlete){content.innerHTML='<div class="card empty">No athlete selected.</div>';return;}
+   content.innerHTML=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Testing</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests set by coach.</div>'}</div>`).join("");
+ }
+}
+function saveTestResult(testId){
+ if(!activeAthlete)return;
+ const t=(data.tests||[]).find(x=>x.id===testId);if(!t)return;
+ const score=document.getElementById(`testscore_${testId}`)?.value.trim();
+ if(!score)return alert("Enter your test score.");
+ const athlete=data.athletes.find(a=>a.id===activeAthlete);
+ const result={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,athleteName:athlete?.name||"",testId,testName:t.name,category:t.category,unit:t.unit||"score",score,date:document.getElementById(`testdate_${testId}`)?.value||new Date().toISOString().slice(0,10),notes:document.getElementById(`testnote_${testId}`)?.value||""};
+ data.testResults.push(result);submitAthleteCloud("test",result);persist();renderTesting();alert("Testing score saved");
 }
 
 async function refreshCoachCloud(){
@@ -455,17 +574,19 @@ async function refreshCoachCloud(){
     const items=j.items||[];
     const remoteCheckins=items.filter(x=>x.kind==="checkin").map(x=>x.payload);
     const remoteSessions=items.filter(x=>x.kind==="session").map(x=>x.payload);
+    const remoteTests=items.filter(x=>x.kind==="test").map(x=>x.payload);
     const mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return [...m.values()]};
     data.checkins=mergeUnique(data.checkins||[],remoteCheckins);
     data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);
-    persist();renderReview();alert("Latest athlete results loaded.");
+    data.testResults=mergeUnique(data.testResults||[],remoteTests);
+    persist();renderTesting();renderReview();alert("Latest athlete results loaded.");
   }catch(e){console.error(e);alert("Could not load athlete results. Check Coach Cloud in Settings.");}
 }
 function renderReview(){
 const logs=data.sessionLogs||[];
 const logEl=document.getElementById("sessionResults");
 if(logEl){
-  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.actualSplit?" • Actual "+esc(r.actualSplit):""}${r.goalSplit?" • Goal "+esc(r.goalSplit):""}${r.setWeights?.length?" • Weights "+esc(r.setWeights.filter(Boolean).join(", ")):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
+  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.actualTime?" • Time "+esc(r.actualTime):""}${r.actualSplit?" • Pace/Split "+esc(r.actualSplit):""}${r.completedSets?" • Completed "+esc(r.completedSets):""}${r.rpe?" • RPE "+esc(r.rpe):""}${r.setWeights?.length?" • Weights "+esc(r.setWeights.filter(Boolean).join(", ")):""}${r.setReps?.length?" • Reps "+esc(r.setReps.filter(Boolean).join(", ")):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
 }
 if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
 const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
