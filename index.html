@@ -168,7 +168,8 @@ dashMeta.textContent=`${data.meta.season||""} • Block ${data.meta.blockNo} —
 dashWeek.innerHTML=DAYS.map(d=>{const ss=data.days[d].sessions||[];return `<div class="sessionline"><b>${d}</b><div class="sub">${ss.length?ss.map(s=>esc(s.title||s.type||"Session")).join(" • "):"No session entered"}</div></div>`}).join("")
 }
 function saveWeekDetails(){
-data.meta={season:season.value.trim(),blockName:blockName.value.trim(),blockNo:+blockNo.value||1,weekNo:+weekNo.value||1,date:weekDate.value,name:weekName.value.trim()||`Block ${+blockNo.value||1} - Week ${+weekNo.value||1}`};
+const seasonEl=document.getElementById("season"),blockNameEl=document.getElementById("blockName"),blockNoEl=document.getElementById("blockNo"),weekNoEl=document.getElementById("weekNo"),weekDateEl=document.getElementById("weekDate"),weekNameEl=document.getElementById("weekName");
+data.meta={season:seasonEl.value.trim(),blockName:blockNameEl.value.trim(),blockNo:+blockNoEl.value||1,weekNo:+weekNoEl.value||1,date:weekDateEl.value,name:weekNameEl.value.trim()||`Block ${+blockNoEl.value||1} - Week ${+weekNoEl.value||1}`};
 persist();renderAll();alert("Week details saved");
 }
 function renderPlanner(){
@@ -230,13 +231,19 @@ function saveAllVisibleSessions(){
 }
 function archiveCurrentWeek(){
   saveAllVisibleSessions();
+  const seasonEl=document.getElementById("season");
+  const blockNameEl=document.getElementById("blockName");
+  const blockNoEl=document.getElementById("blockNo");
+  const weekNoEl=document.getElementById("weekNo");
+  const weekDateEl=document.getElementById("weekDate");
+  const weekNameEl=document.getElementById("weekName");
   data.meta={
-    season:season?.value?.trim()||data.meta.season||"",
-    blockName:blockName?.value?.trim()||data.meta.blockName||"",
-    blockNo:+(blockNo?.value||data.meta.blockNo||1),
-    weekNo:+(weekNo?.value||data.meta.weekNo||1),
-    date:weekDate?.value||data.meta.date||"",
-    name:weekName?.value?.trim()||`Block ${+(blockNo?.value||data.meta.blockNo||1)} - Week ${+(weekNo?.value||data.meta.weekNo||1)}`
+    season:seasonEl?.value?.trim()||data.meta.season||"",
+    blockName:blockNameEl?.value?.trim()||data.meta.blockName||"",
+    blockNo:+(blockNoEl?.value||data.meta.blockNo||1),
+    weekNo:+(weekNoEl?.value||data.meta.weekNo||1),
+    date:weekDateEl?.value||data.meta.date||"",
+    name:weekNameEl?.value?.trim()||`Block ${+(blockNoEl?.value||data.meta.blockNo||1)} - Week ${+(weekNoEl?.value||data.meta.weekNo||1)}`
   };
   const snap=snapshot();
   const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;
@@ -250,7 +257,9 @@ function archiveCurrentWeek(){
 function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season && +x.meta.blockNo===+data.meta.blockNo && +x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
 function renderHistory(){
 const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});
-history.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>'
+const historyEl=document.getElementById("history");
+if(!historyEl)return;
+historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
 }
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
