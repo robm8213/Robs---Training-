@@ -22,7 +22,7 @@ h1{font-size:30px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15
 .badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#11385f;color:#8fc3ff;font-weight:900}.badge.green{background:#123a25;color:#8ff0ae}.badge.amber{background:#493613;color:#ffd47d}
 .btn{border:0;border-radius:11px;background:var(--blue);color:#fff;font-weight:900;padding:11px 13px;font-size:14px;cursor:pointer}.btn.secondary{background:#172837}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.full{width:100%}
 input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;color:#fff;border-radius:9px;padding:10px;font:inherit}textarea{min-height:82px}.label{font-size:11px;color:var(--mut);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.7px}
-.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.resultSet{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;background:#0a1721}.resultSetHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.prescription{font-size:11px;color:#9db0bf}.tripleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
+.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.resultSet{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;background:#0a1721}.resultSetHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.prescription{font-size:11px;color:#9db0bf}.tripleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.scoreTable{width:100%;display:grid;gap:7px;margin-top:10px}.scoreRow{display:grid;grid-template-columns:54px minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);gap:7px;align-items:end}.scoreHead{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}.scoreSet{display:flex;align-items:center;justify-content:center;min-height:42px;font-weight:900;background:#0a1620;border:1px solid var(--line);border-radius:9px}.scoreCell input{padding:9px 8px;font-size:13px}.scoreCell .label{display:none}.scoreCaption{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
 .sessionCard{border:1px solid #294052;border-radius:14px;padding:14px;margin:12px 0;background:#0b1822}.sessionline{padding:11px 0;border-top:1px solid var(--line)}.sessionline:first-child{border-top:0}
 .builderRow{display:grid;grid-template-columns:1.5fr 76px 76px 76px 76px 38px;gap:7px;align-items:center;padding:6px 0}.builderHead{font-size:10px;color:var(--mut);text-transform:uppercase}.builderRow input{padding:8px 5px}
 .question{border-top:1px solid var(--line);padding:12px 0}.question:first-child{border-top:0}.answerbox{margin-top:8px}.flag{border-left:4px solid var(--amber)}
@@ -30,7 +30,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 @media(max-width:760px){
 .layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(7,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
-.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
+.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.scoreRow{grid-template-columns:44px minmax(0,1.15fr) minmax(0,.9fr) minmax(0,.9fr);gap:5px}.scoreCell input{font-size:12px;padding:8px 5px}.scoreSet{min-height:39px;font-size:12px}.scoreHead{font-size:9px}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
 </style>
 </head>
@@ -463,18 +463,17 @@ function athleteSessionLogger(day,s){
      return `<div class="question">
        <b>${esc(x.name||("Piece "+(j+1)))}</b>
        <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} ${x.a?"• "+esc(x.a)+" each":""} ${x.b?"• Target split "+esc(x.b):""} ${x.c?"• Rest "+esc(x.c):""}</div>
-       <div style="margin-top:8px">
-       ${Array.from({length:sets},(_,k)=>{
-         const old=oldSets[k]||{};
-         return `<div class="resultSet">
-           <div class="resultSetHead"><b>Set ${k+1}</b><span class="prescription">${x.a?esc(x.a)+" work":""}${x.a&&x.c?" • ":""}${x.c?"Rest "+esc(x.c):""}</span></div>
-           <div class="tripleGrid">
-             <div><div class="label">Actual split / pace</div><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||x.b||"e.g. 1:45.0"}" value=""></div>
-             <div><div class="label">Metres</div><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"e.g. 320"}" value=""></div>
-             <div><div class="label">Rest</div><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"e.g. 1:30"}" value=""></div>
-           </div>
-         </div>`;
-       }).join("")}
+       <div class="scoreTable">
+         <div class="scoreRow scoreHead"><div>Set</div><div>Split / Pace</div><div>Metres</div><div>Rest</div></div>
+         ${Array.from({length:sets},(_,k)=>{
+           const old=oldSets[k]||{};
+           return `<div class="scoreRow">
+             <div class="scoreSet">${k+1}</div>
+             <div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||x.b||"1:45.0"}"></div>
+             <div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"320"}"></div>
+             <div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"1:30"}"></div>
+           </div>`;
+         }).join("")}
        </div>
        ${substitution}
      </div>`;
@@ -487,14 +486,13 @@ function athleteSessionLogger(day,s){
    return `<div class="question">
      <b>${esc(x.name||("Exercise "+(j+1)))}</b>
      <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
-     <div style="margin-top:8px">
-       ${Array.from({length:sets},(_,k)=>`<div class="resultSet">
-         <div class="resultSetHead"><b>Set ${k+1}</b><span class="prescription">${x.b?esc(x.b)+" reps":""}${x.b&&x.c?" • ":""}${x.c?"Rest "+esc(x.c):""}</span></div>
-         <div class="tripleGrid">
-           <div><div class="label">Weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div>
-           <div><div class="label">Actual reps</div><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div>
-           <div><div class="label">Rest</div><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"e.g. 1:30"}"></div>
-         </div>
+     <div class="scoreTable">
+       <div class="scoreRow scoreHead"><div>Set</div><div>Weight</div><div>Reps</div><div>Rest</div></div>
+       ${Array.from({length:sets},(_,k)=>`<div class="scoreRow">
+         <div class="scoreSet">${k+1}</div>
+         <div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div>
+         <div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div>
+         <div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"1:30"}"></div>
        </div>`).join("")}
      </div>
      ${substitution}
