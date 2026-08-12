@@ -359,7 +359,8 @@ async function loadAthleteInvite(token){
     data.sessionLogs=[];
     activeAthlete=j.athlete.id;
     coachMode=false;
-    document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display="none"});
+    document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display="none"}); 
+    document.querySelectorAll(".mobilebar button").forEach(b=>{b.style.display=b.dataset.screen==="checkin"?"block":"none";});
     if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
     if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
     renderAll(); nav("checkin");
