@@ -28,7 +28,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 .question{border-top:1px solid var(--line);padding:12px 0}.question:first-child{border-top:0}.answerbox{margin-top:8px}.flag{border-left:4px solid var(--amber)}
 .mobilebar{display:none}
 @media(max-width:760px){
-.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(7,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(8,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
 .grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.scoreRow{grid-template-columns:38px minmax(0,1.12fr) minmax(0,.86fr) minmax(0,.86fr) 48px;gap:4px}.scoreCell input{font-size:12px;padding:8px 5px}.scoreSet{min-height:39px;font-size:12px}.scoreHead{font-size:9px}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
@@ -84,12 +84,15 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
     </div>
 </section>
 
-<section id="programs" class="screen">
-<div class="sub">COACH RESULTS & HISTORY</div><h1>This Week</h1>
+<section id="athletehistory" class="screen">
+<div class="sub">ATHLETE HISTORY</div><h1>Current Week Results</h1>
 <div class="notice">See how every athlete has gone this week. Tap any completed session to view their detailed results.</div>
 <div class="card"><button class="btn full green" onclick="refreshCoachCloud()">Refresh Athlete Results</button></div>
 <div id="weeklyResultsDashboard"></div>
-<div class="sub" style="margin-top:22px">PROGRAM HISTORY</div><h1>Blocks & Weeks</h1>
+</section>
+
+<section id="programs" class="screen">
+<div class="sub">TRAINING BLOCKS</div><h1>Program History</h1>
 <div class="notice">Every archived week stays here. You can load it, copy it into the current week, or duplicate an entire block for next season.</div>
 <div id="history"></div>
 </section>
@@ -158,7 +161,8 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <button data-screen="planner" onclick="nav('planner')"><span>▦</span>Week</button>
 <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
 <button data-screen="checkin" onclick="nav('checkin')"><span>☑</span>Check-In</button>
-<button data-screen="programs" onclick="nav('programs')"><span>▣</span>History</button>
+<button data-screen="athletehistory" onclick="nav('athletehistory')"><span>☷</span>Athlete History</button>
+<button data-screen="programs" onclick="nav('programs')"><span>▣</span>Training Blocks</button>
 <button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
 <button data-screen="settings" onclick="nav('settings')"><span>⚙️</span>Settings</button>
 </div>
@@ -361,7 +365,7 @@ function sessionLogDetailHtml(l){
  if(l.type==="Carnival"){
    return `<div class="resultDetail"><b>${esc(l.carnivalLocation||"Carnival")} — ${esc(l.carnivalType||"")}</b><div class="sub">Result: ${esc(l.carnivalResult||"")}${l.athleteNotes?" • "+esc(l.athleteNotes):""}</div></div>`;
  }
- return `<div class="resultDetail">${(l.results||[]).map(r=>`<div class="sub"><b>${esc(r.name||"")}</b>${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${l.athleteNotes?`<div class="mini" style="margin-top:5px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div>`;
+ return `<div class="resultDetail">${(l.results||[]).map(r=>`<div class="sub"><b>${esc(r.name||"")}</b>${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:6px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:5px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div>`;
 }
 function toggleWeeklyResultDetail(id){
  const el=document.getElementById(`weekly_detail_${id}`);if(!el)return;
@@ -583,8 +587,15 @@ function athleteSessionLogger(day,s){
      ${substitution}
    </div>`;
  }).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}
- <div class="label">Athlete session notes</div>
- <textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
+ <div class="card" style="margin-top:12px;padding:12px">
+   <h3>Session Summary</h3>
+   <div class="grid2" style="margin-top:8px">
+     <div><div class="label">Average Heart Rate (bpm)</div><input id="avghr_${day}_${s.id}" type="number" min="30" max="240" placeholder="e.g. 162"></div>
+     <div><div class="label">Session RPE (1–10)</div><input id="sessionrpe_${day}_${s.id}" type="number" min="1" max="10" placeholder="e.g. 8"></div>
+   </div>
+   <div class="label">Athlete session notes</div>
+   <textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
+ </div>
  <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button>
  </div>`;
 }
@@ -695,6 +706,8 @@ function saveAthleteSession(day,id){
    id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,
    season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,
    day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,
+   avgHeartRate:document.getElementById(`avghr_${day}_${id}`)?.value||"",
+   sessionRpe:document.getElementById(`sessionrpe_${day}_${id}`)?.value||"",
    athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",
    results
  };
@@ -787,7 +800,7 @@ function renderReview(){
 const logs=data.sessionLogs||[];
 const logEl=document.getElementById("sessionResults");
 if(logEl){
-  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
+  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:5px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:4px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
 }
 if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
 const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
