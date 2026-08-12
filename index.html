@@ -240,7 +240,7 @@ function sessionEditor(day,s,i){
    <div class="carnivalBox">
      <div class="grid2">
        <div><div class="label">Carnival location</div><input id="${day}_${s.id}_carnivalLocation" value="${esc(s.carnivalLocation||"")}" placeholder="e.g. Freshwater"></div>
-       <div><div class="label">Carnival type</div><select id="${day}_${s.id}_carnivalType">${["Premiership","Ocean Thunder","State","Aussies","Other"].map(x=>`<option ${s.carnivalType===x?"selected":""}>${x}</option>`).join("")}</select></div>
+       <div><div class="label">Carnival type</div><select id="${day}_${s.id}_carnivalType">${["Local Premiership","State Selection","Branch","ASRL","State","Aussies","Other"].map(x=>`<option ${s.carnivalType===x?"selected":""}>${x}</option>`).join("")}</select></div>
      </div>
    </div>
  `:`
