@@ -360,10 +360,10 @@ async function loadAthleteInvite(token){
     activeAthlete=j.athlete.id;
     coachMode=false;
     document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display="none"}); 
-    document.querySelectorAll(".mobilebar button").forEach(b=>{b.style.display=b.dataset.screen==="checkin"?"block":"none";});
+    document.querySelectorAll(".mobilebar button").forEach(b=>{b.style.display=["planner","checkin"].includes(b.dataset.screen)?"block":"none";});
     if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
     if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
-    renderAll(); nav("checkin");
+    renderAll(); nav("planner");
   }catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`;}
 }
 function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
