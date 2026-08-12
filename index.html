@@ -59,7 +59,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 
 <section id="planner" class="screen">
 <div class="sub">PROGRAM BUILDER</div><h1>Weekly Planner</h1>
-<div class="notice">Save the week under a season, block and week number. Use Copy Previous Week to avoid typing the same program again.</div>
+<div class="notice">Save the week under a season, block and week number. When the week is finished, archive it to History, then use Create Next Week to start the next week without overwriting the previous one.</div>
 <div class="card">
 <div class="grid2">
 <div><div class="label">Season</div><input id="season" placeholder="2026/27"></div>
@@ -71,6 +71,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 </div>
 <div class="grid2" style="margin-top:12px"><button class="btn full" onclick="saveWeekDetails()">Save Week Details</button><button class="btn full secondary" onclick="copyPreviousWeek()">Copy Previous Week</button></div>
 <div style="margin-top:10px"><button class="btn full green" onclick="archiveCurrentWeek()">Save / Archive Week to History</button></div>
+<div style="margin-top:10px"><button class="btn full secondary" onclick="createNextWeekFromCurrent()">Create Next Week</button></div>
 </div>
 <div id="plannerDays"></div>
 <div class="card" id="weekSaveCard">
@@ -207,6 +208,18 @@ function saveSession(day,id,notify=true){
   if(notify) alert(`${day} Session saved`);
 }
 function snapshot(){return JSON.parse(JSON.stringify({meta:data.meta,days:data.days}))}
+
+function createNextWeekFromCurrent(){
+  const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;
+  let x=data.archive.find(a=>a.key===currentKey);
+  if(!x){
+    const ok=confirm("This week is not saved in History yet. Save / Archive it first?");
+    if(!ok)return;
+    archiveCurrentWeek();
+    return;
+  }
+  createNextWeek(currentKey);
+}
 function saveAllVisibleSessions(){
   DAYS.forEach(day=>{
     (data.days[day]?.sessions||[]).forEach(s=>{
@@ -259,7 +272,30 @@ function renderHistory(){
 const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});
 const historyEl=document.getElementById("history");
 if(!historyEl)return;
-historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
+historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button><button class="btn green" onclick="createNextWeek('${x.key}')">Create Next Week</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
+}
+
+function blankDays(){
+  return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
+}
+function createNextWeek(key){
+  const x=data.archive.find(a=>a.key===key);
+  if(!x)return;
+  const nextWeek=(+x.meta.weekNo||1)+1;
+  const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);
+  data.meta={
+    season:x.meta.season,
+    blockName:x.meta.blockName,
+    blockNo:+x.meta.blockNo||1,
+    weekNo:nextWeek,
+    date:"",
+    name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`
+  };
+  data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();
+  persist();
+  renderAll();
+  nav("planner");
+  alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`);
 }
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
