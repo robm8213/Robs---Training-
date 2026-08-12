@@ -70,9 +70,16 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <div><div class="label">Week heading / notes</div><input id="weekName" placeholder="Block 1 - Week 1"></div>
 </div>
 <div class="grid2" style="margin-top:12px"><button class="btn full" onclick="saveWeekDetails()">Save Week Details</button><button class="btn full secondary" onclick="copyPreviousWeek()">Copy Previous Week</button></div>
+<div style="margin-top:10px"><button class="btn full green" onclick="archiveCurrentWeek()">Save / Archive Week to History</button></div>
 </div>
 <div id="plannerDays"></div>
-<div class="card"><button class="btn full green" onclick="archiveCurrentWeek()">Save / Archive This Week</button></div>
+<div class="card" id="weekSaveCard">
+      <h2>Finish This Week</h2>
+      <div class="sub" style="margin-bottom:10px">
+        Save all Monday–Sunday sessions into Program History. This creates/updates this exact Season + Block + Week only.
+      </div>
+      <button class="btn full green" onclick="archiveCurrentWeek()">SAVE / ARCHIVE WEEK TO HISTORY</button>
+    </div>
 </section>
 
 <section id="programs" class="screen">
@@ -155,7 +162,9 @@ function renderAll(){renderDashboard();renderPlanner();renderHistory();renderAth
 function renderDashboard(){
 sAth.textContent=data.athletes.length;sBlock.textContent=data.meta.blockNo;sWeek.textContent=data.meta.weekNo;
 const pd=DAYS.filter(d=>data.days[d].sessions.some(s=>s.title||s.type||s.instructions||s.exercises?.length)).length;sDays.textContent=pd+"/7";
-dashMeta.textContent=`${data.meta.season||""} • Block ${data.meta.blockNo} — Week ${data.meta.weekNo}${data.meta.blockName?" • "+data.meta.blockName:""}`;
+const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;
+const archivedNow=data.archive?.some(x=>x.key===currentKey);
+dashMeta.textContent=`${data.meta.season||""} • Block ${data.meta.blockNo} — Week ${data.meta.weekNo}${data.meta.blockName?" • "+data.meta.blockName:""}${archivedNow?" • SAVED IN HISTORY":""}`;
 dashWeek.innerHTML=DAYS.map(d=>{const ss=data.days[d].sessions||[];return `<div class="sessionline"><b>${d}</b><div class="sub">${ss.length?ss.map(s=>esc(s.title||s.type||"Session")).join(" • "):"No session entered"}</div></div>`}).join("")
 }
 function saveWeekDetails(){
@@ -181,17 +190,67 @@ function exerciseRow(day,s,j,x){const c=isCardio(s.type);return `<div class="bui
 function addExercise(day,id){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.push({name:"",a:"",b:"",c:"",d:""});saveRender()}
 function removeExercise(day,id,j){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.splice(j,1);saveRender()}
 function saveSession(day,id,notify=true){
-const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;
-s.title=document.getElementById(`${day}_${id}_title`)?.value||s.title;s.type=document.getElementById(`${day}_${id}_type`)?.value||s.type;s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value||s.instructions;s.notes=document.getElementById(`${day}_${id}_notes`)?.value||s.notes;
-const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];s.exercises=rows.map(r=>{let o={};r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);return o});
-persist();renderAll();if(notify)alert(`${day} session saved`);
+  const s=data.days[day].sessions.find(x=>x.id===id); if(!s)return;
+  s.title=document.getElementById(`${day}_${id}_title`)?.value ?? s.title;
+  s.type=document.getElementById(`${day}_${id}_type`)?.value ?? s.type;
+  s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value ?? s.instructions;
+  s.notes=document.getElementById(`${day}_${id}_notes`)?.value ?? s.notes;
+  const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];
+  s.exercises=rows.map(r=>{
+    let o={};
+    r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
+    return o;
+  });
+  persist();
+  renderDashboard();
+  if(notify) alert(`${day} Session saved`);
 }
 function snapshot(){return JSON.parse(JSON.stringify({meta:data.meta,days:data.days}))}
-function archiveCurrentWeek(){saveWeekDetails();const snap=snapshot();const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;data.archive=data.archive.filter(x=>x.key!==key);data.archive.push({key,savedAt:new Date().toISOString(),...snap});persist();renderAll();alert("Week saved to Program History")}
+function saveAllVisibleSessions(){
+  DAYS.forEach(day=>{
+    (data.days[day]?.sessions||[]).forEach(s=>{
+      const title=document.getElementById(`${day}_${s.id}_title`);
+      const type=document.getElementById(`${day}_${s.id}_type`);
+      const instructions=document.getElementById(`${day}_${s.id}_instructions`);
+      const notes=document.getElementById(`${day}_${s.id}_notes`);
+      if(title) s.title=title.value;
+      if(type) s.type=type.value;
+      if(instructions) s.instructions=instructions.value;
+      if(notes) s.notes=notes.value;
+      const rows=[...(document.getElementById(`${day}_${s.id}_rows`)?.children||[])];
+      if(rows.length){
+        s.exercises=rows.map(r=>{
+          let o={};
+          r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
+          return o;
+        });
+      }
+    });
+  });
+}
+function archiveCurrentWeek(){
+  saveAllVisibleSessions();
+  data.meta={
+    season:season?.value?.trim()||data.meta.season||"",
+    blockName:blockName?.value?.trim()||data.meta.blockName||"",
+    blockNo:+(blockNo?.value||data.meta.blockNo||1),
+    weekNo:+(weekNo?.value||data.meta.weekNo||1),
+    date:weekDate?.value||data.meta.date||"",
+    name:weekName?.value?.trim()||`Block ${+(blockNo?.value||data.meta.blockNo||1)} - Week ${+(weekNo?.value||data.meta.weekNo||1)}`
+  };
+  const snap=snapshot();
+  const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;
+  data.archive=data.archive.filter(x=>x.key!==key);
+  data.archive.push({key,savedAt:new Date().toISOString(),...snap});
+  persist();
+  renderAll();
+  alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);
+  nav("programs");
+}
 function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season && +x.meta.blockNo===+data.meta.blockNo && +x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
 function renderHistory(){
 const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});
-history.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty">No archived weeks yet.</div>'
+history.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>'
 }
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
