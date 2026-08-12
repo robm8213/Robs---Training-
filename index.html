@@ -103,12 +103,22 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 </section>
 
 <section id="review" class="screen">
-<div class="sub">COACH REVIEW</div><h1>Weekly Check-In Review</h1>
+<div class="sub">COACH REVIEW</div><h1>Athlete Results & Check-Ins</h1>
+<div class="card"><button class="btn full green" onclick="refreshCoachCloud()">Refresh Athlete Results</button><div class="sub" style="margin-top:8px">Pull the latest athlete session results and weekly check-ins from the shared database.</div></div>
 <div class="card" id="summary"></div>
+<div id="sessionResults"></div>
 <div id="checkinHistory"></div>
 </section>
 
 <section id="settings" class="screen">
+<div class="card">
+  <h2>Shared Athlete Access</h2>
+  <div class="sub">Connect Coach Mode to the shared ROB'S TRAINING database. The coach key is stored only on this device.</div>
+  <div class="label" style="margin-top:12px">Coach key</div>
+  <input id="coachCloudKey" type="password" placeholder="Enter coach key">
+  <button class="btn full green" style="margin-top:10px" onclick="saveCoachCloudKey()">Connect Coach Cloud</button>
+  <div id="cloudStatus" class="sub" style="margin-top:8px"></div>
+</div>
 <div class="sub">APP SETUP</div><h1>Settings</h1>
 <div class="card"><h2>Edit Weekly Check-In Questions</h2><div class="sub">Change wording, add questions, remove questions or reorder them.</div><div id="weeklyQuestionEditor"></div><button class="btn full secondary" onclick="addWeeklyQuestion()">+ Add Weekly Question</button></div>
 <div class="card"><h2>Edit Competition Review Questions</h2><div class="sub">Default is 6 questions.</div><div id="raceQuestionEditor"></div><button class="btn full secondary" onclick="addRaceQuestion()">+ Add Racing Question</button></div>
@@ -263,6 +273,7 @@ function archiveCurrentWeek(){
   data.archive=data.archive.filter(x=>x.key!==key);
   data.archive.push({key,savedAt:new Date().toISOString(),...snap});
   persist();
+  syncCoachCloud(false);
   renderAll();
   alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);
   nav("programs");
@@ -300,9 +311,63 @@ function createNextWeek(key){
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
 function duplicateBlock(seas,bn){const arr=data.archive.filter(x=>x.meta.season===seas&&+x.meta.blockNo===+bn);if(!arr.length)return;const newSeason=prompt("New season name:",seas)||seas;const newBlock=+(prompt("New block number:",String(bn))||bn);arr.forEach(x=>{const y=JSON.parse(JSON.stringify(x));y.meta.season=newSeason;y.meta.blockNo=newBlock;y.key=`${newSeason}|${newBlock}|${y.meta.weekNo}`;y.savedAt=new Date().toISOString();data.archive=data.archive.filter(a=>a.key!==y.key);data.archive.push(y)});persist();renderAll();alert("Block duplicated")}
-function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender()}
-function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
-function removeAthlete(id){data.athletes=data.athletes.filter(a=>a.id!==id);saveRender()}
+
+const API="/api";
+function saveCoachCloudKey(){
+  const v=document.getElementById("coachCloudKey")?.value.trim();
+  if(!v)return alert("Enter the coach key first.");
+  localStorage.setItem("robsCoachKey",v);
+  const st=document.getElementById("cloudStatus"); if(st)st.textContent="Coach Cloud connected on this device.";
+  syncCoachCloud(false);
+}
+async function syncCoachCloud(notify=false){
+  const key=localStorage.getItem("robsCoachKey"); if(!key)return false;
+  try{
+    const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data})});
+    if(!r.ok)throw new Error(await r.text());
+    if(notify)alert("Coach program synced online.");
+    return true;
+  }catch(e){console.error(e); if(notify)alert("Cloud sync failed. Check the Coach key in Settings."); return false;}
+}
+async function shareAthlete(id){
+  const a=data.athletes.find(x=>x.id===id); if(!a)return;
+  const key=localStorage.getItem("robsCoachKey");
+  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
+  await syncCoachCloud(false);
+  try{
+    const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);
+    if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link});}
+    else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.");}
+    else prompt("Copy this athlete link:",link);
+  }catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.");}
+}
+async function submitAthleteCloud(kind,payload){
+  const token=new URLSearchParams(location.search).get("athlete"); if(!token)return;
+  try{await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload})});}catch(e){console.error(e)}
+}
+async function loadAthleteInvite(token){
+  try{
+    const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token));
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    data=j.data;
+    data.athletes=[j.athlete];
+    data.checkins=[];
+    data.sessionLogs=[];
+    activeAthlete=j.athlete.id;
+    coachMode=false;
+    document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display="none"});
+    if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
+    if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
+    renderAll(); nav("checkin");
+  }catch(e){console.error(e);document.body.innerHTML='<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB\\'S TRAINING athlete link.</p></div>';}
+}
+function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
+function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
+function removeAthlete(id){data.athletes=data.athletes.filter(a=>a.id!==id);saveRender();syncCoachCloud(false)}
 function renderCheckin(){
 checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
 if(!activeAthlete){checkinForm.innerHTML='<div class="card empty">Select an athlete to view training and complete the check-in.</div>';return}
@@ -352,14 +417,36 @@ function saveAthleteSession(day,id){
    const sets=parseInt(x.a)||1;
    return {name:x.name||"",setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||"")};
  });
- data.sessionLogs.push({id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,results});
+ const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,results};data.sessionLogs.push(log);submitAthleteCloud("session",log);
  persist(); alert("Session results saved");
 }
 function submitCheckin(){
-const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];data.checkins.push({id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra});persist();renderAll();alert("Weekly check-in submitted")
+const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];const ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")
+}
+
+async function refreshCoachCloud(){
+  const key=localStorage.getItem("robsCoachKey");
+  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
+  try{
+    const r=await fetch(API+"?action=coach-submissions",{headers:{"x-coach-key":key}});
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    const items=j.items||[];
+    const remoteCheckins=items.filter(x=>x.kind==="checkin").map(x=>x.payload);
+    const remoteSessions=items.filter(x=>x.kind==="session").map(x=>x.payload);
+    const mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return [...m.values()]};
+    data.checkins=mergeUnique(data.checkins||[],remoteCheckins);
+    data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);
+    persist();renderReview();alert("Latest athlete results loaded.");
+  }catch(e){console.error(e);alert("Could not load athlete results. Check Coach Cloud in Settings.");}
 }
 function renderReview(){
-if(!data.checkins.length){summary.innerHTML='<div class="empty">No check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
+const logs=data.sessionLogs||[];
+const logEl=document.getElementById("sessionResults");
+if(logEl){
+  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.actualSplit?" • Actual "+esc(r.actualSplit):""}${r.goalSplit?" • Goal "+esc(r.goalSplit):""}${r.setWeights?.length?" • Weights "+esc(r.setWeights.filter(Boolean).join(", ")):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
+}
+if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
 const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
 const num=(idx)=>latest.map(c=>+c.weekly[idx]?.a).filter(n=>!isNaN(n));const avg=a=>a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):"—";
 summary.innerHTML=`<h2>Current Week Summary</h2><div class="grid4"><div class="stat"><span class="sub">Responses</span><b>${latest.length}</b></div><div class="stat"><span class="sub">Training</span><b>${avg(num(0))}</b></div><div class="stat"><span class="sub">Recovery</span><b>${avg(num(2))}</b></div><div class="stat"><span class="sub">Motivation</span><b>${avg(num(3))}</b></div></div>`;
@@ -373,6 +460,10 @@ function qarr(k){return k==="weekly"?data.weeklyQuestions:data.raceQuestions}fun
 function exportData(){importBox.value=JSON.stringify(data,null,2);navigator.clipboard?.writeText(importBox.value);alert("Backup copied")}
 function importData(){try{data=JSON.parse(importBox.value);persist();renderAll();alert("Imported")}catch(e){alert("Invalid backup")}}
 renderAll();
+const savedCloudKey=localStorage.getItem("robsCoachKey");
+if(savedCloudKey && document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device.";}
+const inviteToken=new URLSearchParams(location.search).get("athlete");
+if(inviteToken)loadAthleteInvite(inviteToken);
 </script>
 </body>
 </html>
