@@ -363,7 +363,7 @@ async function loadAthleteInvite(token){
     if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
     if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
     renderAll(); nav("checkin");
-  }catch(e){console.error(e);document.body.innerHTML='<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB\\'S TRAINING athlete link.</p></div>';}
+  }catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`;}
 }
 function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
 function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
