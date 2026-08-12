@@ -22,7 +22,7 @@ h1{font-size:30px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15
 .badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#11385f;color:#8fc3ff;font-weight:900}.badge.green{background:#123a25;color:#8ff0ae}.badge.amber{background:#493613;color:#ffd47d}
 .btn{border:0;border-radius:11px;background:var(--blue);color:#fff;font-weight:900;padding:11px 13px;font-size:14px;cursor:pointer}.btn.secondary{background:#172837}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.full{width:100%}
 input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;color:#fff;border-radius:9px;padding:10px;font:inherit}textarea{min-height:82px}.label{font-size:11px;color:var(--mut);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.7px}
-.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
+.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.resultSet{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;background:#0a1721}.resultSetHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.prescription{font-size:11px;color:#9db0bf}.tripleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
 .sessionCard{border:1px solid #294052;border-radius:14px;padding:14px;margin:12px 0;background:#0b1822}.sessionline{padding:11px 0;border-top:1px solid var(--line)}.sessionline:first-child{border-top:0}
 .builderRow{display:grid;grid-template-columns:1.5fr 76px 76px 76px 76px 38px;gap:7px;align-items:center;padding:6px 0}.builderHead{font-size:10px;color:var(--mut);text-transform:uppercase}.builderRow input{padding:8px 5px}
 .question{border-top:1px solid var(--line);padding:12px 0}.question:first-child{border-top:0}.answerbox{margin-top:8px}.flag{border-left:4px solid var(--amber)}
@@ -30,7 +30,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 @media(max-width:760px){
 .layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(7,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
-.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
+.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
 </style>
 </head>
@@ -450,32 +450,60 @@ function athleteSessionLogger(day,s){
    const substitution=`<div class="substituteBox">
      <label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label>
      <div id="subbox_${day}_${s.id}_${j}" style="display:none">
-       <div class="grid2"><div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise"></div>
-       <div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. knee injury / equipment unavailable"></div></div>
+       <div class="grid2">
+         <div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise / piece"></div>
+         <div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. injury / equipment unavailable"></div>
+       </div>
      </div>
    </div>`;
+
    if(c){
-     return `<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b>
-       <div class="sub">Coach target: ${esc(x.b||"—")} ${x.a?"• Time "+esc(x.a):""} ${x.c?"• Rest "+esc(x.c):""} ${x.d?"• Sets "+esc(x.d):""}</div>
-       ${previous.actualTime||previous.actualSplit?`<div class="mini" style="margin-top:5px">Last result: ${previous.actualTime?esc(previous.actualTime)+" time":""}${previous.actualTime&&previous.actualSplit?" • ":""}${previous.actualSplit?esc(previous.actualSplit)+" pace/split":""}</div>`:""}
-       <div class="grid2" style="margin-top:8px">
-         <div><div class="label">Actual time</div><input id="time_${day}_${s.id}_${j}" placeholder="e.g. 6:18.4"></div>
-         <div><div class="label">Actual / avg pace or split</div><input id="actual_${day}_${s.id}_${j}" placeholder="e.g. 1:34.6"></div>
-         <div><div class="label">Completed sets / pieces</div><input id="done_${day}_${s.id}_${j}" type="number" min="0" placeholder="${esc(x.d||"")}"></div>
-         <div><div class="label">RPE (1–10)</div><input id="rpe_${day}_${s.id}_${j}" type="number" min="1" max="10" placeholder="Optional"></div>
-       </div>${substitution}</div>`;
+     const sets=Math.max(1,parseInt(x.d)||1);
+     const oldSets=previous.sets||[];
+     return `<div class="question">
+       <b>${esc(x.name||("Piece "+(j+1)))}</b>
+       <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} ${x.a?"• "+esc(x.a)+" each":""} ${x.b?"• Target split "+esc(x.b):""} ${x.c?"• Rest "+esc(x.c):""}</div>
+       <div style="margin-top:8px">
+       ${Array.from({length:sets},(_,k)=>{
+         const old=oldSets[k]||{};
+         return `<div class="resultSet">
+           <div class="resultSetHead"><b>Set ${k+1}</b><span class="prescription">${x.a?esc(x.a)+" work":""}${x.a&&x.c?" • ":""}${x.c?"Rest "+esc(x.c):""}</span></div>
+           <div class="tripleGrid">
+             <div><div class="label">Actual split / pace</div><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||x.b||"e.g. 1:45.0"}" value=""></div>
+             <div><div class="label">Metres</div><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"e.g. 320"}" value=""></div>
+             <div><div class="label">Rest</div><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"e.g. 1:30"}" value=""></div>
+           </div>
+         </div>`;
+       }).join("")}
+       </div>
+       ${substitution}
+     </div>`;
    }
+
    const sets=Math.max(1,parseInt(x.a)||1);
-   const lastWeights=previous.setWeights||[];
-   const lastReps=previous.setReps||[];
-   return `<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b>
-     <div class="sub">Coach prescription: ${esc(x.a||"—")} sets × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
-     ${(lastWeights.length||lastReps.length)?`<div class="mini" style="margin-top:5px">Last time: ${Array.from({length:Math.max(lastWeights.length,lastReps.length)},(_,k)=>`${lastWeights[k]?esc(lastWeights[k])+"kg":""}${lastWeights[k]&&lastReps[k]?" × ":""}${lastReps[k]?esc(lastReps[k])+" reps":""}`).filter(Boolean).join(" / ")}</div>`:""}
-     <div class="testingGrid" style="margin-top:8px">${Array.from({length:sets},(_,k)=>`<div class="card" style="margin:0;padding:10px"><b>Set ${k+1}</b><div class="grid2"><div><div class="label">Weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${lastWeights[k]||""}"></div><div><div class="label">Actual reps</div><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${lastReps[k]||x.b||""}"></div></div></div>`).join("")}</div>
-     ${substitution}</div>`;
- }).join(""):'<div class="empty">Coach session details entered with no exercises/pieces.</div>'}
- <div class="label">Athlete session notes</div><textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
- <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button></div>`;
+   const oldWeights=previous.setWeights||[];
+   const oldReps=previous.setReps||[];
+   const oldRests=previous.setRests||[];
+   return `<div class="question">
+     <b>${esc(x.name||("Exercise "+(j+1)))}</b>
+     <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
+     <div style="margin-top:8px">
+       ${Array.from({length:sets},(_,k)=>`<div class="resultSet">
+         <div class="resultSetHead"><b>Set ${k+1}</b><span class="prescription">${x.b?esc(x.b)+" reps":""}${x.b&&x.c?" • ":""}${x.c?"Rest "+esc(x.c):""}</span></div>
+         <div class="tripleGrid">
+           <div><div class="label">Weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div>
+           <div><div class="label">Actual reps</div><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div>
+           <div><div class="label">Rest</div><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"e.g. 1:30"}"></div>
+         </div>
+       </div>`).join("")}
+     </div>
+     ${substitution}
+   </div>`;
+ }).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}
+ <div class="label">Athlete session notes</div>
+ <textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
+ <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button>
+ </div>`;
 }
 function toggleSubstitute(day,id,j){
  const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked;
@@ -490,17 +518,52 @@ function saveAthleteSession(day,id){
  if(!data.sessionLogs)data.sessionLogs=[];
  const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;
  const c=isCardio(s.type);
+
  const results=(s.exercises||[]).map((x,j)=>{
    const substituted=document.getElementById(`sub_${day}_${id}_${j}`)?.checked||false;
-   const base={name:x.name||"",substituted,substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""};
+   const base={
+     name:x.name||"",
+     substituted,
+     substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",
+     substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""
+   };
+
    if(c){
-     return {...base,actualTime:document.getElementById(`time_${day}_${id}_${j}`)?.value||"",actualSplit:document.getElementById(`actual_${day}_${id}_${j}`)?.value||"",completedSets:document.getElementById(`done_${day}_${id}_${j}`)?.value||"",rpe:document.getElementById(`rpe_${day}_${id}_${j}`)?.value||""};
+     const sets=Math.max(1,parseInt(x.d)||1);
+     return {...base,
+       prescribedTime:x.a||"",
+       prescribedSplit:x.b||"",
+       prescribedRest:x.c||"",
+       sets:Array.from({length:sets},(_,k)=>({
+         set:k+1,
+         split:document.getElementById(`split_${day}_${id}_${j}_${k}`)?.value||"",
+         meters:document.getElementById(`meters_${day}_${id}_${j}_${k}`)?.value||"",
+         rest:document.getElementById(`rest_${day}_${id}_${j}_${k}`)?.value||""
+       }))
+     };
    }
+
    const sets=Math.max(1,parseInt(x.a)||1);
-   return {...base,setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),setReps:Array.from({length:sets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||"")};
+   return {...base,
+     prescribedReps:x.b||"",
+     prescribedRest:x.c||"",
+     setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),
+     setReps:Array.from({length:sets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||""),
+     setRests:Array.from({length:sets},(_,k)=>document.getElementById(`grest_${day}_${id}_${j}_${k}`)?.value||"")
+   };
  });
- const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",results};
- data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Session results saved");
+
+ const log={
+   id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,
+   season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,
+   day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,
+   athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",
+   results
+ };
+ data.sessionLogs.push(log);
+ submitAthleteCloud("session",log);
+ persist();
+ alert("Session results saved");
 }
 function submitCheckin(){
 const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];const ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")
@@ -586,7 +649,7 @@ function renderReview(){
 const logs=data.sessionLogs||[];
 const logEl=document.getElementById("sessionResults");
 if(logEl){
-  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.actualTime?" • Time "+esc(r.actualTime):""}${r.actualSplit?" • Pace/Split "+esc(r.actualSplit):""}${r.completedSets?" • Completed "+esc(r.completedSets):""}${r.rpe?" • RPE "+esc(r.rpe):""}${r.setWeights?.length?" • Weights "+esc(r.setWeights.filter(Boolean).join(", ")):""}${r.setReps?.length?" • Reps "+esc(r.setReps.filter(Boolean).join(", ")):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
+  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
 }
 if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
 const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
