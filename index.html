@@ -446,7 +446,34 @@ function configureAthleteNavigation(){const desktopPlanner=document.querySelecto
 async function loadAthleteInvite(token){try{const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token));if(!r.ok)throw new Error(await r.text());const j=await r.json();data=j.data;data.athletes=[j.athlete];data.checkins=[];data.sessionLogs=[];data.testResults=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));activeAthlete=j.athlete.id;coachMode=false;activeTrainingDay=DAYS.find(d=>(data.days[d]?.sessions||[]).length)||"";configureAthleteNavigation();if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";if(typeof modeBtn!=="undefined")modeBtn.style.display="none";renderAll();nav("training")}catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`}}
 function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
 function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
-function removeAthlete(id){data.athletes=data.athletes.filter(a=>a.id!==id);saveRender();syncCoachCloud(false)}
+async function removeAthlete(id){
+  const a=data.athletes.find(x=>x.id===id);
+  if(!a)return;
+  if(!confirm(`Remove ${a.name} and disable their athlete link?`))return;
+
+  const key=localStorage.getItem("robsCoachKey");
+  if(key){
+    try{
+      const r=await fetch(API+"?action=revoke-athlete",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","x-coach-key":key},
+        body:JSON.stringify({athleteId:id})
+      });
+      if(!r.ok)throw new Error(await r.text());
+    }catch(e){
+      console.error(e);
+      alert("Could not disable the athlete link. Athlete was NOT removed. Check Coach Cloud and try again.");
+      return;
+    }
+  }
+
+  data.athletes=data.athletes.filter(x=>x.id!==id);
+  if(activeAthlete===id)activeAthlete="";
+  persist();
+  await syncCoachCloud(false);
+  renderAll();
+  alert(`${a.name} removed. Their athlete link has been disabled.`);
+}
 function toggleTrainingDay(day){
   activeTrainingDay=activeTrainingDay===day?"":day;
   renderCheckin();
