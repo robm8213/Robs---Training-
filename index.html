@@ -246,7 +246,7 @@ let coachMode=true;let activeAthlete="";let activeTrainingDay="";let lastCloudUp
 function persist(){localStorage.setItem("rt_v8",JSON.stringify(data))}
 function saveRender(){persist();if(coachMode)syncCoachCloud(false);renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function nav(id){if(document.getElementById("planner")?.classList.contains("active")&&id!=="planner"){savePlannerDraftToData();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true)}document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
+function nav(id){if(document.getElementById("planner")?.classList.contains("active")&&id!=="planner"){savePlannerDraftToData();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true)}const target=(id==="checkin"&&coachMode)?"review":id;document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===target));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
 function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
 
 function parseWeekDate(value){
