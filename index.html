@@ -139,7 +139,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="trainingSessions"></div></section>
+<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
 
 <section id="checkin" class="screen">
 <div class="sub">ATHLETE WELLNESS & FEEDBACK</div><h1>Weekly Athlete Check-In</h1>
@@ -460,23 +460,44 @@ function athleteDaySummary(day){
   if(!ss.length)return "Rest / No Session";
   return ss.map(s=>s.title||s.type||"Session").join(" • ");
 }
-function renderCheckin(){const live=currentTrainingSnapshot();const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");if(athleteWeekIdentity)athleteWeekIdentity.innerHTML=weekIdentityHtml(live.meta);checkinAthletePicker.style.display=coachMode?"":"none";checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;if(!activeAthlete){if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML='<div class="card empty">Select an athlete to view training.</div>';checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the check-in.</div>';return}const athleteSessionHtml=DAYS.map(day=>{
-  const ss=live.days?.[day]?.sessions||[];
-  const open=activeTrainingDay===day;
-  return `<div class="athleteDayCard ${open?"open":""}" id="athleteDay_${day}">
-    <button class="athleteDayToggle" type="button" onclick="toggleTrainingDay('${day}')">
-      <div>
-        <div class="dayTitle">${day}</div>
-        <div class="dayMeta">${ss.length?`${ss.length} Session${ss.length===1?"":"s"} • ${esc(athleteDaySummary(day))}`:"Rest / No Session"}</div>
+function renderCheckin(){
+  const live=currentTrainingSnapshot();
+  const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");
+  if(athleteWeekIdentity)athleteWeekIdentity.innerHTML=weekIdentityHtml(live.meta);
+  const athletePreviewNotice=document.getElementById("athletePreviewNotice");
+  if(athletePreviewNotice)athletePreviewNotice.innerHTML=!activeAthlete&&!coachMode?'<div class="sub" style="margin:0 0 10px">Previewing the current training week. Athlete-specific results save when an athlete opens their personal link.</div>':"";
+
+  checkinAthletePicker.style.display=coachMode?"":"none";
+  checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
+
+  const athleteSessionHtml=DAYS.map(day=>{
+    const ss=live.days?.[day]?.sessions||[];
+    const open=activeTrainingDay===day;
+    return `<div class="athleteDayCard ${open?"open":""}" id="athleteDay_${day}">
+      <button class="athleteDayToggle" type="button" onclick="toggleTrainingDay('${day}')">
+        <div>
+          <div class="dayTitle">${day}</div>
+          <div class="dayMeta">${ss.length?`${ss.length} Session${ss.length===1?"":"s"} • ${esc(athleteDaySummary(day))}`:"Rest / No Session"}</div>
+        </div>
+        <div class="chev">›</div>
+      </button>
+      <div class="athleteDayBody">
+        ${ss.length?ss.map((sess,idx)=>`<div class="athleteSessionBox"><div class="athleteSessionHead"><div class="mini">SESSION ${idx+1}</div></div>${athleteSessionLogger(day,sess)}</div>`).join(""):'<div class="empty" style="padding:14px 2px">No training programmed for this day.</div>'}
       </div>
-      <div class="chev">›</div>
-    </button>
-    <div class="athleteDayBody">
-      ${ss.length?ss.map((sess,idx)=>`<div class="athleteSessionBox"><div class="athleteSessionHead"><div class="mini">SESSION ${idx+1}</div></div>${athleteSessionLogger(day,sess)}</div>`).join(""):'<div class="empty" style="padding:14px 2px">No training programmed for this day.</div>'}
-    </div>
-  </div>`;
-}).join("");
-if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';checkinForm.innerHTML=`<div class="card"><h2>Monday Weekly Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div><div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div><div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`}
+    </div>`;
+  }).join("");
+
+  if(typeof trainingSessions!=="undefined"){
+    trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';
+  }
+
+  if(!activeAthlete){
+    checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the weekly check-in.</div>';
+    return;
+  }
+
+  checkinForm.innerHTML=`<div class="card"><h2>Monday Weekly Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div><div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div><div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`;
+}
 function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select>`;else if(q.type==="ratingnote")input=`<div class="grid2"><select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select><input id="${p}${i}_note" placeholder="Optional soreness / niggle note"></div>`;else if(q.type==="focus")input=`<select id="${p}${i}">${["Starts","Power","Rating","Rhythm","Timing","Runs / Finishes","Fitness","Strength","Recovery","Communication","Other"].map(x=>`<option>${x}</option>`).join("")}</select>`;else input=`<textarea id="${p}${i}"></textarea>`;return`<div class="question"><b>${i+1}. ${esc(q.q)}</b><div class="answerbox">${input}</div></div>`}
 function athleteSessionLogger(day,s){if(s.type==="Carnival"){return`<div class="sessionCard"><div class="row"><div><b>🏁 ${esc(s.carnivalLocation||s.title||"Carnival")}</b><div class="sub">${esc(s.carnivalType||"Carnival")}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px">${esc(s.instructions)}</div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}<div class="carnivalBox"><div class="label">Result</div><input id="carnivalResult_${day}_${s.id}" placeholder="e.g. 2nd"><div class="label">Notes</div><textarea id="carnivalNotes_${day}_${s.id}" placeholder="Optional carnival notes"></textarea><button class="btn full green" onclick="saveCarnivalResult('${day}','${s.id}')">Save Carnival Result</button></div></div>`}const c=isCardio(s.type),prior=latestPriorSessionForAthlete(activeAthlete,s);return`<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}${(s.exercises||[]).length?(s.exercises||[]).map((x,j)=>{const previous=prior?.results?.[j]||{},substitution=`<div class="substituteBox"><label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label><div id="subbox_${day}_${s.id}_${j}" style="display:none"><div class="grid2"><div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise / piece"></div><div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. injury / equipment unavailable"></div></div></div></div>`;if(c){const sets=Math.max(1,parseInt(x.d)||1),oldSets=previous.sets||[];return`<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b><div class="sub">${x.a?`<span style="font-weight:900;color:#f7f9fb">${esc(x.a)} MIN</span>`:""}${x.c?` • Rest ${esc(x.c)}`:""}${sets>1?` • ${sets} sets`:""}</div><div class="scoreTable"><div class="scoreRow scoreHead"><div>Set</div><div>Avg Split / Pace</div><div>Metres</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>{const old=oldSets[k]||{};return`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||"Enter"}"></div><div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"320"}"></div><div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`}).join("")}</div>${substitution}</div>`}const sets=Math.max(1,parseInt(x.a)||1),oldWeights=previous.setWeights||[],oldReps=previous.setReps||[],oldRests=previous.setRests||[];return`<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b><div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div><div class="scoreTable"><div class="scoreRow scoreHead"><div>Set</div><div>Weight</div><div>Reps</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div><div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div><div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`).join("")}</div>${substitution}</div>`}).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}<div class="card" style="margin-top:12px;padding:12px"><h3>Session Summary</h3><div class="grid2" style="margin-top:8px"><div><div class="label">Average Heart Rate (bpm)</div><input id="avghr_${day}_${s.id}" type="number" min="30" max="240" placeholder="e.g. 162"></div><div><div class="label">Session RPE (1–10)</div><input id="sessionrpe_${day}_${s.id}" type="number" min="1" max="10" placeholder="e.g. 8"></div></div><div class="label">Athlete session notes</div><textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea></div><button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button></div>`}
 function toggleSubstitute(day,id,j){const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked,box=document.getElementById(`subbox_${day}_${id}_${j}`);if(box)box.style.display=on?"block":"none"}
