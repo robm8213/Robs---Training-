@@ -52,7 +52,7 @@ if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,40
       );
       return send(res,200,{token});
     }
-
+    if(action==="revoke-athlete" && req.method==="POST"){if(!coach(req))return send(res,401,{error:"Coach key invalid"});const b=await body(req);const athleteId=String(b.athleteId||"").trim();if(!athleteId)return send(res,400,{error:"Athlete id required"});await pool.query(`update athlete_invites set active=false where athlete_id=$1`,[athleteId]);return send(res,200,{ok:true});}
     if(action==="invite" && req.method==="GET"){
       const token=u.searchParams.get("token");
       const q=await pool.query(
