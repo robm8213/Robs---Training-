@@ -38,7 +38,7 @@ module.exports=async(req,res)=>{
       );
       return send(res,200,{ok:true});
     }
-
+if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,401,{error:"Coach key invalid"});const q=await pool.query(`select data,updated_at from app_state where id='master'`);if(!q.rowCount)return send(res,404,{error:"No coach program found"});return send(res,200,{data:q.rows[0].data,updatedAt:q.rows[0].updated_at});}
     if(action==="create-invite" && req.method==="POST"){
       if(!coach(req)) return send(res,401,{error:"Coach key invalid"});
       const b=await body(req), a=b.athlete;
