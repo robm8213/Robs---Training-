@@ -36,6 +36,30 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 .athleteDayCard.open .athleteDayBody{display:block}
 .athleteSessionBox{border:1px solid #294052;border-radius:14px;background:#0b1822;margin-top:10px;overflow:hidden}
 .athleteSessionHead{padding:14px 14px 4px}
+.weekIdentityBanner{
+  background:linear-gradient(180deg,#10263a,#0d1d2a);
+  border:1px solid #24577f;
+  border-radius:15px;
+  padding:14px 16px;
+  margin:12px 0 16px;
+}
+.weekIdentityTop{
+  font-size:11px;
+  color:#8fc3ff;
+  font-weight:900;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+}
+.weekIdentityMain{
+  font-size:22px;
+  font-weight:1000;
+  margin-top:4px;
+}
+.weekIdentityDate{
+  color:#c4d3df;
+  font-size:13px;
+  margin-top:4px;
+}
 
 .mobilebar{display:none}
 @media(max-width:760px){
@@ -71,6 +95,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 
 <section id="planner" class="screen">
 <div class="sub">PROGRAM BUILDER</div><h1>Weekly Planner</h1>
+<div id="coachWeekIdentity"></div>
 <div class="notice">Save the week under a season, block and week number. Changes made on the MASTER coach device save automatically to Coach Cloud. Other coach devices automatically load the latest program without pushing older data back.</div>
 <div class="card">
 <div class="grid2">
@@ -114,7 +139,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="trainingSessions"></div></section>
+<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="trainingSessions"></div></section>
 
 <section id="checkin" class="screen">
 <div class="sub">ATHLETE WELLNESS & FEEDBACK</div><h1>Weekly Athlete Check-In</h1>
@@ -223,6 +248,29 @@ function saveRender(){persist();if(coachMode)syncCoachCloud(false);renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function nav(id){if(document.getElementById("planner")?.classList.contains("active")&&id!=="planner"){savePlannerDraftToData();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true)}document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
 function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
+function weekStartingDate(){
+  const raw=data.meta?.date||"";
+  if(raw){
+    const d=new Date(raw+"T00:00:00");
+    if(!isNaN(d))return d;
+  }
+  return null;
+}
+function formatWeekStart(d){
+  if(!d)return "Week starting date not set";
+  return "Week Starting Monday "+d.toLocaleDateString("en-AU",{day:"numeric",month:"long",year:"numeric"});
+}
+function weekIdentityHtml(){
+  const season=esc(data.meta?.season||"Season");
+  const block=Number(data.meta?.blockNo)||1;
+  const week=Number(data.meta?.weekNo)||1;
+  const d=weekStartingDate();
+  return `<div class="weekIdentityBanner">
+    <div class="weekIdentityTop">${season} SEASON</div>
+    <div class="weekIdentityMain">BLOCK ${block} • WEEK ${week}</div>
+    <div class="weekIdentityDate">${formatWeekStart(d)}</div>
+  </div>`;
+}
 function renderAll(){renderDashboard();renderPlanner();renderHistory();renderWeeklyResultsDashboard();renderAthletes();renderCheckin();renderTesting();renderReview();renderQuestionEditors()}
 function renderDashboard(){
 sAth.textContent=data.athletes.length;sBlock.textContent=data.meta.blockNo;sWeek.textContent=data.meta.weekNo;
@@ -262,6 +310,7 @@ data.meta={season:seasonEl.value.trim(),blockName:blockNameEl.value.trim(),block
 persist();syncCoachCloud(false);renderAll();alert("Week details saved");
 }
 function renderPlanner(){
+const coachWeekIdentity=document.getElementById("coachWeekIdentity");if(coachWeekIdentity)coachWeekIdentity.innerHTML=weekIdentityHtml();
 season.value=data.meta.season||"";blockName.value=data.meta.blockName||"";blockNo.value=data.meta.blockNo||1;weekNo.value=data.meta.weekNo||1;weekDate.value=data.meta.date||"";weekName.value=data.meta.name||"";
 plannerDays.innerHTML=DAYS.map(day=>`<div class="card day"><div class="row"><div class="dayname">${day}</div><span class="badge">${data.days[day].sessions.length} SESSION${data.days[day].sessions.length===1?"":"S"}</span></div><div>${data.days[day].sessions.map((s,i)=>sessionEditor(day,s,i)).join("")||'<div class="empty" style="padding:10px 0">No sessions added.</div>'}</div><button class="btn full secondary" onclick="addSession('${day}')">+ Add Session</button></div>`).join("")
 }
@@ -358,7 +407,7 @@ function athleteDaySummary(day){
   if(!ss.length)return "Rest / No Session";
   return ss.map(s=>s.title||s.type||"Session").join(" • ");
 }
-function renderCheckin(){checkinAthletePicker.style.display=coachMode?"":"none";checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;if(!activeAthlete){if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML='<div class="card empty">Select an athlete to view training.</div>';checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the check-in.</div>';return}const athleteSessionHtml=DAYS.map(day=>{
+function renderCheckin(){const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");if(athleteWeekIdentity)athleteWeekIdentity.innerHTML=weekIdentityHtml();checkinAthletePicker.style.display=coachMode?"":"none";checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;if(!activeAthlete){if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML='<div class="card empty">Select an athlete to view training.</div>';checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the check-in.</div>';return}const athleteSessionHtml=DAYS.map(day=>{
   const ss=data.days[day]?.sessions||[];
   const open=activeTrainingDay===day;
   return `<div class="athleteDayCard ${open?"open":""}" id="athleteDay_${day}">
