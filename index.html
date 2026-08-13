@@ -120,7 +120,6 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 <div id="checkinHistory"></div>
 </section>
 
-
 <section id="testing" class="screen">
 <div class="sub" id="testingSub">PERFORMANCE TESTING</div><h1 id="testingTitle">Testing</h1>
 <div class="notice" id="testingNotice">Erg and gym testing results are kept separately from weekly training.</div>
@@ -190,7 +189,6 @@ const DEFAULT_RACE=[
 {q:"What could we improve OUTSIDE the boat?",type:"text"},
 {q:"What should our #1 focus be heading into the next race?",type:"focus"}
 ];
-
 const DEFAULT_TESTS=[
 {id:"erg2k",category:"Erg",name:"2k Erg",unit:"time",target:"Record total time and average split"},
 {id:"erg500",category:"Erg",name:"500m Erg",unit:"time",target:"Record total time"},
@@ -198,7 +196,6 @@ const DEFAULT_TESTS=[
 {id:"gym_deadlift",category:"Gym",name:"Deadlift",unit:"kg",target:"Record best completed working set"},
 {id:"gym_bench",category:"Gym",name:"Bench Press",unit:"kg",target:"Record best completed working set"}
 ];
-
 const emptyDays=()=>Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
 let data=JSON.parse(localStorage.getItem("rt_v8")||"null")||{
 meta:{season:"2026/27",blockName:"Pre-Season / Base Building",blockNo:1,weekNo:1,date:"",name:"Block 1 - Week 1"},
@@ -206,7 +203,7 @@ days:emptyDays(),athletes:[],archive:[],checkins:[],weeklyQuestions:DEFAULT_WEEK
 };
 if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];
 DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});
-let coachMode=true;let activeAthlete="";
+let coachMode=true;let activeAthlete="";let lastCloudUpdatedAt="";let cloudSyncBusy=false;
 function persist(){localStorage.setItem("rt_v8",JSON.stringify(data))}
 function saveRender(){persist();if(coachMode)syncCoachCloud(false);renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
@@ -233,627 +230,83 @@ plannerDays.innerHTML=DAYS.map(day=>`<div class="card day"><div class="row"><div
 function addSession(day){data.days[day].sessions.push({id:Date.now()+"_"+Math.random().toString(36).slice(2),title:"",type:"",instructions:"",notes:"",exercises:[]});saveRender()}
 function removeSession(day,id){data.days[day].sessions=data.days[day].sessions.filter(s=>s.id!==id);saveRender()}
 function isCardio(t){return ["Erg","Boat","Cycling","Running"].includes(t)}
-function changeSessionType(day,id){
- const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;
- s.type=document.getElementById(`${day}_${id}_type`)?.value||"";
- persist();renderPlanner();
-}
-function sessionEditor(day,s,i){
- const carnival=s.type==="Carnival";
- return `<div class="sessionCard"><div class="row"><b>SESSION ${i+1}</b><button class="btn red" onclick="removeSession('${day}','${s.id}')">Remove</button></div>
- <div class="grid2">
-   <div><div class="label">Session title</div><input id="${day}_${s.id}_title" value="${esc(s.title)}" placeholder="${carnival?"Carnival":""}"></div>
-   <div><div class="label">Type</div><select id="${day}_${s.id}_type" onchange="changeSessionType('${day}','${s.id}')">${["","Gym","Erg","Boat","Cycling","Running","Carnival","Recovery","Rest"].map(x=>`<option ${s.type===x?"selected":""}>${x}</option>`).join("")}</select></div>
- </div>
- ${carnival?`
-   <div class="carnivalBox">
-     <div class="grid2">
-       <div><div class="label">Carnival location</div><input id="${day}_${s.id}_carnivalLocation" value="${esc(s.carnivalLocation||"")}" placeholder="e.g. Freshwater"></div>
-       <div><div class="label">Carnival type</div><select id="${day}_${s.id}_carnivalType">${["Local Premiership","State Selection","Branch","ASRL","State","Aussies","Other"].map(x=>`<option ${s.carnivalType===x?"selected":""}>${x}</option>`).join("")}</select></div>
-     </div>
-   </div>
- `:`
-   <div class="row" style="margin-top:12px"><h3>${isCardio(s.type)?"Cardio Builder":"Workout Builder"}</h3><button class="btn secondary" onclick="addExercise('${day}','${s.id}')">+ Add</button></div>
-   <div class="builderRow builderHead">${isCardio(s.type)?"<span>Piece</span><span>Time</span><span>Target Pace</span><span class='rest'>Rest</span><span>Sets</span><span></span>":"<span>Exercise</span><span>Sets</span><span>Reps</span><span class='rest'>Rest</span><span></span><span></span>"}</div>
-   <div id="${day}_${s.id}_rows">${(s.exercises||[]).map((x,j)=>exerciseRow(day,s,j,x)).join("")}</div>
- `}
- <div class="label">Session instructions</div><textarea id="${day}_${s.id}_instructions">${esc(s.instructions||"")}</textarea>
- <div class="label">Coach notes</div><textarea id="${day}_${s.id}_notes">${esc(s.notes||"")}</textarea>
- <button class="btn full" onclick="saveSession('${day}','${s.id}',true)">Save Session ${i+1}</button></div>`;
-}
+function changeSessionType(day,id){const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.type=document.getElementById(`${day}_${id}_type`)?.value||"";persist();renderPlanner()}
+function sessionEditor(day,s,i){const carnival=s.type==="Carnival";return `<div class="sessionCard"><div class="row"><b>SESSION ${i+1}</b><button class="btn red" onclick="removeSession('${day}','${s.id}')">Remove</button></div><div class="grid2"><div><div class="label">Session title</div><input id="${day}_${s.id}_title" value="${esc(s.title)}" placeholder="${carnival?"Carnival":""}"></div><div><div class="label">Type</div><select id="${day}_${s.id}_type" onchange="changeSessionType('${day}','${s.id}')">${["","Gym","Erg","Boat","Cycling","Running","Carnival","Recovery","Rest"].map(x=>`<option ${s.type===x?"selected":""}>${x}</option>`).join("")}</select></div></div>${carnival?`<div class="carnivalBox"><div class="grid2"><div><div class="label">Carnival location</div><input id="${day}_${s.id}_carnivalLocation" value="${esc(s.carnivalLocation||"")}" placeholder="e.g. Freshwater"></div><div><div class="label">Carnival type</div><select id="${day}_${s.id}_carnivalType">${["Local Premiership","State Selection","Branch","ASRL","State","Aussies","Other"].map(x=>`<option ${s.carnivalType===x?"selected":""}>${x}</option>`).join("")}</select></div></div></div>`:`<div class="row" style="margin-top:12px"><h3>${isCardio(s.type)?"Cardio Builder":"Workout Builder"}</h3><button class="btn secondary" onclick="addExercise('${day}','${s.id}')">+ Add</button></div><div class="builderRow builderHead">${isCardio(s.type)?"<span>Piece</span><span>Time</span><span>Target Pace</span><span class='rest'>Rest</span><span>Sets</span><span></span>":"<span>Exercise</span><span>Sets</span><span>Reps</span><span class='rest'>Rest</span><span></span><span></span>"}</div><div id="${day}_${s.id}_rows">${(s.exercises||[]).map((x,j)=>exerciseRow(day,s,j,x)).join("")}</div>`}<div class="label">Session instructions</div><textarea id="${day}_${s.id}_instructions">${esc(s.instructions||"")}</textarea><div class="label">Coach notes</div><textarea id="${day}_${s.id}_notes">${esc(s.notes||"")}</textarea><button class="btn full" onclick="saveSession('${day}','${s.id}',true)">Save Session ${i+1}</button></div>`}
 function exerciseRow(day,s,j,x){const c=isCardio(s.type);return `<div class="builderRow"><input data-f="name" value="${esc(x.name||"")}" placeholder="${c?"4 x 1km":"Back Squat"}"><input data-f="a" value="${esc(x.a||"")}" placeholder="${c?"Time":"Sets"}"><input data-f="b" value="${esc(x.b||"")}" placeholder="${c?"Pace":"Reps"}"><input class="rest" data-f="c" value="${esc(x.c||"")}" placeholder="Rest">${c?`<input data-f="d" value="${esc(x.d||"")}" placeholder="Sets">`:`<input data-f="d" type="hidden" value=""><span></span>`}<button class="btn red" onclick="removeExercise('${day}','${s.id}',${j})">×</button></div>`}
 function addExercise(day,id){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.push({name:"",a:"",b:"",c:"",d:""});saveRender()}
 function removeExercise(day,id,j){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.splice(j,1);saveRender()}
-function saveSession(day,id,notify=true){
-  const s=data.days[day].sessions.find(x=>x.id===id); if(!s)return;
-  s.title=document.getElementById(`${day}_${id}_title`)?.value ?? s.title;
-  s.type=document.getElementById(`${day}_${id}_type`)?.value ?? s.type;
-  s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value ?? s.instructions;
-  s.notes=document.getElementById(`${day}_${id}_notes`)?.value ?? s.notes;
-  if(s.type==="Carnival"){
-    s.carnivalLocation=document.getElementById(`${day}_${id}_carnivalLocation`)?.value ?? s.carnivalLocation ?? "";
-    s.carnivalType=document.getElementById(`${day}_${id}_carnivalType`)?.value ?? s.carnivalType ?? "Premiership";
-    s.exercises=[];
-  }
-  const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];
-  s.exercises=rows.map(r=>{
-    let o={};
-    r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
-    return o;
-  });
-  persist();
-  syncCoachCloud(false);
-  renderDashboard();
-  if(notify) alert(`${day} Session saved`);
-}
+function saveSession(day,id,notify=true){const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.title=document.getElementById(`${day}_${id}_title`)?.value??s.title;s.type=document.getElementById(`${day}_${id}_type`)?.value??s.type;s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value??s.instructions;s.notes=document.getElementById(`${day}_${id}_notes`)?.value??s.notes;if(s.type==="Carnival"){s.carnivalLocation=document.getElementById(`${day}_${id}_carnivalLocation`)?.value??s.carnivalLocation??"";s.carnivalType=document.getElementById(`${day}_${id}_carnivalType`)?.value??s.carnivalType??"Premiership";s.exercises=[]}const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];s.exercises=rows.map(r=>{let o={};r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);return o});persist();syncCoachCloud(false);renderDashboard();if(notify)alert(`${day} Session saved`)}
 function snapshot(){return JSON.parse(JSON.stringify({meta:data.meta,days:data.days}))}
-
-function createNextWeekFromCurrent(){
-  const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;
-  let x=data.archive.find(a=>a.key===currentKey);
-  if(!x){
-    const ok=confirm("This week is not saved in History yet. Save / Archive it first?");
-    if(!ok)return;
-    archiveCurrentWeek();
-    return;
-  }
-  createNextWeek(currentKey);
-}
-function saveAllVisibleSessions(){
-  DAYS.forEach(day=>{
-    (data.days[day]?.sessions||[]).forEach(s=>{
-      const title=document.getElementById(`${day}_${s.id}_title`);
-      const type=document.getElementById(`${day}_${s.id}_type`);
-      const instructions=document.getElementById(`${day}_${s.id}_instructions`);
-      const notes=document.getElementById(`${day}_${s.id}_notes`);
-      if(title) s.title=title.value;
-      if(type) s.type=type.value;
-      if(instructions) s.instructions=instructions.value;
-      if(notes) s.notes=notes.value;
-      if(s.type==="Carnival"){
-        const carnivalLocationEl=document.getElementById(`${day}_${s.id}_carnivalLocation`);
-        const carnivalTypeEl=document.getElementById(`${day}_${s.id}_carnivalType`);
-        if(carnivalLocationEl)s.carnivalLocation=carnivalLocationEl.value;
-        if(carnivalTypeEl)s.carnivalType=carnivalTypeEl.value;
-        s.exercises=[];
-      }
-      const rows=[...(document.getElementById(`${day}_${s.id}_rows`)?.children||[])];
-      if(rows.length){
-        s.exercises=rows.map(r=>{
-          let o={};
-          r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
-          return o;
-        });
-      }
-    });
-  });
-}
-function archiveCurrentWeek(){
-  saveAllVisibleSessions();
-  const seasonEl=document.getElementById("season");
-  const blockNameEl=document.getElementById("blockName");
-  const blockNoEl=document.getElementById("blockNo");
-  const weekNoEl=document.getElementById("weekNo");
-  const weekDateEl=document.getElementById("weekDate");
-  const weekNameEl=document.getElementById("weekName");
-  data.meta={
-    season:seasonEl?.value?.trim()||data.meta.season||"",
-    blockName:blockNameEl?.value?.trim()||data.meta.blockName||"",
-    blockNo:+(blockNoEl?.value||data.meta.blockNo||1),
-    weekNo:+(weekNoEl?.value||data.meta.weekNo||1),
-    date:weekDateEl?.value||data.meta.date||"",
-    name:weekNameEl?.value?.trim()||`Block ${+(blockNoEl?.value||data.meta.blockNo||1)} - Week ${+(weekNoEl?.value||data.meta.weekNo||1)}`
-  };
-  const snap=snapshot();
-  const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;
-  data.archive=data.archive.filter(x=>x.key!==key);
-  data.archive.push({key,savedAt:new Date().toISOString(),...snap});
-  persist();
-  syncCoachCloud(false);
-  renderAll();
-  alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);
-  nav("programs");
-}
-function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season && +x.meta.blockNo===+data.meta.blockNo && +x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
-
-function currentWeekSessionLogs(){
- return (data.sessionLogs||[]).filter(l=>l.season===data.meta.season&&+l.blockNo===+data.meta.blockNo&&+l.weekNo===+data.meta.weekNo);
-}
-function sessionLogLabel(l){
- if(l.type==="Carnival")return `🏁 ${l.carnivalResult||"Result"}`;
- return `✅ ${l.sessionTitle||l.type||"Session"}`;
-}
-function sessionLogDetailHtml(l){
- if(l.type==="Carnival"){
-   return `<div class="resultDetail"><b>${esc(l.carnivalLocation||"Carnival")} — ${esc(l.carnivalType||"")}</b><div class="sub">Result: ${esc(l.carnivalResult||"")}${l.athleteNotes?" • "+esc(l.athleteNotes):""}</div></div>`;
- }
- return `<div class="resultDetail">${(l.results||[]).map(r=>`<div class="sub"><b>${esc(r.name||"")}</b>${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:6px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:5px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div>`;
-}
-function toggleWeeklyResultDetail(id){
- const el=document.getElementById(`weekly_detail_${id}`);if(!el)return;
- el.style.display=el.style.display==="none"?"block":"none";
-}
-function renderWeeklyResultsDashboard(){
- const el=document.getElementById("weeklyResultsDashboard");if(!el)return;
- const athletes=data.athletes||[];
- const logs=currentWeekSessionLogs();
- if(!athletes.length){el.innerHTML='<div class="card empty">No athletes added yet.</div>';return;}
- const days=DAYS;
- const rows=athletes.map(a=>{
-   const cells=days.map(day=>{
-     const dayLogs=logs.filter(l=>l.athleteId===a.id&&l.day===day).sort((x,y)=>(x.savedAt||0)-(y.savedAt||0));
-     if(!dayLogs.length)return `<div class="weekCell"><span class="mini">—</span></div>`;
-     return `<div class="weekCell ${dayLogs.some(l=>l.type==="Carnival")?"carnival":"done"}">${dayLogs.map(l=>`<button onclick="toggleWeeklyResultDetail('${l.id}')"><b>${sessionLogLabel(l)}</b></button><div id="weekly_detail_${l.id}" style="display:none">${sessionLogDetailHtml(l)}</div>`).join("")}</div>`;
-   }).join("");
-   return `<div class="weekResultsRow"><div class="weekCell"><b>${esc(a.name)}</b><div class="mini">${esc(a.squad||"")}</div></div>${cells}</div>`;
- }).join("");
- el.innerHTML=`<div class="card"><div class="row"><div><h2>Current Week Results</h2><div class="sub">${esc(data.meta.season||"")} • Block ${data.meta.blockNo||""} • Week ${data.meta.weekNo||""}</div></div><span class="badge green">${logs.length} RESULT${logs.length===1?"":"S"}</span></div><div class="weekResultsWrap"><div class="weekResultsTable"><div class="weekResultsRow weekResultsHead"><div>Athlete</div>${days.map(d=>`<div>${d.slice(0,3)}</div>`).join("")}</div>${rows}</div></div></div>`;
-}
-function renderHistory(){
-const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});
-const historyEl=document.getElementById("history");
-if(!historyEl)return;
-historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button><button class="btn green" onclick="createNextWeek('${x.key}')">Create Next Week</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
-}
-
-function blankDays(){
-  return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
-}
-function createNextWeek(key){
-  const x=data.archive.find(a=>a.key===key);
-  if(!x)return;
-  const nextWeek=(+x.meta.weekNo||1)+1;
-  const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);
-  data.meta={
-    season:x.meta.season,
-    blockName:x.meta.blockName,
-    blockNo:+x.meta.blockNo||1,
-    weekNo:nextWeek,
-    date:"",
-    name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`
-  };
-  data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();
-  persist();
-  renderAll();
-  nav("planner");
-  alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`);
-}
+function createNextWeekFromCurrent(){const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;let x=data.archive.find(a=>a.key===currentKey);if(!x){const ok=confirm("This week is not saved in History yet. Save / Archive it first?");if(!ok)return;archiveCurrentWeek();return}createNextWeek(currentKey)}
+function saveAllVisibleSessions(){DAYS.forEach(day=>{(data.days[day]?.sessions||[]).forEach(s=>{const title=document.getElementById(`${day}_${s.id}_title`);const type=document.getElementById(`${day}_${s.id}_type`);const instructions=document.getElementById(`${day}_${s.id}_instructions`);const notes=document.getElementById(`${day}_${s.id}_notes`);if(title)s.title=title.value;if(type)s.type=type.value;if(instructions)s.instructions=instructions.value;if(notes)s.notes=notes.value;if(s.type==="Carnival"){const carnivalLocationEl=document.getElementById(`${day}_${s.id}_carnivalLocation`);const carnivalTypeEl=document.getElementById(`${day}_${s.id}_carnivalType`);if(carnivalLocationEl)s.carnivalLocation=carnivalLocationEl.value;if(carnivalTypeEl)s.carnivalType=carnivalTypeEl.value;s.exercises=[]}const rows=[...(document.getElementById(`${day}_${s.id}_rows`)?.children||[])];if(rows.length){s.exercises=rows.map(r=>{let o={};r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);return o})}})})}
+function archiveCurrentWeek(){saveAllVisibleSessions();const seasonEl=document.getElementById("season"),blockNameEl=document.getElementById("blockName"),blockNoEl=document.getElementById("blockNo"),weekNoEl=document.getElementById("weekNo"),weekDateEl=document.getElementById("weekDate"),weekNameEl=document.getElementById("weekName");data.meta={season:seasonEl?.value?.trim()||data.meta.season||"",blockName:blockNameEl?.value?.trim()||data.meta.blockName||"",blockNo:+(blockNoEl?.value||data.meta.blockNo||1),weekNo:+(weekNoEl?.value||data.meta.weekNo||1),date:weekDateEl?.value||data.meta.date||"",name:weekNameEl?.value?.trim()||`Block ${+(blockNoEl?.value||data.meta.blockNo||1)} - Week ${+(weekNoEl?.value||data.meta.weekNo||1)}`};const snap=snapshot();const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;data.archive=data.archive.filter(x=>x.key!==key);data.archive.push({key,savedAt:new Date().toISOString(),...snap});persist();syncCoachCloud(false);renderAll();alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);nav("programs")}
+function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season&&+x.meta.blockNo===+data.meta.blockNo&&+x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
+function currentWeekSessionLogs(){return(data.sessionLogs||[]).filter(l=>l.season===data.meta.season&&+l.blockNo===+data.meta.blockNo&&+l.weekNo===+data.meta.weekNo)}
+function sessionLogLabel(l){if(l.type==="Carnival")return`🏁 ${l.carnivalResult||"Result"}`;return`✅ ${l.sessionTitle||l.type||"Session"}`}
+function sessionLogDetailHtml(l){if(l.type==="Carnival")return`<div class="resultDetail"><b>${esc(l.carnivalLocation||"Carnival")} — ${esc(l.carnivalType||"")}</b><div class="sub">Result: ${esc(l.carnivalResult||"")}${l.athleteNotes?" • "+esc(l.athleteNotes):""}</div></div>`;return `<div class="resultDetail">${(l.results||[]).map(r=>`<div class="sub"><b>${esc(r.name||"")}</b>${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:6px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:5px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div>`}
+function toggleWeeklyResultDetail(id){const el=document.getElementById(`weekly_detail_${id}`);if(!el)return;el.style.display=el.style.display==="none"?"block":"none"}
+function renderWeeklyResultsDashboard(){const el=document.getElementById("weeklyResultsDashboard");if(!el)return;const athletes=data.athletes||[];const logs=currentWeekSessionLogs();if(!athletes.length){el.innerHTML='<div class="card empty">No athletes added yet.</div>';return}const days=DAYS;const rows=athletes.map(a=>{const cells=days.map(day=>{const dayLogs=logs.filter(l=>l.athleteId===a.id&&l.day===day).sort((x,y)=>(x.savedAt||0)-(y.savedAt||0));if(!dayLogs.length)return`<div class="weekCell"><span class="mini">—</span></div>`;return`<div class="weekCell ${dayLogs.some(l=>l.type==="Carnival")?"carnival":"done"}">${dayLogs.map(l=>`<button onclick="toggleWeeklyResultDetail('${l.id}')"><b>${sessionLogLabel(l)}</b></button><div id="weekly_detail_${l.id}" style="display:none">${sessionLogDetailHtml(l)}</div>`).join("")}</div>`}).join("");return`<div class="weekResultsRow"><div class="weekCell"><b>${esc(a.name)}</b><div class="mini">${esc(a.squad||"")}</div></div>${cells}</div>`}).join("");el.innerHTML=`<div class="card"><div class="row"><div><h2>Current Week Results</h2><div class="sub">${esc(data.meta.season||"")} • Block ${data.meta.blockNo||""} • Week ${data.meta.weekNo||""}</div></div><span class="badge green">${logs.length} RESULT${logs.length===1?"":"S"}</span></div><div class="weekResultsWrap"><div class="weekResultsTable"><div class="weekResultsRow weekResultsHead"><div>Athlete</div>${days.map(d=>`<div>${d.slice(0,3)}</div>`).join("")}</div>${rows}</div></div></div>`}
+function renderHistory(){const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});const historyEl=document.getElementById("history");if(!historyEl)return;historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button><button class="btn green" onclick="createNextWeek('${x.key}')">Create Next Week</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>'}
+function blankDays(){return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]))}
+function createNextWeek(key){const x=data.archive.find(a=>a.key===key);if(!x)return;const nextWeek=(+x.meta.weekNo||1)+1;const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);data.meta={season:x.meta.season,blockName:x.meta.blockName,blockNo:+x.meta.blockNo||1,weekNo:nextWeek,date:"",name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`};data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();persist();renderAll();nav("planner");alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`)}
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
 function duplicateBlock(seas,bn){const arr=data.archive.filter(x=>x.meta.season===seas&&+x.meta.blockNo===+bn);if(!arr.length)return;const newSeason=prompt("New season name:",seas)||seas;const newBlock=+(prompt("New block number:",String(bn))||bn);arr.forEach(x=>{const y=JSON.parse(JSON.stringify(x));y.meta.season=newSeason;y.meta.blockNo=newBlock;y.key=`${newSeason}|${newBlock}|${y.meta.weekNo}`;y.savedAt=new Date().toISOString();data.archive=data.archive.filter(a=>a.key!==y.key);data.archive.push(y)});persist();renderAll();alert("Block duplicated")}
-
 const API="/api";
-async function saveCoachCloudKey(){
-  const v=document.getElementById("coachCloudKey")?.value.trim();
-  if(!v)return alert("Enter the coach key first.");
-  localStorage.setItem("robsCoachKey",v);
-  const st=document.getElementById("cloudStatus"); if(st)st.textContent="Connecting to Coach Cloud…";
-  const loaded=await loadCoachCloud(false);
-  if(st)st.textContent=loaded?"Coach Cloud connected and latest program loaded.":"Coach key saved, but latest program could not be loaded.";
-}
-async function loadCoachCloud(notify=false){
-  const key=localStorage.getItem("robsCoachKey");
-  if(!key){if(notify)alert("Enter the Coach key in Settings first.");return false;}
-  try{
-    const r=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key}});
-    if(!r.ok)throw new Error(await r.text());
-    const j=await r.json();
-    if(!j.data)throw new Error("No coach program found");
-    data=j.data;
-    if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;
-    if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;
-    if(!data.archive)data.archive=[];
-    if(!data.checkins)data.checkins=[];
-    if(!data.sessionLogs)data.sessionLogs=[];
-    if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));
-    if(!data.testResults)data.testResults=[];
-    DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});
-    persist();
-    renderAll();
-    await refreshCoachCloud(false);
-    const st=document.getElementById("cloudStatus");if(st)st.textContent="Latest Coach program loaded from cloud.";
-    if(notify)alert("Latest Coach program loaded.");
-    return true;
-  }catch(e){
-    console.error(e);
-    const st=document.getElementById("cloudStatus");if(st)st.textContent="Could not load Coach Cloud.";
-    if(notify)alert("Could not load the Coach program. Check the Coach key and internet connection.");
-    return false;
-  }
-}
-async function syncCoachCloud(notify=false){
-  const key=localStorage.getItem("robsCoachKey"); if(!key)return false;
-  try{
-    const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data})});
-    if(!r.ok)throw new Error(await r.text());
-    if(notify)alert("Coach program synced online.");
-    return true;
-  }catch(e){console.error(e); if(notify)alert("Cloud sync failed. Check the Coach key in Settings."); return false;}
-}
-async function shareAthlete(id){
-  const a=data.athletes.find(x=>x.id===id); if(!a)return;
-  const key=localStorage.getItem("robsCoachKey");
-  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
-  await syncCoachCloud(false);
-  try{
-    const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});
-    if(!r.ok)throw new Error(await r.text());
-    const j=await r.json();
-    const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);
-    if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link});}
-    else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.");}
-    else prompt("Copy this athlete link:",link);
-  }catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.");}
-}
-async function submitAthleteCloud(kind,payload){
-  const token=new URLSearchParams(location.search).get("athlete"); if(!token)return;
-  try{await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload})});}catch(e){console.error(e)}
-}
-function configureAthleteNavigation(){
-  const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]');
-  const desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]');
-  const desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]');
-  document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");
-  if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training";}
-  if(desktopTesting)desktopTesting.style.display="";
-  if(desktopCheckin)desktopCheckin.style.display="";
-  const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]');
-  const mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]');
-  const mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]');
-  document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");
-  if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training";}
-  if(mobileTesting)mobileTesting.style.display="block";
-  if(mobileCheckin)mobileCheckin.style.display="block";
-  const bar=document.querySelector('.mobilebar');if(bar)bar.style.gridTemplateColumns="repeat(3,1fr)";
-}
-async function loadAthleteInvite(token){
-  try{
-    const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token));
-    if(!r.ok)throw new Error(await r.text());
-    const j=await r.json();
-    data=j.data;
-    data.athletes=[j.athlete];
-    data.checkins=[];
-    data.sessionLogs=[];
-    data.testResults=[];
-    if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));
-    activeAthlete=j.athlete.id;
-    coachMode=false;
-    configureAthleteNavigation();
-    if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
-    if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
-    renderAll(); nav("training");
-  }catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`;}
-}
+async function saveCoachCloudKey(){const v=document.getElementById("coachCloudKey")?.value.trim();if(!v)return alert("Enter the coach key first.");localStorage.setItem("robsCoachKey",v);const st=document.getElementById("cloudStatus");if(st)st.textContent="Connecting to Coach Cloud…";const loaded=await loadCoachCloud(false);if(st)st.textContent=loaded?"Coach Cloud connected and latest program loaded.":"Coach key saved, but latest program could not be loaded."}
+async function loadCoachCloud(notify=false){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify)alert("Enter the Coach key in Settings first.");return false}try{const r=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key}});if(!r.ok)throw new Error(await r.text());const j=await r.json();if(!j.data)throw new Error("No coach program found");if(j.updatedAt&&j.updatedAt===lastCloudUpdatedAt&&!notify)return true;lastCloudUpdatedAt=j.updatedAt||lastCloudUpdatedAt;data=j.data;if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});persist();renderAll();await refreshCoachCloud(false);const st=document.getElementById("cloudStatus");if(st)st.textContent="Latest Coach program loaded from cloud.";if(notify)alert("Latest Coach program loaded.");return true}catch(e){console.error(e);const st=document.getElementById("cloudStatus");if(st)st.textContent="Could not load Coach Cloud.";if(notify)alert("Could not load the Coach program. Check the Coach key and internet connection.");return false}}
+async function syncCoachCloud(notify=false){const key=localStorage.getItem("robsCoachKey");if(!key)return false;try{const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data})});if(!r.ok)throw new Error(await r.text());if(notify)alert("Coach program synced online.");return true}catch(e){console.error(e);if(notify)alert("Cloud sync failed. Check the Coach key in Settings.");return false}}
+async function shareAthlete(id){const a=data.athletes.find(x=>x.id===id);if(!a)return;const key=localStorage.getItem("robsCoachKey");if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return}await syncCoachCloud(false);try{const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});if(!r.ok)throw new Error(await r.text());const j=await r.json();const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link})}else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.")}else prompt("Copy this athlete link:",link)}catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.")}}
+async function submitAthleteCloud(kind,payload){const token=new URLSearchParams(location.search).get("athlete");if(!token)return;try{await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload})})}catch(e){console.error(e)}}
+function configureAthleteNavigation(){const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]'),desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]'),desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]');document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training"}if(desktopTesting)desktopTesting.style.display="";if(desktopCheckin)desktopCheckin.style.display="";const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]'),mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]'),mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]');document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training"}if(mobileTesting)mobileTesting.style.display="block";if(mobileCheckin)mobileCheckin.style.display="block";const bar=document.querySelector('.mobilebar');if(bar)bar.style.gridTemplateColumns="repeat(3,1fr)"}
+async function loadAthleteInvite(token){try{const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token));if(!r.ok)throw new Error(await r.text());const j=await r.json();data=j.data;data.athletes=[j.athlete];data.checkins=[];data.sessionLogs=[];data.testResults=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));activeAthlete=j.athlete.id;coachMode=false;configureAthleteNavigation();if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";if(typeof modeBtn!=="undefined")modeBtn.style.display="none";renderAll();nav("training")}catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`}}
 function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
 function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
 function removeAthlete(id){data.athletes=data.athletes.filter(a=>a.id!==id);saveRender();syncCoachCloud(false)}
-function renderCheckin(){
-checkinAthletePicker.style.display=coachMode?"":"none";
-checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
-if(!activeAthlete){if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML='<div class="card empty">Select an athlete to view training.</div>';checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the check-in.</div>';return}
-const athleteSessionHtml = DAYS.map(day=>{
-  const ss=data.days[day].sessions||[];
-  if(!ss.length) return "";
-  return `<div class="card"><h2>${day}</h2>${ss.map(sess=>athleteSessionLogger(day,sess)).join("")}</div>`;
-}).join("");
-if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';
-checkinForm.innerHTML=`<div class="card"><h2>Monday Weekly Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}
-<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div>
-<div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div>
-<div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`
-}
-function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select>`;else if(q.type==="ratingnote")input=`<div class="grid2"><select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select><input id="${p}${i}_note" placeholder="Optional soreness / niggle note"></div>`;else if(q.type==="focus")input=`<select id="${p}${i}">${["Starts","Power","Rating","Rhythm","Timing","Runs / Finishes","Fitness","Strength","Recovery","Communication","Other"].map(x=>`<option>${x}</option>`).join("")}</select>`;else input=`<textarea id="${p}${i}"></textarea>`;return `<div class="question"><b>${i+1}. ${esc(q.q)}</b><div class="answerbox">${input}</div></div>`}
-
-function athleteSessionLogger(day,s){
- if(s.type==="Carnival"){
-   return `<div class="sessionCard">
-     <div class="row"><div><b>🏁 ${esc(s.carnivalLocation||s.title||"Carnival")}</b><div class="sub">${esc(s.carnivalType||"Carnival")}</div></div></div>
-     ${s.instructions?`<div class="notice" style="margin-top:10px">${esc(s.instructions)}</div>`:""}
-     ${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}
-     <div class="carnivalBox">
-       <div class="label">Result</div><input id="carnivalResult_${day}_${s.id}" placeholder="e.g. 2nd">
-       <div class="label">Notes</div><textarea id="carnivalNotes_${day}_${s.id}" placeholder="Optional carnival notes"></textarea>
-       <button class="btn full green" onclick="saveCarnivalResult('${day}','${s.id}')">Save Carnival Result</button>
-     </div>
-   </div>`;
- }
-
- const c=isCardio(s.type);
- const prior=latestPriorSessionForAthlete(activeAthlete,s);
- return `<div class="sessionCard">
- <div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>
- ${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}
- ${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}
- ${(s.exercises||[]).length?(s.exercises||[]).map((x,j)=>{
-   const previous=prior?.results?.[j]||{};
-   const substitution=`<div class="substituteBox">
-     <label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label>
-     <div id="subbox_${day}_${s.id}_${j}" style="display:none">
-       <div class="grid2">
-         <div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise / piece"></div>
-         <div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. injury / equipment unavailable"></div>
-       </div>
-     </div>
-   </div>`;
-
-   if(c){
-     const sets=Math.max(1,parseInt(x.d)||1);
-     const oldSets=previous.sets||[];
-     return `<div class="question">
-       <b>${esc(x.name||("Piece "+(j+1)))}</b>
-       <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} ${x.a?"• "+esc(x.a)+" each":""} ${x.b?"• Target split "+esc(x.b):""} ${x.c?"• Rest "+esc(x.c):""}</div>
-       <div class="scoreTable">
-         <div class="scoreRow scoreHead"><div>Set</div><div>Split / Pace</div><div>Metres</div><div>Rest</div><div>Done</div></div>
-         ${Array.from({length:sets},(_,k)=>{
-           const old=oldSets[k]||{};
-           return `<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}">
-             <div class="scoreSet">${k+1}</div>
-             <div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||x.b||"1:45.0"}"></div>
-             <div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"320"}"></div>
-             <div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div>
-             <div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div>
-           </div>`;
-         }).join("")}
-       </div>
-       ${substitution}
-     </div>`;
-   }
-
-   const sets=Math.max(1,parseInt(x.a)||1);
-   const oldWeights=previous.setWeights||[];
-   const oldReps=previous.setReps||[];
-   const oldRests=previous.setRests||[];
-   return `<div class="question">
-     <b>${esc(x.name||("Exercise "+(j+1)))}</b>
-     <div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
-     <div class="scoreTable">
-       <div class="scoreRow scoreHead"><div>Set</div><div>Weight</div><div>Reps</div><div>Rest</div><div>Done</div></div>
-       ${Array.from({length:sets},(_,k)=>`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}">
-         <div class="scoreSet">${k+1}</div>
-         <div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div>
-         <div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div>
-         <div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div>
-         <div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div>
-       </div>`).join("")}
-     </div>
-     ${substitution}
-   </div>`;
- }).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}
- <div class="card" style="margin-top:12px;padding:12px">
-   <h3>Session Summary</h3>
-   <div class="grid2" style="margin-top:8px">
-     <div><div class="label">Average Heart Rate (bpm)</div><input id="avghr_${day}_${s.id}" type="number" min="30" max="240" placeholder="e.g. 162"></div>
-     <div><div class="label">Session RPE (1–10)</div><input id="sessionrpe_${day}_${s.id}" type="number" min="1" max="10" placeholder="e.g. 8"></div>
-   </div>
-   <div class="label">Athlete session notes</div>
-   <textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea>
- </div>
- <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button>
- </div>`;
-}
-function toggleSubstitute(day,id,j){
- const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked;
- const box=document.getElementById(`subbox_${day}_${id}_${j}`);
- if(box)box.style.display=on?"block":"none";
-}
-
+function renderCheckin(){checkinAthletePicker.style.display=coachMode?"":"none";checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;if(!activeAthlete){if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML='<div class="card empty">Select an athlete to view training.</div>';checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the check-in.</div>';return}const athleteSessionHtml=DAYS.map(day=>{const ss=data.days[day].sessions||[];if(!ss.length)return"";return`<div class="card"><h2>${day}</h2>${ss.map(sess=>athleteSessionLogger(day,sess)).join("")}</div>`}).join("");if(typeof trainingSessions!=="undefined")trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';checkinForm.innerHTML=`<div class="card"><h2>Monday Weekly Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div><div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div><div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`}
+function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select>`;else if(q.type==="ratingnote")input=`<div class="grid2"><select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select><input id="${p}${i}_note" placeholder="Optional soreness / niggle note"></div>`;else if(q.type==="focus")input=`<select id="${p}${i}">${["Starts","Power","Rating","Rhythm","Timing","Runs / Finishes","Fitness","Strength","Recovery","Communication","Other"].map(x=>`<option>${x}</option>`).join("")}</select>`;else input=`<textarea id="${p}${i}"></textarea>`;return`<div class="question"><b>${i+1}. ${esc(q.q)}</b><div class="answerbox">${input}</div></div>`}
+function athleteSessionLogger(day,s){if(s.type==="Carnival"){return`<div class="sessionCard"><div class="row"><div><b>🏁 ${esc(s.carnivalLocation||s.title||"Carnival")}</b><div class="sub">${esc(s.carnivalType||"Carnival")}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px">${esc(s.instructions)}</div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}<div class="carnivalBox"><div class="label">Result</div><input id="carnivalResult_${day}_${s.id}" placeholder="e.g. 2nd"><div class="label">Notes</div><textarea id="carnivalNotes_${day}_${s.id}" placeholder="Optional carnival notes"></textarea><button class="btn full green" onclick="saveCarnivalResult('${day}','${s.id}')">Save Carnival Result</button></div></div>`}const c=isCardio(s.type),prior=latestPriorSessionForAthlete(activeAthlete,s);return`<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}${(s.exercises||[]).length?(s.exercises||[]).map((x,j)=>{const previous=prior?.results?.[j]||{},substitution=`<div class="substituteBox"><label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label><div id="subbox_${day}_${s.id}_${j}" style="display:none"><div class="grid2"><div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise / piece"></div><div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. injury / equipment unavailable"></div></div></div></div>`;if(c){const sets=Math.max(1,parseInt(x.d)||1),oldSets=previous.sets||[];return`<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b><div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} ${x.a?"• "+esc(x.a)+" each":""} ${x.b?"• Target split "+esc(x.b):""} ${x.c?"• Rest "+esc(x.c):""}</div><div class="scoreTable"><div class="scoreRow scoreHead"><div>Set</div><div>Split / Pace</div><div>Metres</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>{const old=oldSets[k]||{};return`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||x.b||"1:45.0"}"></div><div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"320"}"></div><div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`}).join("")}</div>${substitution}</div>`}const sets=Math.max(1,parseInt(x.a)||1),oldWeights=previous.setWeights||[],oldReps=previous.setReps||[],oldRests=previous.setRests||[];return`<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b><div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div><div class="scoreTable"><div class="scoreRow scoreHead"><div>Set</div><div>Weight</div><div>Reps</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div><div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div><div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`).join("")}</div>${substitution}</div>`}).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}<div class="card" style="margin-top:12px;padding:12px"><h3>Session Summary</h3><div class="grid2" style="margin-top:8px"><div><div class="label">Average Heart Rate (bpm)</div><input id="avghr_${day}_${s.id}" type="number" min="30" max="240" placeholder="e.g. 162"></div><div><div class="label">Session RPE (1–10)</div><input id="sessionrpe_${day}_${s.id}" type="number" min="1" max="10" placeholder="e.g. 8"></div></div><div class="label">Athlete session notes</div><textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea></div><button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button></div>`}
+function toggleSubstitute(day,id,j){const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked,box=document.getElementById(`subbox_${day}_${id}_${j}`);if(box)box.style.display=on?"block":"none"}
 const restTimers={};
-function parseRestSeconds(v){
- const t=String(v||"").trim().toLowerCase();
- if(!t)return 0;
- if(/^\d+:\d{1,2}$/.test(t)){const [m,sec]=t.split(":").map(Number);return m*60+sec;}
- if(/^\d+(\.\d+)?$/.test(t))return Math.round(Number(t));
- let total=0;
- const mm=t.match(/(\d+(?:\.\d+)?)\s*m/);const ss=t.match(/(\d+(?:\.\d+)?)\s*s/);
- if(mm)total+=Math.round(Number(mm[1])*60);if(ss)total+=Math.round(Number(ss[1]));
- return total;
-}
-function formatRestSeconds(n){
- n=Math.max(0,Math.round(n));return `${Math.floor(n/60)}:${String(n%60).padStart(2,"0")}`;
-}
-function completeSet(day,id,j,k,prescribedRest){
- const key=`${day}_${id}_${j}_${k}`;
- const btn=document.getElementById(`done_${key}`);
- const row=document.getElementById(`setrow_${key}`);
- const timer=document.getElementById(`timer_${key}`);
- if(!btn||!row||!timer)return;
-
- if(btn.classList.contains("done")){
-   btn.classList.remove("done");row.classList.remove("completed");timer.textContent="";timer.classList.remove("go");
-   if(restTimers[key]){clearInterval(restTimers[key]);delete restTimers[key];}
-   return;
- }
-
- btn.classList.add("done");row.classList.add("completed");
- const restInput=document.getElementById(`rest_${key}`)||document.getElementById(`grest_${key}`);
- const source=(restInput?.value||prescribedRest||restInput?.placeholder||"").trim();
- let remaining=parseRestSeconds(source);
- if(restTimers[key])clearInterval(restTimers[key]);
- if(remaining<=0){timer.textContent="DONE";return;}
- timer.textContent=`REST ${formatRestSeconds(remaining)}`;
- restTimers[key]=setInterval(()=>{
-   remaining--;
-   if(remaining<=0){
-     clearInterval(restTimers[key]);delete restTimers[key];
-     timer.textContent="GO";timer.classList.add("go");
-     if(navigator.vibrate)navigator.vibrate([120,80,120]);
-   }else timer.textContent=`REST ${formatRestSeconds(remaining)}`;
- },1000);
-}
-function saveCarnivalResult(day,id){
- if(!data.sessionLogs)data.sessionLogs=[];
- const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;
- const result=document.getElementById(`carnivalResult_${day}_${id}`)?.value.trim()||"";
- if(!result)return alert("Enter the carnival result.");
- const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||"Carnival",type:"Carnival",carnivalLocation:s.carnivalLocation||"",carnivalType:s.carnivalType||"",carnivalResult:result,athleteNotes:document.getElementById(`carnivalNotes_${day}_${id}`)?.value||"",results:[]};
- data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Carnival result saved");
-}
-
-function latestPriorSessionForAthlete(athleteId,s){
- const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===athleteId && l.sessionTitle===(s.title||s.type||"Session") && l.type===s.type);
- return logs.sort((a,b)=>b.savedAt-a.savedAt)[0]||null;
-}
-function saveAthleteSession(day,id){
- if(!data.sessionLogs)data.sessionLogs=[];
- const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;
- const c=isCardio(s.type);
-
- const results=(s.exercises||[]).map((x,j)=>{
-   const substituted=document.getElementById(`sub_${day}_${id}_${j}`)?.checked||false;
-   const base={
-     name:x.name||"",
-     substituted,
-     substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",
-     substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""
-   };
-
-   if(c){
-     const sets=Math.max(1,parseInt(x.d)||1);
-     return {...base,
-       prescribedTime:x.a||"",
-       prescribedSplit:x.b||"",
-       prescribedRest:x.c||"",
-       sets:Array.from({length:sets},(_,k)=>({
-         set:k+1,
-         split:document.getElementById(`split_${day}_${id}_${j}_${k}`)?.value||"",
-         meters:document.getElementById(`meters_${day}_${id}_${j}_${k}`)?.value||"",
-         rest:document.getElementById(`rest_${day}_${id}_${j}_${k}`)?.value||"",
-         completed:document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false
-       }))
-     };
-   }
-
-   const sets=Math.max(1,parseInt(x.a)||1);
-   return {...base,
-     prescribedReps:x.b||"",
-     prescribedRest:x.c||"",
-     setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),
-     setReps:Array.from({length:sets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||""),
-     setRests:Array.from({length:sets},(_,k)=>document.getElementById(`grest_${day}_${id}_${j}_${k}`)?.value||""),
-     setCompleted:Array.from({length:sets},(_,k)=>document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false)
-   };
- });
-
- const log={
-   id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,
-   season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,
-   day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,
-   avgHeartRate:document.getElementById(`avghr_${day}_${id}`)?.value||"",
-   sessionRpe:document.getElementById(`sessionrpe_${day}_${id}`)?.value||"",
-   athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",
-   results
- };
- data.sessionLogs.push(log);
- submitAthleteCloud("session",log);
- persist();
- alert("Session results saved");
-}
-function submitCheckin(){
-const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];const ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")
-}
-
-
-function addTestingItem(){
- if(!coachMode)return;
- const category=document.getElementById("testCategory")?.value||"Erg";
- const name=document.getElementById("testName")?.value.trim();
- if(!name)return alert("Enter a test name.");
- data.tests.push({id:"test_"+Date.now().toString(36),category,name,unit:document.getElementById("testUnit")?.value.trim()||"score",target:document.getElementById("testTarget")?.value.trim()||""});
- document.getElementById("testName").value="";document.getElementById("testUnit").value="";document.getElementById("testTarget").value="";
- persist();renderTesting();syncCoachCloud(false);
-}
-function removeTestingItem(id){
- if(!coachMode)return;
- if(!confirm("Remove this test? Existing athlete results will remain in history."))return;
- data.tests=data.tests.filter(t=>t.id!==id);persist();renderTesting();syncCoachCloud(false);
-}
-function latestTestResult(athleteId,testId){
- return (data.testResults||[]).filter(r=>r.athleteId===athleteId&&r.testId===testId).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))[0]||null;
-}
-function testingCard(t){
- const last=latestTestResult(activeAthlete,t.id);
- return `<div class="card"><div class="row"><div><span class="badge">${esc(t.category)}</span><h2 style="margin-top:8px">${esc(t.name)}</h2></div>${coachMode?`<button class="btn red" onclick="removeTestingItem('${t.id}')">Remove</button>`:""}</div>
- ${t.target?`<div class="sub">Coach target / notes: ${esc(t.target)}</div>`:""}
- ${coachMode?`<div class="mini" style="margin-top:10px">Unit: ${esc(t.unit||"score")}</div>`:
- `<div class="grid2" style="margin-top:10px"><div><div class="label">Your score (${esc(t.unit||"score")})</div><input id="testscore_${t.id}" placeholder="Enter result"></div><div><div class="label">Date</div><input id="testdate_${t.id}" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>
-  <div class="label">Notes</div><textarea id="testnote_${t.id}" placeholder="Optional notes"></textarea>
-  ${last?`<div class="mini">Previous: ${esc(last.score)} ${esc(t.unit||"")} • ${esc(last.date||"")}</div>`:""}
-  <button class="btn full green" style="margin-top:10px" onclick="saveTestResult('${t.id}')">Save Test Score</button>`}
- </div>`;
-}
-function renderTesting(){
- const setup=document.getElementById("coachTestingSetup"),content=document.getElementById("testingContent");
- if(!content)return;
- if(setup)setup.style.display=coachMode?"block":"none";
- const title=document.getElementById("testingTitle"),sub=document.getElementById("testingSub"),notice=document.getElementById("testingNotice");
- if(title)title.textContent=coachMode?"Testing":"My Testing";
- if(sub)sub.textContent=coachMode?"PERFORMANCE TESTING":"ATHLETE PERFORMANCE";
- if(notice)notice.textContent=coachMode?"Set Erg and Gym tests, then review athlete scores below.":"Enter your Erg and Gym testing scores. Your coach will see submitted results.";
- const tests=data.tests||[];
- if(coachMode){
-   const results=(data.testResults||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
-   const groups=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Tests</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests in this category.</div>'}</div>`).join("");
-   const history=results.length?`<div class="card"><h2>Latest Athlete Test Scores</h2>${results.map(r=>{const a=data.athletes.find(x=>x.id===r.athleteId);const t=tests.find(x=>x.id===r.testId);return `<div class="testResult"><b>${esc(a?.name||r.athleteName||"Athlete")} — ${esc(t?.name||r.testName||"Test")}</b><div class="sub">${esc(r.score)} ${esc(t?.unit||r.unit||"")} • ${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`}).join("")}</div>`:'<div class="card empty">No testing scores submitted yet.</div>';
-   content.innerHTML=groups+history;
- }else{
-   if(!activeAthlete){content.innerHTML='<div class="card empty">No athlete selected.</div>';return;}
-   content.innerHTML=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Testing</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests set by coach.</div>'}</div>`).join("");
- }
-}
-function saveTestResult(testId){
- if(!activeAthlete)return;
- const t=(data.tests||[]).find(x=>x.id===testId);if(!t)return;
- const score=document.getElementById(`testscore_${testId}`)?.value.trim();
- if(!score)return alert("Enter your test score.");
- const athlete=data.athletes.find(a=>a.id===activeAthlete);
- const result={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,athleteName:athlete?.name||"",testId,testName:t.name,category:t.category,unit:t.unit||"score",score,date:document.getElementById(`testdate_${testId}`)?.value||new Date().toISOString().slice(0,10),notes:document.getElementById(`testnote_${testId}`)?.value||""};
- data.testResults.push(result);submitAthleteCloud("test",result);persist();renderTesting();alert("Testing score saved");
-}
-
-async function refreshCoachCloud(notify=true){
-  const key=localStorage.getItem("robsCoachKey");
-  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
-  try{
-    const r=await fetch(API+"?action=coach-submissions",{headers:{"x-coach-key":key}});
-    if(!r.ok)throw new Error(await r.text());
-    const j=await r.json();
-    const items=j.items||[];
-    const remoteCheckins=items.filter(x=>x.kind==="checkin").map(x=>x.payload);
-    const remoteSessions=items.filter(x=>x.kind==="session").map(x=>x.payload);
-    const remoteTests=items.filter(x=>x.kind==="test").map(x=>x.payload);
-    const mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return [...m.values()]};
-    data.checkins=mergeUnique(data.checkins||[],remoteCheckins);
-    data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);
-    data.testResults=mergeUnique(data.testResults||[],remoteTests);
-    persist();renderTesting();renderWeeklyResultsDashboard();renderReview();if(notify)alert("Latest athlete results loaded.");
-  }catch(e){console.error(e);alert("Could not load athlete results. Check Coach Cloud in Settings.");}
-}
-function renderReview(){
-const logs=data.sessionLogs||[];
-const logEl=document.getElementById("sessionResults");
-if(logEl){
-  logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return `<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:5px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:4px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>';
-}
-if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
-const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
-const num=(idx)=>latest.map(c=>+c.weekly[idx]?.a).filter(n=>!isNaN(n));const avg=a=>a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):"—";
-summary.innerHTML=`<h2>Current Week Summary</h2><div class="grid4"><div class="stat"><span class="sub">Responses</span><b>${latest.length}</b></div><div class="stat"><span class="sub">Training</span><b>${avg(num(0))}</b></div><div class="stat"><span class="sub">Recovery</span><b>${avg(num(2))}</b></div><div class="stat"><span class="sub">Motivation</span><b>${avg(num(3))}</b></div></div>`;
-checkinHistory.innerHTML=data.checkins.slice().reverse().map(c=>{const body=+c.weekly[4]?.a<=4||+c.weekly[2]?.a<=4;return `<div class="card ${body?"flag":""}"><div class="row"><div><h2>${esc(c.athlete)}</h2><div class="sub">${esc(c.season)} • Block ${c.blockNo} Week ${c.weekNo} • ${c.date}</div></div>${body?'<span class="badge amber">CHECK RECOVERY</span>':'<span class="badge green">SUBMITTED</span>'}</div>${c.weekly.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}${x.note?" • "+esc(x.note):""}</div></div>`).join("")}${c.raced?`<h3 style="margin-top:14px">Competition Review</h3>${c.race.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}</div></div>`).join("")}`:""}</div>`}).join("")
-}
-function renderQuestionEditors(){
-weeklyQuestionEditor.innerHTML=data.weeklyQuestions.map((q,i)=>editorRow("weekly",q,i)).join("");raceQuestionEditor.innerHTML=data.raceQuestions.map((q,i)=>editorRow("race",q,i)).join("")
-}
-function editorRow(kind,q,i){return `<div class="question"><div class="grid2"><input value="${esc(q.q)}" onchange="editQuestion('${kind}',${i},this.value)"><select onchange="editQuestionType('${kind}',${i},this.value)">${["rating","ratingnote","text","focus"].map(t=>`<option ${q.type===t?"selected":""}>${t}</option>`).join("")}</select></div><div class="row" style="margin-top:8px"><button class="btn secondary" onclick="moveQuestion('${kind}',${i},-1)">↑</button><button class="btn secondary" onclick="moveQuestion('${kind}',${i},1)">↓</button><button class="btn red" onclick="deleteQuestion('${kind}',${i})">Delete</button></div></div>`}
+function parseRestSeconds(v){const t=String(v||"").trim().toLowerCase();if(!t)return 0;if(/^\d+:\d{1,2}$/.test(t)){const[m,sec]=t.split(":").map(Number);return m*60+sec}if(/^\d+(\.\d+)?$/.test(t))return Math.round(Number(t));let total=0;const mm=t.match(/(\d+(?:\.\d+)?)\s*m/),ss=t.match(/(\d+(?:\.\d+)?)\s*s/);if(mm)total+=Math.round(Number(mm[1])*60);if(ss)total+=Math.round(Number(ss[1]));return total}
+function formatRestSeconds(n){n=Math.max(0,Math.round(n));return`${Math.floor(n/60)}:${String(n%60).padStart(2,"0")}`}
+function completeSet(day,id,j,k,prescribedRest){const key=`${day}_${id}_${j}_${k}`,btn=document.getElementById(`done_${key}`),row=document.getElementById(`setrow_${key}`),timer=document.getElementById(`timer_${key}`);if(!btn||!row||!timer)return;if(btn.classList.contains("done")){btn.classList.remove("done");row.classList.remove("completed");timer.textContent="";timer.classList.remove("go");if(restTimers[key]){clearInterval(restTimers[key]);delete restTimers[key]}return}btn.classList.add("done");row.classList.add("completed");const restInput=document.getElementById(`rest_${key}`)||document.getElementById(`grest_${key}`),source=(restInput?.value||prescribedRest||restInput?.placeholder||"").trim();let remaining=parseRestSeconds(source);if(restTimers[key])clearInterval(restTimers[key]);if(remaining<=0){timer.textContent="DONE";return}timer.textContent=`REST ${formatRestSeconds(remaining)}`;restTimers[key]=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(restTimers[key]);delete restTimers[key];timer.textContent="GO";timer.classList.add("go");if(navigator.vibrate)navigator.vibrate([120,80,120])}else timer.textContent=`REST ${formatRestSeconds(remaining)}`},1000)}
+function saveCarnivalResult(day,id){if(!data.sessionLogs)data.sessionLogs=[];const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;const result=document.getElementById(`carnivalResult_${day}_${id}`)?.value.trim()||"";if(!result)return alert("Enter the carnival result.");const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||"Carnival",type:"Carnival",carnivalLocation:s.carnivalLocation||"",carnivalType:s.carnivalType||"",carnivalResult:result,athleteNotes:document.getElementById(`carnivalNotes_${day}_${id}`)?.value||"",results:[]};data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Carnival result saved")}
+function latestPriorSessionForAthlete(athleteId,s){const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===athleteId&&l.sessionTitle===(s.title||s.type||"Session")&&l.type===s.type);return logs.sort((a,b)=>b.savedAt-a.savedAt)[0]||null}
+function saveAthleteSession(day,id){if(!data.sessionLogs)data.sessionLogs=[];const s=data.days[day].sessions.find(x=>x.id===id);if(!s||!activeAthlete)return;const c=isCardio(s.type);const results=(s.exercises||[]).map((x,j)=>{const substituted=document.getElementById(`sub_${day}_${id}_${j}`)?.checked||false,base={name:x.name||"",substituted,substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""};if(c){const sets=Math.max(1,parseInt(x.d)||1);return{...base,prescribedTime:x.a||"",prescribedSplit:x.b||"",prescribedRest:x.c||"",sets:Array.from({length:sets},(_,k)=>({set:k+1,split:document.getElementById(`split_${day}_${id}_${j}_${k}`)?.value||"",meters:document.getElementById(`meters_${day}_${id}_${j}_${k}`)?.value||"",rest:document.getElementById(`rest_${day}_${id}_${j}_${k}`)?.value||"",completed:document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false}))}}const sets=Math.max(1,parseInt(x.a)||1);return{...base,prescribedReps:x.b||"",prescribedRest:x.c||"",setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),setReps:Array.from({length:sets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||""),setRests:Array.from({length:sets},(_,k)=>document.getElementById(`grest_${day}_${id}_${j}_${k}`)?.value||""),setCompleted:Array.from({length:sets},(_,k)=>document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false)}});const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,avgHeartRate:document.getElementById(`avghr_${day}_${id}`)?.value||"",sessionRpe:document.getElementById(`sessionrpe_${day}_${id}`)?.value||"",athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",results};data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Session results saved")}
+function submitCheckin(){const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""})),raced=document.getElementById("competed").value==="yes",ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[],ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")}
+function addTestingItem(){if(!coachMode)return;const category=document.getElementById("testCategory")?.value||"Erg",name=document.getElementById("testName")?.value.trim();if(!name)return alert("Enter a test name.");data.tests.push({id:"test_"+Date.now().toString(36),category,name,unit:document.getElementById("testUnit")?.value.trim()||"score",target:document.getElementById("testTarget")?.value.trim()||""});document.getElementById("testName").value="";document.getElementById("testUnit").value="";document.getElementById("testTarget").value="";persist();renderTesting();syncCoachCloud(false)}
+function removeTestingItem(id){if(!coachMode)return;if(!confirm("Remove this test? Existing athlete results will remain in history."))return;data.tests=data.tests.filter(t=>t.id!==id);persist();renderTesting();syncCoachCloud(false)}
+function latestTestResult(athleteId,testId){return(data.testResults||[]).filter(r=>r.athleteId===athleteId&&r.testId===testId).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))[0]||null}
+function testingCard(t){const last=latestTestResult(activeAthlete,t.id);return`<div class="card"><div class="row"><div><span class="badge">${esc(t.category)}</span><h2 style="margin-top:8px">${esc(t.name)}</h2></div>${coachMode?`<button class="btn red" onclick="removeTestingItem('${t.id}')">Remove</button>`:""}</div>${t.target?`<div class="sub">Coach target / notes: ${esc(t.target)}</div>`:""}${coachMode?`<div class="mini" style="margin-top:10px">Unit: ${esc(t.unit||"score")}</div>`:`<div class="grid2" style="margin-top:10px"><div><div class="label">Your score (${esc(t.unit||"score")})</div><input id="testscore_${t.id}" placeholder="Enter result"></div><div><div class="label">Date</div><input id="testdate_${t.id}" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div><div class="label">Notes</div><textarea id="testnote_${t.id}" placeholder="Optional notes"></textarea>${last?`<div class="mini">Previous: ${esc(last.score)} ${esc(t.unit||"")} • ${esc(last.date||"")}</div>`:""}<button class="btn full green" style="margin-top:10px" onclick="saveTestResult('${t.id}')">Save Test Score</button>`}</div>`}
+function renderTesting(){const setup=document.getElementById("coachTestingSetup"),content=document.getElementById("testingContent");if(!content)return;if(setup)setup.style.display=coachMode?"block":"none";const title=document.getElementById("testingTitle"),sub=document.getElementById("testingSub"),notice=document.getElementById("testingNotice");if(title)title.textContent=coachMode?"Testing":"My Testing";if(sub)sub.textContent=coachMode?"PERFORMANCE TESTING":"ATHLETE PERFORMANCE";if(notice)notice.textContent=coachMode?"Set Erg and Gym tests, then review athlete scores below.":"Enter your Erg and Gym testing scores. Your coach will see submitted results.";const tests=data.tests||[];if(coachMode){const results=(data.testResults||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));const groups=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Tests</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests in this category.</div>'}</div>`).join("");const history=results.length?`<div class="card"><h2>Latest Athlete Test Scores</h2>${results.map(r=>{const a=data.athletes.find(x=>x.id===r.athleteId),t=tests.find(x=>x.id===r.testId);return`<div class="testResult"><b>${esc(a?.name||r.athleteName||"Athlete")} — ${esc(t?.name||r.testName||"Test")}</b><div class="sub">${esc(r.score)} ${esc(t?.unit||r.unit||"")} • ${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`}).join("")}</div>`:'<div class="card empty">No testing scores submitted yet.</div>';content.innerHTML=groups+history}else{if(!activeAthlete){content.innerHTML='<div class="card empty">No athlete selected.</div>';return}content.innerHTML=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Testing</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests set by coach.</div>'}</div>`).join("")}}
+function saveTestResult(testId){if(!activeAthlete)return;const t=(data.tests||[]).find(x=>x.id===testId);if(!t)return;const score=document.getElementById(`testscore_${testId}`)?.value.trim();if(!score)return alert("Enter your test score.");const athlete=data.athletes.find(a=>a.id===activeAthlete),result={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,athleteName:athlete?.name||"",testId,testName:t.name,category:t.category,unit:t.unit||"score",score,date:document.getElementById(`testdate_${testId}`)?.value||new Date().toISOString().slice(0,10),notes:document.getElementById(`testnote_${testId}`)?.value||""};data.testResults.push(result);submitAthleteCloud("test",result);persist();renderTesting();alert("Testing score saved")}
+async function refreshCoachCloud(notify=true){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify){alert("Open Settings and connect Coach Cloud first.");nav("settings")}return}try{const r=await fetch(API+"?action=coach-submissions",{headers:{"x-coach-key":key}});if(!r.ok)throw new Error(await r.text());const j=await r.json(),items=j.items||[],remoteCheckins=items.filter(x=>x.kind==="checkin").map(x=>x.payload),remoteSessions=items.filter(x=>x.kind==="session").map(x=>x.payload),remoteTests=items.filter(x=>x.kind==="test").map(x=>x.payload),mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return[...m.values()]};data.checkins=mergeUnique(data.checkins||[],remoteCheckins);data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);data.testResults=mergeUnique(data.testResults||[],remoteTests);persist();renderTesting();renderWeeklyResultsDashboard();renderReview();if(notify)alert("Latest athlete results loaded.")}catch(e){console.error(e);if(notify)alert("Could not load athlete results. Check Coach Cloud in Settings.")}}
+function renderReview(){const logs=data.sessionLogs||[],logEl=document.getElementById("sessionResults");if(logEl){logEl.innerHTML=logs.length?`<div class="card"><h2>Training Results</h2>${logs.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(l=>{const ath=data.athletes.find(a=>a.id===l.athleteId)?.name||"Athlete";return`<div class="sessionline"><div><b>${esc(ath)} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""} • ${esc(l.day||"")}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:5px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:4px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div></div>`}).join("")}</div>`:'<div class="card empty">No athlete training results submitted yet.</div>'}if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo),num=idx=>latest.map(c=>+c.weekly[idx]?.a).filter(n=>!isNaN(n)),avg=a=>a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):"—";summary.innerHTML=`<h2>Current Week Summary</h2><div class="grid4"><div class="stat"><span class="sub">Responses</span><b>${latest.length}</b></div><div class="stat"><span class="sub">Training</span><b>${avg(num(0))}</b></div><div class="stat"><span class="sub">Recovery</span><b>${avg(num(2))}</b></div><div class="stat"><span class="sub">Motivation</span><b>${avg(num(3))}</b></div></div>`;checkinHistory.innerHTML=data.checkins.slice().reverse().map(c=>{const body=+c.weekly[4]?.a<=4||+c.weekly[2]?.a<=4;return`<div class="card ${body?"flag":""}"><div class="row"><div><h2>${esc(c.athlete)}</h2><div class="sub">${esc(c.season)} • Block ${c.blockNo} Week ${c.weekNo} • ${c.date}</div></div>${body?'<span class="badge amber">CHECK RECOVERY</span>':'<span class="badge green">SUBMITTED</span>'}</div>${c.weekly.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}${x.note?" • "+esc(x.note):""}</div></div>`).join("")}${c.raced?`<h3 style="margin-top:14px">Competition Review</h3>${c.race.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}</div></div>`).join("")}`:""}</div>`}).join("")}
+function renderQuestionEditors(){weeklyQuestionEditor.innerHTML=data.weeklyQuestions.map((q,i)=>editorRow("weekly",q,i)).join("");raceQuestionEditor.innerHTML=data.raceQuestions.map((q,i)=>editorRow("race",q,i)).join("")}
+function editorRow(kind,q,i){return`<div class="question"><div class="grid2"><input value="${esc(q.q)}" onchange="editQuestion('${kind}',${i},this.value)"><select onchange="editQuestionType('${kind}',${i},this.value)">${["rating","ratingnote","text","focus"].map(t=>`<option ${q.type===t?"selected":""}>${t}</option>`).join("")}</select></div><div class="row" style="margin-top:8px"><button class="btn secondary" onclick="moveQuestion('${kind}',${i},-1)">↑</button><button class="btn secondary" onclick="moveQuestion('${kind}',${i},1)">↓</button><button class="btn red" onclick="deleteQuestion('${kind}',${i})">Delete</button></div></div>`}
 function qarr(k){return k==="weekly"?data.weeklyQuestions:data.raceQuestions}function editQuestion(k,i,v){qarr(k)[i].q=v;persist();syncCoachCloud(false)}function editQuestionType(k,i,v){qarr(k)[i].type=v;saveRender()}function deleteQuestion(k,i){qarr(k).splice(i,1);saveRender()}function moveQuestion(k,i,d){const a=qarr(k),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];saveRender()}function addWeeklyQuestion(){data.weeklyQuestions.push({q:"New weekly question",type:"text"});saveRender()}function addRaceQuestion(){data.raceQuestions.push({q:"New racing question",type:"text"});saveRender()}
 function exportData(){importBox.value=JSON.stringify(data,null,2);navigator.clipboard?.writeText(importBox.value);alert("Backup copied")}
 function importData(){try{data=JSON.parse(importBox.value);persist();syncCoachCloud(false);renderAll();alert("Imported")}catch(e){alert("Invalid backup")}}
 renderAll();
 const savedCloudKey=localStorage.getItem("robsCoachKey");
-if(savedCloudKey && document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device.";}
+if(savedCloudKey&&document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device."}
 const inviteToken=new URLSearchParams(location.search).get("athlete");
-if(inviteToken)loadAthleteInvite(inviteToken);
-else if(savedCloudKey)loadCoachCloud(false);
+if(inviteToken)loadAthleteInvite(inviteToken);else if(savedCloudKey)loadCoachCloud(false);
+
+async function backgroundCoachCloudSync(){
+  if(cloudSyncBusy||inviteToken||!coachMode||document.hidden)return;
+  const key=localStorage.getItem("robsCoachKey");if(!key)return;
+  const active=document.activeElement;
+  if(active&&["INPUT","TEXTAREA","SELECT"].includes(active.tagName))return;
+  cloudSyncBusy=true;
+  try{await loadCoachCloud(false);}finally{cloudSyncBusy=false;}
+}
+if(!inviteToken&&savedCloudKey){
+  setInterval(backgroundCoachCloudSync,15000);
+  window.addEventListener("focus",backgroundCoachCloudSync);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)backgroundCoachCloudSync();});
+}
 </script>
 </body>
 </html>
