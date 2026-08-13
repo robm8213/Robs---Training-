@@ -71,7 +71,7 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 
 <section id="planner" class="screen">
 <div class="sub">PROGRAM BUILDER</div><h1>Weekly Planner</h1>
-<div class="notice">Save the week under a season, block and week number. Changes you type here are now automatically saved to Coach Cloud and will appear on your other Coach Mode devices.</div>
+<div class="notice">Save the week under a season, block and week number. Changes save on this device while you work. In Settings, use PUSH THIS DEVICE TO COACH CLOUD on the device with the correct program, then LOAD LATEST COACH CLOUD PROGRAM on your other devices.</div>
 <div class="card">
 <div class="grid2">
 <div><div class="label">Season</div><input id="season" placeholder="2026/27"></div>
@@ -157,7 +157,9 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
   <div class="label" style="margin-top:12px">Coach key</div>
   <input id="coachCloudKey" type="password" placeholder="Enter coach key">
   <button class="btn full green" style="margin-top:10px" onclick="saveCoachCloudKey()">Connect Coach Cloud</button>
-  <button class="btn full secondary" style="margin-top:8px" onclick="loadCoachCloud(true)">Refresh Coach Program</button>
+  <button class="btn full green" style="margin-top:8px" onclick="pushThisDeviceToCloud()">PUSH THIS DEVICE TO COACH CLOUD</button>
+<button class="btn full secondary" style="margin-top:8px" onclick="loadCoachCloud(true)">LOAD LATEST COACH CLOUD PROGRAM</button>
+<div class="sub" id="syncDetail" style="margin-top:8px">Use PUSH on the device with the correct program. Use LOAD on your other devices.</div>
   <div id="cloudStatus" class="sub" style="margin-top:8px"></div>
 </div>
 <div class="sub">APP SETUP</div><h1>Settings</h1>
@@ -289,7 +291,40 @@ function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return
 function duplicateBlock(seas,bn){const arr=data.archive.filter(x=>x.meta.season===seas&&+x.meta.blockNo===+bn);if(!arr.length)return;const newSeason=prompt("New season name:",seas)||seas;const newBlock=+(prompt("New block number:",String(bn))||bn);arr.forEach(x=>{const y=JSON.parse(JSON.stringify(x));y.meta.season=newSeason;y.meta.blockNo=newBlock;y.key=`${newSeason}|${newBlock}|${y.meta.weekNo}`;y.savedAt=new Date().toISOString();data.archive=data.archive.filter(a=>a.key!==y.key);data.archive.push(y)});persist();renderAll();alert("Block duplicated")}
 const API="/api";
 async function saveCoachCloudKey(){const v=document.getElementById("coachCloudKey")?.value.trim();if(!v)return alert("Enter the coach key first.");localStorage.setItem("robsCoachKey",v);const st=document.getElementById("cloudStatus");if(st)st.textContent="Connecting to Coach Cloud…";const loaded=await loadCoachCloud(false);if(st)st.textContent=loaded?"Coach Cloud connected and latest program loaded.":"Coach key saved, but latest program could not be loaded."}
-async function loadCoachCloud(notify=false){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify)alert("Enter the Coach key in Settings first.");return false}try{const r=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key}});if(!r.ok)throw new Error(await r.text());const j=await r.json();if(!j.data)throw new Error("No coach program found");if(j.updatedAt&&j.updatedAt===lastCloudUpdatedAt&&!notify)return true;lastCloudUpdatedAt=j.updatedAt||lastCloudUpdatedAt;data=j.data;if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});persist();renderAll();await refreshCoachCloud(false);const st=document.getElementById("cloudStatus");if(st)st.textContent="Latest Coach program loaded from cloud.";if(notify)alert("Latest Coach program loaded.");return true}catch(e){console.error(e);const st=document.getElementById("cloudStatus");if(st)st.textContent="Could not load Coach Cloud.";if(notify)alert("Could not load the Coach program. Check the Coach key and internet connection.");return false}}
+async function pushThisDeviceToCloud(){
+  const key=localStorage.getItem("robsCoachKey");
+  if(!key){alert("Enter and save the Coach key first.");return false}
+  if(document.getElementById("planner")?.classList.contains("active"))savePlannerDraftToData();
+  persist();
+  const st=document.getElementById("cloudStatus"),detail=document.getElementById("syncDetail");
+  if(st)st.textContent="Pushing this device to Coach Cloud…";
+  try{
+    const r=await fetch(API+"?action=coach-sync",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-coach-key":key},
+      body:JSON.stringify({data})
+    });
+    if(!r.ok)throw new Error(await r.text());
+    const verify=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key},"cache":"no-store"});
+    if(!verify.ok)throw new Error(await verify.text());
+    const j=await verify.json();
+    const localCount=DAYS.reduce((n,d)=>n+(data.days[d]?.sessions||[]).reduce((m,s)=>m+(s.exercises||[]).length,0),0);
+    const cloudCount=DAYS.reduce((n,d)=>n+(j.data?.days?.[d]?.sessions||[]).reduce((m,s)=>m+(s.exercises||[]).length,0),0);
+    if(localCount!==cloudCount)throw new Error(`Verification mismatch: device ${localCount}, cloud ${cloudCount}`);
+    lastCloudUpdatedAt=j.updatedAt||"";
+    if(st)st.textContent="This device is now the Coach Cloud master.";
+    if(detail)detail.textContent=`Verified: ${cloudCount} exercises in Coach Cloud • ${j.updatedAt?new Date(j.updatedAt).toLocaleString():"just now"}`;
+    alert(`Coach Cloud updated successfully. Verified ${cloudCount} exercises.`);
+    return true;
+  }catch(e){
+    console.error(e);
+    if(st)st.textContent="Coach Cloud push failed — this device was not replaced.";
+    if(detail)detail.textContent=String(e.message||e);
+    alert("Cloud push failed. Your program on this device has NOT been replaced.");
+    return false;
+  }
+}
+async function loadCoachCloud(notify=false){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify)alert("Enter the Coach key in Settings first.");return false}try{const r=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key},"cache":"no-store"});if(!r.ok)throw new Error(await r.text());const j=await r.json();if(!j.data)throw new Error("No coach program found");if(j.updatedAt&&j.updatedAt===lastCloudUpdatedAt&&!notify)return true;lastCloudUpdatedAt=j.updatedAt||lastCloudUpdatedAt;data=j.data;if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});persist();renderAll();await refreshCoachCloud(false);const st=document.getElementById("cloudStatus");if(st)st.textContent="Latest Coach program loaded from cloud.";if(notify)alert("Latest Coach program loaded.");return true}catch(e){console.error(e);const st=document.getElementById("cloudStatus");if(st)st.textContent="Could not load Coach Cloud.";if(notify)alert("Could not load the Coach program. Check the Coach key and internet connection.");return false}}
 async function syncCoachCloud(notify=false,keepalive=false){const key=localStorage.getItem("robsCoachKey");if(!key)return false;try{const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data}),keepalive});if(!r.ok)throw new Error(await r.text());lastCloudUpdatedAt="";if(notify)alert("Coach program synced online.");return true}catch(e){console.error(e);if(notify)alert("Cloud sync failed. Check the Coach key in Settings.");return false}}
 async function shareAthlete(id){const a=data.athletes.find(x=>x.id===id);if(!a)return;const key=localStorage.getItem("robsCoachKey");if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return}await syncCoachCloud(false);try{const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});if(!r.ok)throw new Error(await r.text());const j=await r.json();const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link})}else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.")}else prompt("Copy this athlete link:",link)}catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.")}}
 async function submitAthleteCloud(kind,payload){const token=new URLSearchParams(location.search).get("athlete");if(!token)return;try{await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload})})}catch(e){console.error(e)}}
@@ -387,17 +422,9 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden&&document.g
 const savedCloudKey=localStorage.getItem("robsCoachKey");
 if(savedCloudKey&&document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device."}
 const inviteToken=new URLSearchParams(location.search).get("athlete");
-if(inviteToken)loadAthleteInvite(inviteToken);else if(savedCloudKey)loadCoachCloud(false);
+if(inviteToken)loadAthleteInvite(inviteToken);else if(savedCloudKey){const st=document.getElementById("cloudStatus");if(st)st.textContent="Coach key saved. This device has NOT auto-loaded cloud data."; }
 
-async function backgroundCoachCloudSync(){
-  if(cloudSyncBusy||inviteToken||!coachMode||document.hidden)return;
-  const key=localStorage.getItem("robsCoachKey");if(!key)return;
-  const active=document.activeElement;
-  if(active&&["INPUT","TEXTAREA","SELECT"].includes(active.tagName))return;
-  if(document.getElementById("planner")?.classList.contains("active"))return;
-  cloudSyncBusy=true;
-  try{await loadCoachCloud(false);}finally{cloudSyncBusy=false;}
-}
+async function backgroundCoachCloudSync(){return false}
 if(!inviteToken&&savedCloudKey){
   setInterval(backgroundCoachCloudSync,15000);
   window.addEventListener("focus",backgroundCoachCloudSync);
