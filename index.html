@@ -221,6 +221,24 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 .cardioSessionSummaryStat b{display:block;font-size:21px;margin-top:3px}
 .cardioSessionSummaryFoot{font-size:10px;color:#8fa2b2;text-align:center;margin-top:8px}
 
+
+/* ===== IOS SCORE INPUT ZOOM FIX ===== */
+@media(max-width:760px){
+  .scoreCell input{
+    font-size:16px !important;
+    min-width:0;
+    width:100%;
+    padding:8px 5px;
+  }
+  .scoreRow{
+    width:100%;
+    max-width:100%;
+    grid-template-columns:38px minmax(0,1.12fr) minmax(0,.86fr) minmax(0,.86fr) 48px;
+    gap:4px;
+  }
+  .scoreCell,.scoreSet,.doneBtn{min-width:0}
+}
+
 </style>
 </head>
 <body>
