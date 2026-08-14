@@ -295,6 +295,21 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
   .mobilebar button[data-screen="weeksahead"] span{font-size:18px}
 }
 
+
+/* ===== COACH TRAINING BLOCK FOLDERS ===== */
+.coachHistoryBlock{border:1px solid #294052;border-radius:16px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:12px 0;overflow:hidden}
+.coachHistoryBlockBtn,.coachHistoryWeekBtn{width:100%;border:0;background:none;color:var(--txt);display:flex;justify-content:space-between;align-items:center;text-align:left;cursor:pointer}
+.coachHistoryBlockBtn{padding:18px 16px}.coachHistoryBlockTitle{font-size:22px;font-weight:1000}
+.coachHistoryBlockBody{display:none;padding:0 12px 12px}.coachHistoryBlock.open>.coachHistoryBlockBody{display:block}
+.coachHistoryBlockActions{display:flex;justify-content:flex-end;padding:10px 2px 4px}
+.coachHistoryWeek{border:1px solid var(--line);border-radius:13px;background:#0b1a24;margin:9px 0;overflow:hidden}
+.coachHistoryWeekBtn{padding:14px 15px}
+.coachHistoryWeekBody{display:none;padding:0 12px 12px}.coachHistoryWeek.open>.coachHistoryWeekBody{display:block}
+.coachHistoryWeekActions{display:flex;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--line)}
+.coachHistoryBlock>.coachHistoryBlockBtn .folderChev,.coachHistoryWeek>.coachHistoryWeekBtn .folderChev{transition:transform .2s ease}
+.coachHistoryBlock.open>.coachHistoryBlockBtn .folderChev,.coachHistoryWeek.open>.coachHistoryWeekBtn .folderChev{transform:rotate(90deg)}
+@media(max-width:760px){.coachHistoryWeekActions .btn{flex:1 1 100%}}
+
 </style>
 </head>
 <body>
@@ -743,7 +758,63 @@ function renderWeeklyResultsDashboard(){
  }).join("")
 }
 function toggleFolder(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==="none"?"block":"none"}
-function renderHistory(){const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});const historyEl=document.getElementById("history");if(!historyEl)return;historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button><button class="btn green" onclick="createNextWeek('${x.key}')">Create Next Week</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>'}
+
+function renderHistory(){
+ const historyEl=document.getElementById("history");if(!historyEl)return;
+ const groups={};
+ (data.archive||[]).forEach(x=>{
+   const season=x.meta?.season||"",block=Number(x.meta?.blockNo)||1,name=x.meta?.blockName||"";
+   const key=`${season}|${block}|${name}`;
+   (groups[key]??=[]).push(x);
+ });
+ const entries=Object.entries(groups).sort(([,a],[,b])=>{
+   const aa=a[0]?.meta||{},bb=b[0]?.meta||{};
+   return String(aa.season||"").localeCompare(String(bb.season||""))||(Number(aa.blockNo)||1)-(Number(bb.blockNo)||1);
+ });
+ if(!entries.length){
+   historyEl.innerHTML='<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
+   return;
+ }
+ historyEl.innerHTML=entries.map(([key,arr],bi)=>{
+   arr.sort((a,b)=>(Number(a.meta?.weekNo)||1)-(Number(b.meta?.weekNo)||1));
+   const meta=arr[0]?.meta||{},block=Number(meta.blockNo)||1,season=meta.season||"",blockName=meta.blockName||"";
+   const bid=`coachBlock_${bi}`;
+   return `<div class="coachHistoryBlock" id="${bid}">
+     <button class="coachHistoryBlockBtn" type="button" onclick="toggleCoachHistoryFolder('${bid}')">
+       <div>
+         <div class="coachHistoryBlockTitle">BLOCK ${block}</div>
+         <div class="sub">${esc(season)}${blockName?` • ${esc(blockName)}`:""} • ${arr.length} saved week${arr.length===1?"":"s"}</div>
+       </div>
+       <span class="folderChev">›</span>
+     </button>
+     <div class="coachHistoryBlockBody">
+       <div class="coachHistoryBlockActions">
+         <button class="btn secondary" onclick="duplicateBlock('${String(season).replace(/'/g,"\\'")}',${block})">Duplicate Block</button>
+       </div>
+       ${arr.map((x,wi)=>{
+         const wid=`coachBlock_${bi}_week_${wi}`,d=parseWeekDate(x.meta?.date),dateRange=d?formatUpcomingRange(d):"Date not set";
+         return `<div class="coachHistoryWeek" id="${wid}">
+           <button class="coachHistoryWeekBtn" type="button" onclick="toggleCoachHistoryFolder('${wid}')">
+             <div><b>WEEK ${Number(x.meta?.weekNo)||wi+1}</b><div class="sub">${dateRange}${x.meta?.name?` • ${esc(x.meta.name)}`:""}</div></div>
+             <span class="folderChev">›</span>
+           </button>
+           <div class="coachHistoryWeekBody">
+             <div class="coachHistoryWeekActions">
+               <button class="btn secondary" onclick="loadArchive('${String(x.key).replace(/'/g,"\\'")}')">Load</button>
+               <button class="btn" onclick="copyArchive('${String(x.key).replace(/'/g,"\\'")}')">Copy to Current</button>
+               <button class="btn green" onclick="createNextWeek('${String(x.key).replace(/'/g,"\\'")}')">Create Next Week</button>
+             </div>
+           </div>
+         </div>`;
+       }).join("")}
+     </div>
+   </div>`;
+ }).join("");
+}
+function toggleCoachHistoryFolder(id){
+ const el=document.getElementById(id);if(el)el.classList.toggle("open");
+}
+
 function blankDays(){return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]))}
 function createNextWeek(key){const x=data.archive.find(a=>a.key===key);if(!x)return;const nextWeek=(+x.meta.weekNo||1)+1;const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);data.meta={season:x.meta.season,blockName:x.meta.blockName,blockNo:+x.meta.blockNo||1,weekNo:nextWeek,date:"",name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`};data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();persist();renderAll();nav("planner");alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`)}
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
