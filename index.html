@@ -259,6 +259,24 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 .carnivalCoachGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:760px){.carnivalCoachGrid{grid-template-columns:1fr}.mobilebar.carnivalAthleteBar{grid-template-columns:repeat(4,1fr)!important}}
 
+
+/* ===== ATHLETE UPCOMING TRAINING ===== */
+.upcomingTrainingWrap{margin-top:22px}
+.upcomingTrainingHead{margin:0 0 10px}
+.upcomingWeek{border:1px solid #294052;border-radius:15px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:10px 0;overflow:hidden}
+.upcomingWeekBtn{width:100%;border:0;background:none;color:var(--txt);padding:15px 16px;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer}
+.upcomingWeekTitle{font-size:18px;font-weight:1000}
+.upcomingWeekDate{font-size:11px;color:var(--mut);margin-top:4px}
+.upcomingWeekBody{display:none;padding:0 14px 14px}
+.upcomingWeek.open .upcomingWeekBody{display:block}
+.upcomingWeek .folderChev{transition:transform .2s ease}
+.upcomingWeek.open .folderChev{transform:rotate(90deg)}
+.upcomingDay{display:grid;grid-template-columns:92px 1fr;gap:10px;border-top:1px solid var(--line);padding:10px 2px}
+.upcomingDay:first-child{border-top:0}
+.upcomingDayName{font-weight:900;font-size:12px}
+.upcomingDaySessions{font-size:12px;color:#c4d3df}
+@media(max-width:420px){.upcomingDay{grid-template-columns:78px 1fr}}
+
 </style>
 </head>
 <body>
@@ -332,7 +350,7 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
+<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div><div id="upcomingTraining"></div></section>
 
 <section id="checkin" class="screen">
 <div class="sub">ATHLETE WELLNESS & FEEDBACK</div><h1>Weekly Athlete Check-In</h1>
@@ -826,6 +844,48 @@ function athleteDaySummary(day){
   if(!ss.length)return "Rest / No Session";
   return ss.map(s=>s.title||s.type||"Session").join(" • ");
 }
+
+function formatUpcomingRange(start){
+ if(!start)return"Date not set";
+ const end=new Date(start);end.setDate(end.getDate()+6);
+ const sameMonth=start.getMonth()===end.getMonth();
+ const startTxt=start.toLocaleDateString("en-AU",{day:"numeric",month:sameMonth?undefined:"short"});
+ const endTxt=end.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
+ return `${startTxt}–${endTxt}`.toUpperCase();
+}
+function futureTrainingSnapshots(){
+ const all=allProgramSnapshots();
+ const current=currentTrainingSnapshot(),currentStart=inferredWeekStart(current,all);
+ if(!currentStart)return[];
+ const currentKey=snapshotKey(current.meta);
+ return all.map(x=>({...x,_start:inferredWeekStart(x,all)}))
+   .filter(x=>x._start&&x._start>currentStart&&snapshotKey(x.meta)!==currentKey)
+   .filter(x=>DAYS.some(d=>(x.days?.[d]?.sessions||[]).length))
+   .sort((a,b)=>a._start-b._start);
+}
+function toggleUpcomingWeek(id){
+ const el=document.getElementById(id);if(el)el.classList.toggle("open");
+}
+function upcomingSessionLabel(s){
+ if(!s)return"";
+ if(["Erg Testing","Weight Testing"].includes(s.type)){
+   const tests=(s.testItems||[]).map(t=>t.name).filter(Boolean);
+   return tests.length?`${s.title||s.type} — ${tests.join(", ")}`:(s.title||s.type);
+ }
+ if(s.type==="Carnival")return s.carnivalType?`${s.title||"Carnival"} — ${s.carnivalType}`:(s.title||"Carnival");
+ return s.title||s.type||"Session";
+}
+function renderUpcomingTraining(){
+ const el=document.getElementById("upcomingTraining");if(!el)return;
+ if(coachMode){el.innerHTML="";return}
+ const future=futureTrainingSnapshots();
+ if(!future.length){el.innerHTML="";return}
+ el.innerHTML=`<div class="upcomingTrainingWrap"><div class="sub upcomingTrainingHead">UPCOMING TRAINING</div><h2 style="font-size:24px;margin-bottom:4px">Weeks Ahead</h2><div class="sub" style="margin-bottom:12px">View only — see what the coach has programmed ahead.</div>${future.map((w,i)=>{
+   const id=`futureWeek_${i}`,block=Number(w.meta?.blockNo)||1,week=Number(w.meta?.weekNo)||1;
+   return `<div class="upcomingWeek" id="${id}"><button type="button" class="upcomingWeekBtn" onclick="toggleUpcomingWeek('${id}')"><div><div class="upcomingWeekTitle">BLOCK ${block} • WEEK ${week}</div><div class="upcomingWeekDate">${formatUpcomingRange(w._start)}</div></div><span class="folderChev">›</span></button><div class="upcomingWeekBody">${DAYS.map(d=>{const ss=w.days?.[d]?.sessions||[];return `<div class="upcomingDay"><div class="upcomingDayName">${d.toUpperCase()}</div><div class="upcomingDaySessions">${ss.length?ss.map(upcomingSessionLabel).map(esc).join(" • "):"Rest / No Session"}</div></div>`}).join("")}</div></div>`;
+ }).join("")}</div>`;
+}
+
 function renderCheckin(){
   const live=currentTrainingSnapshot();
   const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");
@@ -856,6 +916,7 @@ function renderCheckin(){
   if(typeof trainingSessions!=="undefined"){
     trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';
   }
+  renderUpcomingTraining();
 
   if(!activeAthlete){
     checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the weekly check-in.</div>';
