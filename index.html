@@ -685,7 +685,7 @@ function renderCheckin(){
   const athleteSessionHtml=DAYS.map(day=>{
     const ss=live.days?.[day]?.sessions||[];
     const open=activeTrainingDay===day;
-    return `<div class="athleteDayCard ${open?"open":""}" id="athleteDay_${day}">
+    return `<div class="athleteDayCard" id="athleteDay_${day}">
       <button class="athleteDayToggle" type="button" onclick="toggleTrainingDay('${day}')">
         <div>
           <div class="dayTitle">${day}</div>
