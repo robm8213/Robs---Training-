@@ -984,6 +984,19 @@ if(!inviteToken&&savedCloudKey){
   window.addEventListener("focus",backgroundCoachCloudSync);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)backgroundCoachCloudSync();});
 }
+
+document.addEventListener("input",function(e){
+  const id=e.target?.id||"";
+  if(!id.startsWith("split_")&&!id.startsWith("meters_"))return;
+  document.querySelectorAll(".cardioSessionSummary[id^='cardioSummary_']").forEach(box=>{
+    const key=box.id.replace("cardioSummary_","");
+    if(id.startsWith("split_"+key+"_")||id.startsWith("meters_"+key+"_")){
+      const cut=key.indexOf("_");
+      if(cut>0)updateCardioSessionSummary(key.slice(0,cut),key.slice(cut+1));
+    }
+  });
+});
+
 </script>
 </body>
 </html>
