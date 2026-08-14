@@ -65,11 +65,7 @@ if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,40
       if(!q.rowCount) return send(res,404,{error:"Invite unavailable"});
       const st=await pool.query(`select data from app_state where id='master'`);
       if(!st.rowCount) return send(res,404,{error:"Program not synced yet"});
-      const a=q.rows[0];
-      return send(res,200,{
-        athlete:{id:a.athlete_id,name:a.athlete_name,squad:a.squad},
-        data:st.rows[0].data
-      });
+     const a=q.rows[0];const hist=await pool.query(`select kind,payload,created_at from athlete_submissions where athlete_id=$1 order by created_at desc limit 500`,[a.athlete_id]);return send(res,200,{athlete:{id:a.athlete_id,name:a.athlete_name,squad:a.squad},data:st.rows[0].data,history:hist.rows});
     }
 
     if(action==="athlete-submit" && req.method==="POST"){
