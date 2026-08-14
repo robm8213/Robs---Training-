@@ -322,6 +322,14 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 .specialCoachNote b{display:block;margin-bottom:6px}
 .athleteDayCard:has(.specialAthleteSession){border-color:#2b5d86}
 
+
+/* ===== SUNDAY NEXT-WEEK ATHLETE PREVIEW ===== */
+.sundayPreviewNotice{margin:10px 0 14px;padding:13px 14px;border:1px solid #2b6da5;border-radius:13px;background:linear-gradient(180deg,#102a40,#0b1b29);color:#dcecf8}
+.sundayPreviewNotice b{display:block;color:#58aaff;margin-bottom:5px;font-size:13px;letter-spacing:.5px}
+.sundayPreviewNotice div{font-size:12px;line-height:1.45}
+.sundayPreviewMode .athleteDayBody input:disabled,.sundayPreviewMode .athleteDayBody textarea:disabled,.sundayPreviewMode .athleteDayBody select:disabled{opacity:.78}
+.sundayPreviewMode .athleteDayBody button:disabled{opacity:.45}
+
 </style>
 </head>
 <body>
@@ -563,6 +571,26 @@ function currentTrainingSnapshot(){
   const chosen=started[0]||dated.sort((a,b)=>a._start-b._start)[0];
   return chosen||{meta:data.meta,days:data.days,source:"editor"};
 }
+
+function athleteTrainingSnapshot(){
+ const current=currentTrainingSnapshot();
+ if(coachMode)return current;
+ const now=new Date();
+ if(now.getDay()!==0)return current; // Sunday only
+ const all=allProgramSnapshots();
+ const currentStart=inferredWeekStart(current,all);
+ if(!currentStart)return current;
+ const nextStart=new Date(currentStart);nextStart.setDate(nextStart.getDate()+7);
+ const dated=all.map(x=>({...x,_start:inferredWeekStart(x,all)}))
+   .filter(x=>x._start&&x._start.getTime()===nextStart.getTime())
+   .filter(x=>DAYS.some(d=>(x.days?.[d]?.sessions||[]).length));
+ return dated[0]||current;
+}
+function isSundayNextWeekPreview(snapshot){
+ if(coachMode||new Date().getDay()!==0)return false;
+ return snapshotKey(snapshot?.meta)!==snapshotKey(currentTrainingSnapshot().meta);
+}
+
 function isPlanningAhead(){
   return snapshotKey(currentTrainingSnapshot().meta)!==snapshotKey(data.meta);
 }
@@ -1010,7 +1038,7 @@ function toggleTrainingDay(day){
 }
 
 function weeklySessionDate(day){
- const live=currentTrainingSnapshot(),start=parseWeekDate(live.meta?.date);
+ const live=window.__athleteTrainingLive||currentTrainingSnapshot(),start=parseWeekDate(live.meta?.date);
  if(!start)return"";
  const d=new Date(start);d.setDate(d.getDate()+Math.max(0,DAYS.indexOf(day)));
  return d.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).toUpperCase();
@@ -1022,7 +1050,7 @@ function weeklySpecialSessionMeta(s){
 }
 
 function athleteDaySummary(day){
-  const live=currentTrainingSnapshot();
+  const live=window.__athleteTrainingLive||currentTrainingSnapshot();
   const ss=live.days?.[day]?.sessions||[];
   if(!ss.length)return "Rest / No Session";
   return ss.map(s=>{
@@ -1093,11 +1121,14 @@ function renderWeeksAhead(){
  }).join("");
 }
 function renderCheckin(){
-  const live=currentTrainingSnapshot();
+  const currentLive=currentTrainingSnapshot();
+  const live=athleteTrainingSnapshot();
+  window.__athleteTrainingLive=live;
+  const sundayPreview=isSundayNextWeekPreview(live);
   const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");
   if(athleteWeekIdentity)athleteWeekIdentity.innerHTML=weekIdentityHtml(live.meta);
   const athletePreviewNotice=document.getElementById("athletePreviewNotice");
-  if(athletePreviewNotice)athletePreviewNotice.innerHTML=!activeAthlete&&!coachMode?'<div class="sub" style="margin:0 0 10px">Previewing the current training week. Athlete-specific results save when an athlete opens their personal link.</div>':"";
+  if(athletePreviewNotice)athletePreviewNotice.innerHTML=sundayPreview?`<div class="sundayPreviewNotice"><b>👀 NEXT WEEK PREVIEW</b><div>Starting Monday • View only today. Your coach may still update session times or details before Monday.</div></div>`:(!activeAthlete&&!coachMode?'<div class="sub" style="margin:0 0 10px">Previewing the current training week. Athlete-specific results save when an athlete opens their personal link.</div>':"");
 
   checkinAthletePicker.style.display=coachMode?"":"none";
   checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
@@ -1121,6 +1152,10 @@ function renderCheckin(){
 
   if(typeof trainingSessions!=="undefined"){
     trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';
+    trainingSessions.classList.toggle("sundayPreviewMode",sundayPreview);
+    if(sundayPreview){
+      trainingSessions.querySelectorAll(".athleteDayBody input,.athleteDayBody textarea,.athleteDayBody select,.athleteDayBody button").forEach(el=>{el.disabled=true});
+    }
   }
 
 
