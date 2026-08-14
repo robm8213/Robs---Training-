@@ -288,6 +288,13 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 .aheadBlock>.aheadBlockBtn .folderChev,.aheadWeek>.aheadWeekBtn .folderChev{transition:transform .2s ease}
 .aheadBlock.open>.aheadBlockBtn .folderChev,.aheadWeek.open>.aheadWeekBtn .folderChev{transform:rotate(90deg)}
 
+
+/* ===== FIVE ATHLETE MOBILE TABS ===== */
+@media(max-width:760px){
+  .mobilebar button[data-screen="weeksahead"]{font-size:9px}
+  .mobilebar button[data-screen="weeksahead"] span{font-size:18px}
+}
+
 </style>
 </head>
 <body>
@@ -793,7 +800,33 @@ async function loadCoachCloud(notify=false){const key=localStorage.getItem("robs
 async function syncCoachCloud(notify=false,keepalive=false,force=false){const key=localStorage.getItem("robsCoachKey");if(!key)return false;if(!force&&coachDeviceRole()!=="master")return false;try{const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data}),keepalive});if(!r.ok)throw new Error(await r.text());lastCloudUpdatedAt="";const st=document.getElementById("cloudStatus");if(st)st.textContent="Master device synced to Coach Cloud.";if(notify)alert("Coach program synced online.");return true}catch(e){console.error(e);if(notify)alert("Cloud sync failed. Check the Coach key in Settings.");return false}}
 async function shareAthlete(id){const a=data.athletes.find(x=>x.id===id);if(!a)return;const key=localStorage.getItem("robsCoachKey");if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return}await syncCoachCloud(false);try{const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});if(!r.ok)throw new Error(await r.text());const j=await r.json();const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link})}else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.")}else prompt("Copy this athlete link:",link)}catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.")}}
 async function submitAthleteCloud(kind,payload){const token=new URLSearchParams(location.search).get("athlete");if(!token)return false;try{const r=await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload}),cache:"no-store"});if(!r.ok)throw new Error(await r.text());return true}catch(e){console.error(e);return false}}
-function configureAthleteNavigation(){const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]'),desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]'),desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]'),desktopCarnivals=document.querySelector('.sidebar .navbtn[data-screen="carnivals"]');document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training"}if(desktopTesting)desktopTesting.style.display="";if(desktopCheckin)desktopCheckin.style.display="";if(desktopCarnivals)desktopCarnivals.style.display="";const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]'),mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]'),mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]'),mobileCarnivals=document.querySelector('.mobilebar button[data-screen="carnivals"]');document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training"}if(mobileTesting)mobileTesting.style.display="block";if(mobileCheckin)mobileCheckin.style.display="block";if(mobileCarnivals)mobileCarnivals.style.display="block";const bar=document.querySelector('.mobilebar');if(bar){bar.style.gridTemplateColumns="repeat(4,1fr)";bar.classList.add("carnivalAthleteBar")}}
+function configureAthleteNavigation(){
+ const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]'),
+ desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]'),
+ desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]'),
+ desktopWeeksAhead=document.querySelector('.sidebar .navbtn[data-screen="weeksahead"]'),
+ desktopCarnivals=document.querySelector('.sidebar .navbtn[data-screen="carnivals"]');
+ document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");
+ if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training"}
+ if(desktopTesting)desktopTesting.style.display="";
+ if(desktopCheckin)desktopCheckin.style.display="";
+ if(desktopWeeksAhead)desktopWeeksAhead.style.display="";
+ if(desktopCarnivals)desktopCarnivals.style.display="";
+
+ const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]'),
+ mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]'),
+ mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]'),
+ mobileWeeksAhead=document.querySelector('.mobilebar button[data-screen="weeksahead"]'),
+ mobileCarnivals=document.querySelector('.mobilebar button[data-screen="carnivals"]');
+ document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");
+ if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training"}
+ if(mobileTesting)mobileTesting.style.display="block";
+ if(mobileCheckin)mobileCheckin.style.display="block";
+ if(mobileWeeksAhead)mobileWeeksAhead.style.display="block";
+ if(mobileCarnivals)mobileCarnivals.style.display="block";
+ const bar=document.querySelector('.mobilebar');
+ if(bar){bar.style.gridTemplateColumns="repeat(5,1fr)";bar.classList.add("carnivalAthleteBar")}
+}
 let athleteAccessTimer=null;
 async function validateAthleteAccess(){
   const token=new URLSearchParams(location.search).get("athlete");
