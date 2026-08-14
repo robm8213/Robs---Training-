@@ -615,7 +615,24 @@ plannerDays.innerHTML=DAYS.map(day=>`<div class="card day"><div class="row"><div
 function addSession(day){savePlannerDraftToData();data.days[day].sessions.push({id:Date.now()+"_"+Math.random().toString(36).slice(2),title:"",type:"",instructions:"",notes:"",exercises:[]});persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
 function removeSession(day,id){savePlannerDraftToData();data.days[day].sessions=data.days[day].sessions.filter(s=>s.id!==id);persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
 function isCardio(t){return ["Erg","Boat","Cycling","Running"].includes(t)}
-function changeSessionType(day,id){const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;savePlannerDraftToData();persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
+function changeSessionType(day,id){
+ const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;
+ const newType=document.getElementById(`${day}_${id}_type`)?.value||s.type;
+ savePlannerDraftToData();
+ s.type=newType;
+ if(["Erg Testing","Weight Testing"].includes(newType)){
+   const cat=newType==="Erg Testing"?"Erg":"Gym";
+   const allowed=(data.tests||[]).filter(t=>t.category===cat);
+   const allowedIds=new Set(allowed.map(t=>String(t.id)));
+   s.testItems=(s.testItems||[]).filter(t=>allowedIds.has(String(t.testId)));
+   if(!s.testItems.length&&allowed.length){
+     const b=allowed[0];
+     s.testItems=[{testId:b.id,name:b.name,unit:b.unit||"score",target:b.target||""}];
+   }
+   s.exercises=[];
+ }
+ persist();renderPlanner();renderDashboard();queuePlannerCloudSync()
+}
 function sessionEditor(day,s,i){
  const carnival=s.type==="Carnival",testing=["Erg Testing","Weight Testing"].includes(s.type),testCategory=s.type==="Erg Testing"?"Erg":"Gym";
  const testOptions=(data.tests||[]).filter(t=>t.category===testCategory);
@@ -626,8 +643,13 @@ function sessionEditor(day,s,i){
  <div class="label">Session instructions</div><textarea id="${day}_${s.id}_instructions">${esc(s.instructions||"")}</textarea><div class="label">Coach notes</div><textarea id="${day}_${s.id}_notes">${esc(s.notes||"")}</textarea><button class="btn full" onclick="saveSession('${day}','${s.id}',true)">Save Session ${i+1}</button></div>`;
 }
 function weeklyTestEditorRow(day,s,j,ti,options){
- const selected=ti.testId||options[0]?.id||"",base=options.find(t=>String(t.id)===String(selected));
- return `<div class="question"><div class="row"><b>Test ${j+1}</b><button type="button" class="btn red" onclick="removeWeeklyTest('${day}','${s.id}',${j})">Remove</button></div><div class="grid2"><div><div class="label">Test</div><select data-wtf="testId" onchange="updateWeeklyTestBase('${day}','${s.id}',${j},this.value)">${options.map(t=>`<option value="${esc(t.id)}" ${String(t.id)===String(selected)?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div><div><div class="label">Display name / edit for this week</div><input data-wtf="name" value="${esc(ti.name||base?.name||"")}" placeholder="Test name"></div><div><div class="label">Score unit</div><input data-wtf="unit" value="${esc(ti.unit||base?.unit||"score")}" placeholder="e.g. time, kg"></div><div><div class="label">Coach target / notes</div><input data-wtf="target" value="${esc(ti.target||base?.target||"")}" placeholder="Optional"></div></div></div>`;
+ let base=options.find(t=>String(t.id)===String(ti?.testId));
+ if(!base)base=options[0];
+ const selected=base?.id||"";
+ const name=(String(ti?.testId)===String(selected)&&ti?.name)?ti.name:(base?.name||"");
+ const unit=(String(ti?.testId)===String(selected)&&ti?.unit)?ti.unit:(base?.unit||"score");
+ const target=(String(ti?.testId)===String(selected)&&ti?.target!==undefined)?ti.target:(base?.target||"");
+ return `<div class="question"><div class="row"><b>Test ${j+1}</b><button type="button" class="btn red" onclick="removeWeeklyTest('${day}','${s.id}',${j})">Remove</button></div><div class="grid2"><div><div class="label">Test</div><select data-wtf="testId" onchange="updateWeeklyTestBase('${day}','${s.id}',${j},this.value)">${options.map(t=>`<option value="${esc(t.id)}" ${String(t.id)===String(selected)?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div><div><div class="label">Display name / edit for this week</div><input data-wtf="name" value="${esc(name)}" placeholder="Test name"></div><div><div class="label">Score unit</div><input data-wtf="unit" value="${esc(unit)}" placeholder="e.g. time, kg"></div><div><div class="label">Coach target / notes</div><input data-wtf="target" value="${esc(target)}" placeholder="Optional"></div></div></div>`;
 }
 function addWeeklyTest(day,id){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;const cat=s.type==="Erg Testing"?"Erg":"Gym",base=(data.tests||[]).find(t=>t.category===cat);if(!base)return alert(`No ${cat} tests are set up yet. Add one in Testing first.`);s.testItems=s.testItems||[];s.testItems.push({testId:base.id,name:base.name,unit:base.unit||"score",target:base.target||""});persist();renderPlanner();queuePlannerCloudSync()}
 function removeWeeklyTest(day,id,j){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.testItems=s.testItems||[];s.testItems.splice(j,1);persist();renderPlanner();queuePlannerCloudSync()}
