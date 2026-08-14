@@ -75,6 +75,112 @@ input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;col
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
 .grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.scoreRow{grid-template-columns:38px minmax(0,1.12fr) minmax(0,.86fr) minmax(0,.86fr) 48px;gap:4px}.scoreCell input{font-size:12px;padding:8px 5px}.scoreSet{min-height:39px;font-size:12px}.scoreHead{font-size:9px}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
+
+/* ===== MOBILE RESPONSIVENESS PASS ===== */
+html,body{max-width:100%;overflow-x:hidden}
+.app,.layout,.content,.screen,.card,.sessionCard,.folderCard,.weekFolder{min-width:0;max-width:100%}
+.row>*{min-width:0}
+img,video,canvas,svg{max-width:100%;height:auto}
+button,input,select,textarea{max-width:100%}
+input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
+.folderTitle,.folderMeta,.weekFolderBtn b,.sub,.notice,.mini,.dayMeta{overflow-wrap:anywhere;word-break:break-word}
+
+/* Keep complex coach workout-builder rows contained inside their card instead of
+   allowing the entire phone page to become wider than the viewport. */
+.day .sessionCard{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.day .builderRow{min-width:470px}
+.weekResultsWrap{max-width:100%;-webkit-overflow-scrolling:touch}
+
+@media(max-width:760px){
+  html,body{width:100%;overflow-x:hidden}
+  .app{width:100%;max-width:100%}
+  header{
+    min-height:66px;height:auto;
+    padding:8px 12px;
+    gap:8px;
+  }
+  .brand{min-width:0;gap:9px}
+  .logo{width:38px;height:38px;flex:0 0 38px;font-size:13px}
+  .brandtxt{font-size:17px;white-space:nowrap}
+  header>.row{flex:0 1 auto;justify-content:flex-end;gap:6px;flex-wrap:wrap}
+  .modepill{font-size:9px;padding:6px 8px;white-space:nowrap}
+  #modeBtn{padding:8px 9px;font-size:11px;white-space:nowrap}
+  .content{width:100%;max-width:100%;padding:14px 12px calc(92px + env(safe-area-inset-bottom))}
+  h1{font-size:26px;line-height:1.1}
+  h2{line-height:1.2}
+  .card{padding:14px;border-radius:14px}
+  .notice{padding:11px}
+  .row{max-width:100%}
+  .folderBtn,.weekFolderBtn{min-height:58px}
+  .folderBtn{padding:14px}
+  .folderTitle{font-size:18px}
+  .folderChev{flex:0 0 auto}
+  .grid2>*{min-width:0}
+  .stat{padding:12px}
+  .stat b{font-size:21px}
+
+  /* Bottom navigation remains usable across modern phone widths. */
+  .mobilebar{
+    width:100%;
+    max-width:100vw;
+    left:0;right:0;
+    overflow:hidden;
+  }
+  .mobilebar button{min-width:0;line-height:1.05}
+  .mobilebar span{font-size:18px}
+
+  /* Tables and detailed score grids stay inside the viewport. */
+  .scoreTable{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scoreRow{min-width:286px}
+  .weekResultsTable{max-width:none}
+}
+
+@media(max-width:430px){
+  header{padding-left:10px;padding-right:10px}
+  .content{padding-left:10px;padding-right:10px}
+  .brandtxt{font-size:16px}
+  .modepill{font-size:8px}
+  #modeBtn{font-size:10px;padding:7px 8px}
+  .grid4{gap:8px}
+  .folderBtn,.weekFolderBtn{gap:8px}
+  .folderTitle{font-size:17px}
+  .btn{font-size:13px;padding:10px 11px}
+  .sessionCard{padding:12px}
+}
+
+@media(max-width:390px){
+  /* Coach mode has 8 navigation items. Two rows prevents labels becoming
+     unreadably narrow on smaller phones. Athlete mode still overrides this to
+     3 columns via the app's existing JS. */
+  .mobilebar{grid-template-columns:repeat(4,1fr)}
+  .content{padding-bottom:calc(142px + env(safe-area-inset-bottom))}
+  .mobilebar button{font-size:9px;padding:6px 1px}
+  .mobilebar span{font-size:17px}
+  .grid4{grid-template-columns:1fr 1fr}
+  .scoreRow{grid-template-columns:34px minmax(90px,1.1fr) minmax(58px,.8fr) minmax(58px,.8fr) 44px;gap:3px}
+  .scoreCell input{padding:8px 4px}
+}
+
+@media(max-width:350px){
+  header{align-items:flex-start}
+  .brandtxt{font-size:15px}
+  .logo{width:35px;height:35px;flex-basis:35px}
+  header>.row{max-width:118px}
+  .modepill{white-space:normal;text-align:center}
+  #modeBtn{white-space:normal}
+  .content{padding-left:8px;padding-right:8px}
+  .grid4{grid-template-columns:1fr}
+  .folderBtn{padding:12px}
+  .folderTitle{font-size:16px}
+  h1{font-size:23px}
+}
+
+@media(max-height:500px) and (orientation:landscape){
+  header{position:relative}
+  .content{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+  .mobilebar{position:fixed}
+}
+
 </style>
 </head>
 <body>
