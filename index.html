@@ -14,322 +14,32 @@ header{height:72px;padding:0 18px;display:flex;align-items:center;justify-conten
 .modepill{font-size:11px;padding:8px 10px;border-radius:999px;background:#10263b;color:#91c2ff;font-weight:800}
 .layout{display:grid;grid-template-columns:220px 1fr}.sidebar{border-right:1px solid #15232e;padding:18px 12px;position:sticky;top:72px;height:calc(100vh - 72px)}
 .navbtn{display:flex;gap:10px;width:100%;border:0;background:none;color:#a0b0bd;padding:12px;border-radius:10px;text-align:left;font-weight:700;cursor:pointer}.navbtn.active,.navbtn:hover{background:#122232;color:#7db5ff}
-.content{padding:22px;max-width:980px;width:100%;margin:auto}.screen{display:none;width:100%}.screen.active{display:block}
+.content{padding:22px;max-width:980px;width:100%;margin:auto}.screen{display:none}.screen.active{display:block}
 h1{font-size:30px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:0}.sub{font-size:12px;color:var(--mut)}
-.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;width:100%}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .stat{background:#0a1620;border:1px solid var(--line);border-radius:14px;padding:14px}.stat b{font-size:24px;display:block;margin-top:4px}
 .badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#11385f;color:#8fc3ff;font-weight:900}.badge.green{background:#123a25;color:#8ff0ae}.badge.amber{background:#493613;color:#ffd47d}
 .btn{border:0;border-radius:11px;background:var(--blue);color:#fff;font-weight:900;padding:11px 13px;font-size:14px;cursor:pointer}.btn.secondary{background:#172837}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.full{width:100%}
 input,textarea,select{width:100%;background:#07121b;border:1px solid #2a3c4c;color:#fff;border-radius:9px;padding:10px;font:inherit}textarea{min-height:82px}.label{font-size:11px;color:var(--mut);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.7px}
-.day{border-left:4px solid var(--blue)}.notice,.sessionCard{width:100%}.screen>h1,.screen>.sub{width:100%}.substituteBox{margin-top:10px;padding:12px;border:1px dashed #3b5970;border-radius:12px;background:#091722}.testingGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.testResult{border-top:1px solid var(--line);padding:10px 0}.testResult:first-child{border-top:0}.mini{font-size:11px;color:var(--mut)}.weekResultsWrap{overflow-x:auto;margin-top:12px}.weekResultsTable{min-width:760px;display:grid;gap:6px}.weekResultsRow{display:grid;grid-template-columns:150px repeat(7,minmax(72px,1fr));gap:6px;align-items:stretch}.weekResultsHead{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}.weekCell{border:1px solid var(--line);border-radius:10px;padding:8px;background:#0a1620;min-height:54px;font-size:11px}.weekCell b{display:block;font-size:12px;margin-bottom:3px}.weekCell.done{border-color:#238b50;background:#0d2b1d}.weekCell.carnival{border-color:#8b6f23;background:#2b2410}.weekCell button{width:100%;border:0;background:none;color:inherit;text-align:left;padding:0;font:inherit}.resultDetail{margin-top:8px;border-top:1px solid var(--line);padding-top:8px}.resultSet{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;background:#0a1721}.resultSetHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.prescription{font-size:11px;color:#9db0bf}.tripleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.scoreTable{width:100%;display:grid;gap:7px;margin-top:10px}.scoreRow{display:grid;grid-template-columns:54px minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr) 58px;gap:7px;align-items:start}.scoreRow.completed{background:#0d2b1d;border:1px solid #238b50;border-radius:11px;padding:6px}.doneBtn{width:100%;min-height:42px;border:1px solid #315166;border-radius:9px;background:#10202c;color:#b9c9d4;font-weight:1000;font-size:18px}.doneBtn.done{background:var(--green);border-color:var(--green);color:#fff}.restTimer{font-size:11px;font-weight:900;color:#8fc3ff;margin-top:4px;min-height:14px}.restTimer.go{color:#8ff0ae;font-size:13px}.carnivalBox{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#0b1822}.scoreHead{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}.scoreSet{display:flex;align-items:center;justify-content:center;min-height:42px;font-weight:900;background:#0a1620;border:1px solid var(--line);border-radius:9px}.scoreCell input{padding:9px 8px;font-size:13px}.scoreCell .label{display:none}.scoreCaption{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
+.day{border-left:4px solid var(--blue)}.dayname{font-size:20px;font-weight:1000}.empty{color:#6f8291;font-size:13px}.notice{background:#10263a;border:1px solid #1e5484;border-radius:12px;padding:12px;font-size:13px;color:#d4e4f2}
 .sessionCard{border:1px solid #294052;border-radius:14px;padding:14px;margin:12px 0;background:#0b1822}.sessionline{padding:11px 0;border-top:1px solid var(--line)}.sessionline:first-child{border-top:0}
 .builderRow{display:grid;grid-template-columns:1.5fr 76px 76px 76px 76px 38px;gap:7px;align-items:center;padding:6px 0}.builderHead{font-size:10px;color:var(--mut);text-transform:uppercase}.builderRow input{padding:8px 5px}
 .question{border-top:1px solid var(--line);padding:12px 0}.question:first-child{border-top:0}.answerbox{margin-top:8px}.flag{border-left:4px solid var(--amber)}
-.athleteDayCard{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:12px 0;overflow:hidden}
-.athleteDayToggle{width:100%;border:0;background:none;color:var(--txt);padding:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;cursor:pointer}
-.athleteDayToggle .dayTitle{font-size:22px;font-weight:1000}
-.athleteDayToggle .dayMeta{font-size:12px;color:var(--mut);margin-top:4px}
-.athleteDayToggle .chev{font-size:24px;color:#8fc3ff;transition:transform .2s ease}
-.athleteDayCard.open .chev{transform:rotate(90deg)}
-.athleteDayBody{display:none;padding:0 14px 14px}
-.athleteDayCard.open .athleteDayBody{display:block}
-.athleteSessionBox{border:1px solid #294052;border-radius:14px;background:#0b1822;margin-top:10px;overflow:hidden}
-.athleteSessionHead{padding:14px 14px 4px}
-.weekIdentityBanner{
-  background:linear-gradient(180deg,#10263a,#0d1d2a);
-  border:1px solid #24577f;
-  border-radius:15px;
-  padding:14px 16px;
-  margin:12px 0 16px;
-}
-.weekIdentityTop{
-  font-size:11px;
-  color:#8fc3ff;
-  font-weight:900;
-  letter-spacing:.9px;
-  text-transform:uppercase;
-}
-.weekIdentityMain{
-  font-size:22px;
-  font-weight:1000;
-  margin-top:4px;
-}
-.weekIdentityDate{
-  color:#c4d3df;
-  font-size:13px;
-  margin-top:4px;
-}
-
-
-.folderCard{border:1px solid #294052;border-radius:15px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:10px 0;overflow:hidden}
-.folderBtn{width:100%;border:0;background:none;color:var(--txt);padding:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;cursor:pointer}
-.folderTitle{font-size:19px;font-weight:1000}.folderMeta{font-size:12px;color:var(--mut);margin-top:4px}.folderChev{font-size:24px;color:#8fc3ff}
-.folderBody{padding:0 14px 14px}.weekFolder{border:1px solid var(--line);border-radius:12px;background:#0a1620;margin:8px 0;overflow:hidden}
-.weekFolderBtn{width:100%;border:0;background:none;color:var(--txt);padding:13px;display:flex;justify-content:space-between;align-items:center;text-align:left;cursor:pointer}
-.weekFolderBody{padding:0 12px 12px}.sessionFolder{border-top:1px solid var(--line);padding:11px 0}.sessionFolder:first-child{border-top:0}
+/* ===== ATHLETE HISTORY TABS + REMINDERS ===== */
+.historyAthleteCard{border:1px solid #294052;border-radius:15px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:10px 0;overflow:hidden}
+.historyAthleteBtn{width:100%;border:0;background:none;color:var(--txt);padding:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;cursor:pointer}
+.historyAthleteBody{display:none;padding:0 14px 14px}.historyAthleteCard.open .historyAthleteBody{display:block}
+.historyTabs{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}.historyTab{border:1px solid #315166;background:#0a1620;color:#b9c9d4;border-radius:999px;padding:8px 12px;font-weight:900;font-size:12px;cursor:pointer}.historyTab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.historyWeekPanel{display:none}.historyWeekPanel.active{display:block}.historyBlockPanel{display:none}.historyBlockPanel.active{display:block}
+.reminderCard{border:1px solid #315b7c;background:linear-gradient(180deg,#10263a,#0b1d2b);border-radius:14px;padding:13px 14px;margin:12px 0}.reminderCard.good{border-color:#238b50;background:linear-gradient(180deg,#123522,#0d2418)}.reminderTitle{font-weight:1000;font-size:15px}.reminderText{font-size:12px;color:#c7d7e3;margin-top:4px;line-height:1.45}.reminderActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.reminderActions .btn{padding:8px 10px;font-size:12px}
 
 .mobilebar{display:none}
 @media(max-width:760px){
-.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(8,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+.layout{display:block}.sidebar{display:none}.content{padding:16px 14px 92px}.mobilebar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:#09131c;border-top:1px solid var(--line);z-index:40;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
 .mobilebar button{border:0;background:none;color:#7f92a2;font-size:10px;padding:7px 1px}.mobilebar button.active{color:var(--blue)}.mobilebar span{display:block;font-size:19px}
-.grid4{grid-template-columns:1fr 1fr}.grid2,.testingGrid,.tripleGrid{grid-template-columns:1fr}.scoreRow{grid-template-columns:38px minmax(0,1.12fr) minmax(0,.86fr) minmax(0,.86fr) 48px;gap:4px}.scoreCell input{font-size:12px;padding:8px 5px}.scoreSet{min-height:39px;font-size:12px}.scoreHead{font-size:9px}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
+.grid4{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.builderRow{grid-template-columns:minmax(120px,1.4fr) 64px 78px 64px 58px 36px;gap:5px}.builderRow .rest{display:block}.builderHead .rest{display:block}.builderRow input{min-width:0;font-size:12px;padding:8px 4px}.builderHead{font-size:9px}.tag{display:none}.brandtxt{font-size:18px}
 }
-
-
-/* ===== ATHLETE EXERCISE + BODYWEIGHT HISTORY ADDITIONS ===== */
-.exercisePrev{margin:9px 0;padding:10px 12px;border:1px solid #2b4f70;border-radius:11px;background:#0d2233}
-.exercisePrevTitle{font-size:10px;color:#8fc3ff;font-weight:900;text-transform:uppercase;letter-spacing:.6px}
-.exercisePrevText{font-size:12px;color:#dbe8f2;margin-top:4px;line-height:1.45}
-.exerciseTools{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}
-.exerciseTools .btn{padding:8px 10px;font-size:12px}
-.exerciseHistoryBox,.weightHistoryBox{display:none;margin:8px 0 10px;border:1px solid #294052;border-radius:11px;background:#08151f;padding:10px}
-.exerciseHistoryItem,.weightHistoryItem{border-top:1px solid #223444;padding:8px 0}
-.exerciseHistoryItem:first-child,.weightHistoryItem:first-child{border-top:0}
-.exerciseNoteBox{margin:9px 0 4px}
-.addSetBtn{margin-top:8px}
-.bodyWeightCard{margin:10px 0;padding:12px;border:1px solid #2b4f70;border-radius:12px;background:#0d2233}
-.bodyWeightRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
-.bodyWeightRow .btn{white-space:nowrap}
-
-/* ===== MOBILE RESPONSIVENESS PASS ===== */
-html,body{max-width:100%;overflow-x:hidden}
-.app,.layout,.content,.screen,.card,.sessionCard,.folderCard,.weekFolder{min-width:0;max-width:100%}
-.row>*{min-width:0}
-img,video,canvas,svg{max-width:100%;height:auto}
-button,input,select,textarea{max-width:100%}
-input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
-.folderTitle,.folderMeta,.weekFolderBtn b,.sub,.notice,.mini,.dayMeta{overflow-wrap:anywhere;word-break:break-word}
-
-/* Keep complex coach workout-builder rows contained inside their card instead of
-   allowing the entire phone page to become wider than the viewport. */
-.day .sessionCard{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.day .builderRow{min-width:470px}
-.weekResultsWrap{max-width:100%;-webkit-overflow-scrolling:touch}
-
-@media(max-width:760px){
-  html,body{width:100%;overflow-x:hidden}
-  .app{width:100%;max-width:100%}
-  header{
-    min-height:66px;height:auto;
-    padding:8px 12px;
-    gap:8px;
-  }
-  .brand{min-width:0;gap:9px}
-  .logo{width:38px;height:38px;flex:0 0 38px;font-size:13px}
-  .brandtxt{font-size:17px;white-space:nowrap}
-  header>.row{flex:0 1 auto;justify-content:flex-end;gap:6px;flex-wrap:wrap}
-  .modepill{font-size:9px;padding:6px 8px;white-space:nowrap}
-  #modeBtn{padding:8px 9px;font-size:11px;white-space:nowrap}
-  .content{width:100%;max-width:100%;padding:14px 12px calc(92px + env(safe-area-inset-bottom))}
-  h1{font-size:26px;line-height:1.1}
-  h2{line-height:1.2}
-  .card{padding:14px;border-radius:14px}
-  .notice{padding:11px}
-  .row{max-width:100%}
-  .folderBtn,.weekFolderBtn{min-height:58px}
-  .folderBtn{padding:14px}
-  .folderTitle{font-size:18px}
-  .folderChev{flex:0 0 auto}
-  .grid2>*{min-width:0}
-  .stat{padding:12px}
-  .stat b{font-size:21px}
-
-  /* Bottom navigation remains usable across modern phone widths. */
-  .mobilebar{
-    width:100%;
-    max-width:100vw;
-    left:0;right:0;
-    overflow:hidden;
-  }
-  .mobilebar button{min-width:0;line-height:1.05}
-  .mobilebar span{font-size:18px}
-
-  /* Tables and detailed score grids stay inside the viewport. */
-  .scoreTable{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .scoreRow{min-width:286px}
-  .weekResultsTable{max-width:none}
-}
-
-@media(max-width:430px){
-  header{padding-left:10px;padding-right:10px}
-  .content{padding-left:10px;padding-right:10px}
-  .brandtxt{font-size:16px}
-  .modepill{font-size:8px}
-  #modeBtn{font-size:10px;padding:7px 8px}
-  .grid4{gap:8px}
-  .folderBtn,.weekFolderBtn{gap:8px}
-  .folderTitle{font-size:17px}
-  .btn{font-size:13px;padding:10px 11px}
-  .sessionCard{padding:12px}
-}
-
-@media(max-width:390px){
-  /* Coach mode has 8 navigation items. Two rows prevents labels becoming
-     unreadably narrow on smaller phones. Athlete mode still overrides this to
-     3 columns via the app's existing JS. */
-  .mobilebar{grid-template-columns:repeat(4,1fr)}
-  .content{padding-bottom:calc(142px + env(safe-area-inset-bottom))}
-  .mobilebar button{font-size:9px;padding:6px 1px}
-  .mobilebar span{font-size:17px}
-  .grid4{grid-template-columns:1fr 1fr}
-  .scoreRow{grid-template-columns:34px minmax(90px,1.1fr) minmax(58px,.8fr) minmax(58px,.8fr) 44px;gap:3px}
-  .scoreCell input{padding:8px 4px}
-}
-
-@media(max-width:350px){
-  header{align-items:flex-start}
-  .brandtxt{font-size:15px}
-  .logo{width:35px;height:35px;flex-basis:35px}
-  header>.row{max-width:118px}
-  .modepill{white-space:normal;text-align:center}
-  #modeBtn{white-space:normal}
-  .content{padding-left:8px;padding-right:8px}
-  .grid4{grid-template-columns:1fr}
-  .folderBtn{padding:12px}
-  .folderTitle{font-size:16px}
-  h1{font-size:23px}
-}
-
-@media(max-height:500px) and (orientation:landscape){
-  header{position:relative}
-  .content{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
-  .mobilebar{position:fixed}
-}
-
-
-/* ===== SET ROW ALIGNMENT FIX ===== */
-.scoreRow:not(.scoreHead){align-items:start}
-.scoreRow:not(.scoreHead) .scoreCell>input,
-.scoreRow:not(.scoreHead) .doneBtn,
-.scoreRow:not(.scoreHead) .scoreSet{min-height:42px}
-
-
-/* ===== TESTING HISTORY FOLDERS ===== */
-.testHistoryBtn{margin-top:9px}
-.testHistoryBox{display:none;margin-top:9px;border:1px solid #294052;border-radius:11px;background:#08151f;padding:10px}
-.testHistoryItem{border-top:1px solid #223444;padding:9px 0}
-.testHistoryItem:first-child{border-top:0}
-
-
-/* ===== CARDIO SESSION SUMMARY ===== */
-.cardioSessionSummary{margin:12px 0 4px;padding:13px;border:1px solid #24577f;border-radius:12px;background:#0d2233}
-.cardioSessionSummaryTitle{font-size:10px;color:#8fc3ff;font-weight:900;text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px}
-.cardioSessionSummaryGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.cardioSessionSummaryStat{background:#08151f;border:1px solid #294052;border-radius:10px;padding:10px;text-align:center}
-.cardioSessionSummaryStat span{display:block;font-size:10px;color:#8fa2b2;text-transform:uppercase;letter-spacing:.5px}
-.cardioSessionSummaryStat b{display:block;font-size:21px;margin-top:3px}
-.cardioSessionSummaryFoot{font-size:10px;color:#8fa2b2;text-align:center;margin-top:8px}
-
-
-/* ===== IOS SCORE INPUT ZOOM FIX ===== */
-@media(max-width:760px){
-  .scoreCell input{
-    font-size:16px !important;
-    min-width:0;
-    width:100%;
-    padding:8px 5px;
-  }
-  .scoreRow{
-    width:100%;
-    max-width:100%;
-    grid-template-columns:38px minmax(0,1.12fr) minmax(0,.86fr) minmax(0,.86fr) 48px;
-    gap:4px;
-  }
-  .scoreCell,.scoreSet,.doneBtn{min-width:0}
-}
-
-
-/* ===== COMPACT CARDIO ATHLETE LAYOUT ===== */
-.cardioTopTools{margin:10px 0 12px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-.cardioSubstitute{display:flex;gap:8px;align-items:center;padding:9px 12px;border:1px dashed #315774;border-radius:11px;background:#091a25}
-.cardioSubstitute input{width:auto;margin:0}
-.cardioSubBox{width:100%;padding:10px;border:1px solid #294052;border-radius:11px;background:#08151f}
-.cardioTopTools .exerciseHistoryBox{width:100%;margin:0}
-.cardioBottomTools{margin:12px 0}
-
-
-/* ===== SEASON CARNIVALS ===== */
-.carnivalHero{border:1px solid #24577f;background:linear-gradient(180deg,#10263a,#0d1d2a);border-radius:16px;padding:16px;margin:12px 0}
-.carnivalDate{font-size:11px;color:#8fc3ff;font-weight:900;text-transform:uppercase;letter-spacing:.8px}
-.carnivalName{font-size:22px;font-weight:1000;margin-top:5px}
-.carnivalInfo{font-size:13px;color:#c4d3df;margin-top:5px;line-height:1.5}
-.carnivalListCard{border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;background:#0a1620}
-.carnivalListCard .row{align-items:flex-start}
-.carnivalCoachGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:760px){.carnivalCoachGrid{grid-template-columns:1fr}.mobilebar.carnivalAthleteBar{grid-template-columns:repeat(4,1fr)!important}}
-
-
-/* ===== ATHLETE UPCOMING TRAINING ===== */
-.upcomingTrainingWrap{margin-top:22px}
-.upcomingTrainingHead{margin:0 0 10px}
-.upcomingWeek{border:1px solid #294052;border-radius:15px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:10px 0;overflow:hidden}
-.upcomingWeekBtn{width:100%;border:0;background:none;color:var(--txt);padding:15px 16px;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer}
-.upcomingWeekTitle{font-size:18px;font-weight:1000}
-.upcomingWeekDate{font-size:11px;color:var(--mut);margin-top:4px}
-.upcomingWeekBody{display:none;padding:0 14px 14px}
-.upcomingWeek.open .upcomingWeekBody{display:block}
-.upcomingWeek .folderChev{transition:transform .2s ease}
-.upcomingWeek.open .folderChev{transform:rotate(90deg)}
-.upcomingDay{display:grid;grid-template-columns:92px 1fr;gap:10px;border-top:1px solid var(--line);padding:10px 2px}
-.upcomingDay:first-child{border-top:0}
-.upcomingDayName{font-weight:900;font-size:12px}
-.upcomingDaySessions{font-size:12px;color:#c4d3df}
-@media(max-width:420px){.upcomingDay{grid-template-columns:78px 1fr}}
-
-
-/* ===== ATHLETE WEEKS AHEAD: BLOCK > WEEK > DAYS ===== */
-.aheadBlock{border:1px solid #294052;border-radius:16px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:12px 0;overflow:hidden}
-.aheadBlockBtn,.aheadWeekBtn{width:100%;border:0;background:none;color:var(--txt);display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer}
-.aheadBlockBtn{padding:18px 16px}.aheadBlockTitle{font-size:22px;font-weight:1000}
-.aheadBlockBody{display:none;padding:0 12px 12px}.aheadBlock.open>.aheadBlockBody{display:block}
-.aheadWeek{border:1px solid var(--line);border-radius:13px;margin:9px 0;background:#0b1a24;overflow:hidden}
-.aheadWeekBtn{padding:14px 15px;font-size:16px}.aheadWeekBody{display:none;padding:0 12px 12px}.aheadWeek.open>.aheadWeekBody{display:block}
-.aheadBlock>.aheadBlockBtn .folderChev,.aheadWeek>.aheadWeekBtn .folderChev{transition:transform .2s ease}
-.aheadBlock.open>.aheadBlockBtn .folderChev,.aheadWeek.open>.aheadWeekBtn .folderChev{transform:rotate(90deg)}
-
-
-/* ===== FIVE ATHLETE MOBILE TABS ===== */
-@media(max-width:760px){
-  .mobilebar button[data-screen="weeksahead"]{font-size:9px}
-  .mobilebar button[data-screen="weeksahead"] span{font-size:18px}
-}
-
-
-/* ===== COACH TRAINING BLOCK FOLDERS ===== */
-.coachHistoryBlock{border:1px solid #294052;border-radius:16px;background:linear-gradient(180deg,var(--panel2),var(--panel));margin:12px 0;overflow:hidden}
-.coachHistoryBlockBtn,.coachHistoryWeekBtn{width:100%;border:0;background:none;color:var(--txt);display:flex;justify-content:space-between;align-items:center;text-align:left;cursor:pointer}
-.coachHistoryBlockBtn{padding:18px 16px}.coachHistoryBlockTitle{font-size:22px;font-weight:1000}
-.coachHistoryBlockBody{display:none;padding:0 12px 12px}.coachHistoryBlock.open>.coachHistoryBlockBody{display:block}
-.coachHistoryBlockActions{display:flex;justify-content:flex-end;padding:10px 2px 4px}
-.coachHistoryWeek{border:1px solid var(--line);border-radius:13px;background:#0b1a24;margin:9px 0;overflow:hidden}
-.coachHistoryWeekBtn{padding:14px 15px}
-.coachHistoryWeekBody{display:none;padding:0 12px 12px}.coachHistoryWeek.open>.coachHistoryWeekBody{display:block}
-.coachHistoryWeekActions{display:flex;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--line)}
-.coachHistoryBlock>.coachHistoryBlockBtn .folderChev,.coachHistoryWeek>.coachHistoryWeekBtn .folderChev{transition:transform .2s ease}
-.coachHistoryBlock.open>.coachHistoryBlockBtn .folderChev,.coachHistoryWeek.open>.coachHistoryWeekBtn .folderChev{transform:rotate(90deg)}
-@media(max-width:760px){.coachHistoryWeekActions .btn{flex:1 1 100%}}
-
-
-/* ===== SPECIAL WEEKLY BOAT + CARNIVAL FORMAT ===== */
-.specialSessionCoachBox{border:1px solid #2b587d;border-radius:14px;padding:14px;margin-top:12px;background:linear-gradient(180deg,#0d2233,#0a1721)}
-.specialFixedType{min-height:43px;display:flex;align-items:center;padding:10px;border:1px solid #2a3c4c;border-radius:9px;background:#07121b;color:#dbe8f2;font-weight:800}
-.specialAthleteSession{border-color:#2b6da5;background:linear-gradient(180deg,#10263a,#0b1822)}
-.specialDate{font-size:11px;color:#55a7ff;font-weight:1000;text-transform:uppercase;letter-spacing:.9px;margin-bottom:8px}
-.specialSessionTitle{font-size:23px;font-weight:1000;margin-bottom:10px}
-.specialInfo{font-size:14px;color:#d8e4ed;line-height:1.65}
-.specialCoachNote{margin-top:14px;padding:12px;border:1px solid #2b5d86;border-radius:12px;background:#10263a}
-.specialCoachNote b{display:block;margin-bottom:6px}
-.athleteDayCard:has(.specialAthleteSession){border-color:#2b5d86}
-
-
-/* ===== SUNDAY NEXT-WEEK ATHLETE PREVIEW ===== */
-.sundayPreviewNotice{margin:10px 0 14px;padding:13px 14px;border:1px solid #2b6da5;border-radius:13px;background:linear-gradient(180deg,#102a40,#0b1b29);color:#dcecf8}
-.sundayPreviewNotice b{display:block;color:#58aaff;margin-bottom:5px;font-size:13px;letter-spacing:.5px}
-.sundayPreviewNotice div{font-size:12px;line-height:1.45}
-.sundayPreviewMode .athleteDayBody input:disabled,.sundayPreviewMode .athleteDayBody textarea:disabled,.sundayPreviewMode .athleteDayBody select:disabled{opacity:.78}
-.sundayPreviewMode .athleteDayBody button:disabled{opacity:.45}
-
 </style>
 </head>
 <body>
@@ -340,28 +50,24 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 </header>
 <div class="layout">
 <aside class="sidebar">
-<button class="navbtn active" data-screen="dashboard" onclick="nav('dashboard')">⌂ Home</button>
-<button class="navbtn" data-screen="planner" onclick="nav('planner')">▦ Week</button>
+<button class="navbtn active" data-screen="dashboard" onclick="nav('dashboard')">⌂ Overview</button>
+<button class="navbtn" data-screen="planner" onclick="nav('planner')">▦ Weekly Planner</button>
+<button class="navbtn" data-screen="programs" onclick="nav('programs')">▣ Program History</button>
 <button class="navbtn" data-screen="athletes" onclick="nav('athletes')">♟ Athletes</button>
-<button class="navbtn" data-screen="checkin" onclick="nav('checkin')">☑ Check-In</button>
-<button class="navbtn" data-screen="athletehistory" onclick="nav('athletehistory')">☷ Athlete History</button>
-<button class="navbtn" data-screen="programs" onclick="nav('programs')">▣ Training Blocks</button>
-<button class="navbtn" data-screen="testing" onclick="nav('testing')">⏱ Testing</button>
-<button class="navbtn" data-screen="weeksahead" onclick="nav('weeksahead')">▦ Weeks Ahead</button>
-<button class="navbtn" data-screen="carnivals" onclick="nav('carnivals')">🏁 Carnivals</button>
+<button class="navbtn" data-screen="checkin" onclick="nav('checkin')">☑ Weekly Check-In</button>
+<button class="navbtn" data-screen="review" onclick="nav('review')">☷ Check-In Review</button>
 <button class="navbtn" data-screen="settings" onclick="nav('settings')">⚙ Settings</button>
 </aside>
 <main class="content">
 <section id="dashboard" class="screen active">
-<div class="sub">OVERVIEW</div><h1 id="dashTitle">Coach Dashboard</h1><div class="sub" id="dashMeta"></div><div id="dashWeekIdentity"></div>
+<div class="sub">OVERVIEW</div><h1 id="dashTitle">Coach Dashboard</h1><div class="sub" id="dashMeta"></div>
 <div class="grid4" style="margin-top:14px"><div class="stat"><span class="sub">Athletes</span><b id="sAth">0</b></div><div class="stat"><span class="sub">Programmed Days</span><b id="sDays">0/7</b></div><div class="stat"><span class="sub">Current Block</span><b id="sBlock">1</b></div><div class="stat"><span class="sub">Current Week</span><b id="sWeek">1</b></div></div>
 <div class="card"><div class="row"><div><h2>This Week</h2><div class="sub">Monday → Sunday</div></div><button class="btn" onclick="nav('planner')">Edit Week</button></div><div id="dashWeek"></div></div>
 </section>
 
 <section id="planner" class="screen">
 <div class="sub">PROGRAM BUILDER</div><h1>Weekly Planner</h1>
-<div id="coachWeekIdentity"></div>
-<div class="notice">Save the week under a season, block and week number. Changes made on the MASTER coach device save automatically to Coach Cloud. Other coach devices automatically load the latest program without pushing older data back.</div>
+<div class="notice">Save the week under a season, block and week number. When the week is finished, archive it to History, then use Create Next Week to start the next week without overwriting the previous one.</div>
 <div class="card">
 <div class="grid2">
 <div><div class="label">Season</div><input id="season" placeholder="2026/27"></div>
@@ -385,15 +91,8 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
     </div>
 </section>
 
-<section id="athletehistory" class="screen">
-<div class="sub">ATHLETE HISTORY</div><h1>Athlete Training History</h1>
-<div class="notice">Each athlete has their own folder. Open an athlete, choose a week, then tap a session to read their training scores and session feedback.</div>
-<div class="card"><button class="btn full green" onclick="refreshCoachCloud()">Refresh Athlete Results</button></div>
-<div id="weeklyResultsDashboard"></div>
-</section>
-
 <section id="programs" class="screen">
-<div class="sub">TRAINING BLOCKS</div><h1>Program History</h1>
+<div class="sub">PROGRAM HISTORY</div><h1>Blocks & Weeks</h1>
 <div class="notice">Every archived week stays here. You can load it, copy it into the current week, or duplicate an entire block for next season.</div>
 <div id="history"></div>
 </section>
@@ -404,50 +103,19 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
-<section id="weeksahead" class="screen"><div class="sub">UPCOMING TRAINING</div><h1>Weeks Ahead</h1><div class="notice">View only — open a training block, then choose a week to see the programmed sessions.</div><div id="weeksAheadBlocks"></div></section>
-
 <section id="checkin" class="screen">
 <div class="sub">ATHLETE WELLNESS & FEEDBACK</div><h1>Weekly Athlete Check-In</h1>
-<div id="checkinIntro" class="notice">Complete this once each Monday. If you competed, the 6-question racing review will appear.</div>
+<div id="checkinIntro" class="notice">Complete this once each week. If you competed, the 6-question racing review will appear.</div>
 <div class="card" id="checkinAthletePicker"></div>
 <div id="checkinForm"></div>
 </section>
 
 <section id="review" class="screen">
-<div class="sub">COACH REVIEW</div><h1>Athlete Check-Ins</h1>
-<div class="notice">Each athlete has their own check-in folder. Open an athlete, then choose the week you want to review.</div>
-<div class="card"><button class="btn full green" onclick="refreshCoachCloud()">Refresh Athlete Check-Ins</button><div class="sub" style="margin-top:8px">Pull the latest weekly athlete check-ins from the shared database.</div></div>
-<div id="summary" style="display:none"></div>
-<div id="sessionResults" style="display:none"></div>
+<div class="sub">COACH REVIEW</div><h1>Athlete Results & Check-Ins</h1>
+<div class="card"><button class="btn full green" onclick="refreshCoachCloud()">Refresh Athlete Results</button><div class="sub" style="margin-top:8px">Pull the latest athlete session results and weekly check-ins from the shared database.</div></div>
+<div class="card" id="summary"></div>
+<div id="sessionResults"></div>
 <div id="checkinHistory"></div>
-</section>
-
-<section id="testing" class="screen">
-<div class="sub" id="testingSub">PERFORMANCE TESTING</div><h1 id="testingTitle">Testing</h1>
-<div class="notice" id="testingNotice">Erg and gym testing results are kept separately from weekly training.</div>
-<div id="coachTestingSetup">
-  <div class="card">
-    <h2>Testing Setup</h2>
-    <div class="sub">Set the tests athletes can complete. Starter tests are included for Erg and Gym.</div>
-    <div class="grid2" style="margin-top:10px">
-      <div><div class="label">Category</div><select id="testCategory"><option>Erg</option><option>Gym</option></select></div>
-      <div><div class="label">Test name</div><input id="testName" placeholder="e.g. 2k Erg"></div>
-      <div><div class="label">Score unit</div><input id="testUnit" placeholder="e.g. time, watts, kg"></div>
-      <div><div class="label">Coach target / notes</div><input id="testTarget" placeholder="Optional"></div>
-    </div>
-    <button class="btn full" style="margin-top:12px" onclick="addTestingItem()">+ Add Test</button>
-  </div>
-</div>
-<div id="testingContent"></div>
-</section>
-
-
-<section id="carnivals" class="screen">
-<div class="sub">SEASON CARNIVALS</div><h1 id="carnivalPageTitle">Carnivals</h1>
-<div class="notice" id="carnivalNotice">Season race dates, locations and times.</div>
-<div id="carnivalCoachEditor"></div>
-<div id="carnivalSeasonList"></div>
 </section>
 
 <section id="settings" class="screen">
@@ -457,10 +125,6 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
   <div class="label" style="margin-top:12px">Coach key</div>
   <input id="coachCloudKey" type="password" placeholder="Enter coach key">
   <button class="btn full green" style="margin-top:10px" onclick="saveCoachCloudKey()">Connect Coach Cloud</button>
-  <button class="btn full green" style="margin-top:8px" onclick="pushThisDeviceToCloud()">PUSH THIS DEVICE TO COACH CLOUD</button>
-<button class="btn full secondary" style="margin-top:8px" onclick="loadCoachCloud(true)">LOAD LATEST COACH CLOUD PROGRAM</button>
-<div class="sub" id="syncDetail" style="margin-top:8px">Use PUSH once on the computer you want as MASTER. Other connected devices become FOLLOWERS and auto-load updates.</div>
-<div class="sub" id="deviceRoleStatus" style="margin-top:6px;font-weight:800"></div>
   <div id="cloudStatus" class="sub" style="margin-top:8px"></div>
 </div>
 <div class="sub">APP SETUP</div><h1>Settings</h1>
@@ -475,12 +139,7 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 <button data-screen="planner" onclick="nav('planner')"><span>▦</span>Week</button>
 <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
 <button data-screen="checkin" onclick="nav('checkin')"><span>☑</span>Check-In</button>
-<button data-screen="athletehistory" onclick="nav('athletehistory')"><span>☷</span>Athlete History</button>
-<button data-screen="programs" onclick="nav('programs')"><span>▣</span>Training Blocks</button>
-<button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
-<button data-screen="weeksahead" onclick="nav('weeksahead')"><span>▦</span>Weeks Ahead</button>
-<button data-screen="carnivals" onclick="nav('carnivals')"><span>🏁</span>Carnivals</button>
-<button data-screen="settings" onclick="nav('settings')"><span>⚙️</span>Settings</button>
+<button data-screen="programs" onclick="nav('programs')"><span>▣</span>History</button>
 </div>
 </div>
 <script>
@@ -505,981 +164,426 @@ const DEFAULT_RACE=[
 {q:"What could we improve OUTSIDE the boat?",type:"text"},
 {q:"What should our #1 focus be heading into the next race?",type:"focus"}
 ];
-const DEFAULT_TESTS=[
-{id:"erg2k",category:"Erg",name:"2k Erg",unit:"time",target:"Record total time and average split"},
-{id:"erg500",category:"Erg",name:"500m Erg",unit:"time",target:"Record total time"},
-{id:"gym_squat",category:"Gym",name:"Back Squat",unit:"kg",target:"Record best completed working set"},
-{id:"gym_deadlift",category:"Gym",name:"Deadlift",unit:"kg",target:"Record best completed working set"},
-{id:"gym_bench",category:"Gym",name:"Bench Press",unit:"kg",target:"Record best completed working set"}
-];
 const emptyDays=()=>Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
 let data=JSON.parse(localStorage.getItem("rt_v8")||"null")||{
 meta:{season:"2026/27",blockName:"Pre-Season / Base Building",blockNo:1,weekNo:1,date:"",name:"Block 1 - Week 1"},
-days:emptyDays(),athletes:[],archive:[],checkins:[],weeklyQuestions:DEFAULT_WEEKLY,raceQuestions:DEFAULT_RACE,tests:DEFAULT_TESTS,testResults:[],carnivals:[]
+days:emptyDays(),athletes:[],archive:[],checkins:[],weeklyQuestions:DEFAULT_WEEKLY,raceQuestions:DEFAULT_RACE
 };
-if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];if(!Array.isArray(data.carnivals))data.carnivals=[];
+if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];
 DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});
-let coachMode=true;let activeAthlete="";let activeTrainingDay="";let lastCloudUpdatedAt="";let cloudSyncBusy=false;let plannerSyncTimer=null;
+let coachMode=true;let activeAthlete="";
 function persist(){localStorage.setItem("rt_v8",JSON.stringify(data))}
-function saveRender(){persist();if(coachMode)syncCoachCloud(false);renderAll()}
+function saveRender(){persist();renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function nav(id){if(document.getElementById("planner")?.classList.contains("active")&&id!=="planner"){savePlannerDraftToData();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true)}const target=(id==="checkin"&&coachMode)?"review":id;document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===target));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
-function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
-
-function parseWeekDate(value){
-  const s=String(value||"").trim();
-  if(!s)return null;
-  let d=null;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) d=new Date(s+"T00:00:00");
-  else if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
-    const [dd,mm,yyyy]=s.split("/").map(Number);
-    d=new Date(yyyy,mm-1,dd);
-  } else d=new Date(s);
-  return d&&!isNaN(d)?new Date(d.getFullYear(),d.getMonth(),d.getDate()):null;
-}
-function snapshotKey(meta){return `${meta?.season||""}|${Number(meta?.blockNo)||1}|${Number(meta?.weekNo)||1}`}
-function allProgramSnapshots(){
-  const items=(data.archive||[]).map(x=>({meta:x.meta,days:x.days,source:"archive"}));
-  items.push({meta:data.meta,days:data.days,source:"editor"});
-  const seen=new Map();
-  items.forEach(x=>{
-    const k=snapshotKey(x.meta);
-    const prev=seen.get(k);
-    if(!prev||x.source==="editor")seen.set(k,x);
-  });
-  return [...seen.values()];
-}
-function inferredWeekStart(snapshot,all){
-  const direct=parseWeekDate(snapshot?.meta?.date);
-  if(direct)return direct;
-  const season=snapshot?.meta?.season||"";
-  const block=Number(snapshot?.meta?.blockNo)||1;
-  const week=Number(snapshot?.meta?.weekNo)||1;
-  const anchors=all.filter(x=>(x.meta?.season||"")===season&&(Number(x.meta?.blockNo)||1)===block&&parseWeekDate(x.meta?.date));
-  if(!anchors.length)return null;
-  anchors.sort((a,b)=>Math.abs((Number(a.meta?.weekNo)||1)-week)-Math.abs((Number(b.meta?.weekNo)||1)-week));
-  const a=anchors[0], ad=parseWeekDate(a.meta.date), aw=Number(a.meta?.weekNo)||1;
-  const d=new Date(ad); d.setDate(d.getDate()+7*(week-aw)); return d;
-}
-function currentTrainingSnapshot(){
-  const all=allProgramSnapshots();
-  if(!all.length)return {meta:data.meta,days:data.days,source:"editor"};
-  const today=new Date(); today.setHours(0,0,0,0);
-  const dated=all.map(x=>({...x,_start:inferredWeekStart(x,all)})).filter(x=>x._start);
-  if(!dated.length)return {meta:data.meta,days:data.days,source:"editor"};
-  const started=dated.filter(x=>x._start<=today).sort((a,b)=>b._start-a._start);
-  const chosen=started[0]||dated.sort((a,b)=>a._start-b._start)[0];
-  return chosen||{meta:data.meta,days:data.days,source:"editor"};
-}
-
-function athleteTrainingSnapshot(){
- const current=currentTrainingSnapshot();
- if(coachMode)return current;
- const now=new Date();
- if(now.getDay()!==0)return current; // Sunday only
- const all=allProgramSnapshots();
- const currentStart=inferredWeekStart(current,all);
- if(!currentStart)return current;
- const nextStart=new Date(currentStart);nextStart.setDate(nextStart.getDate()+7);
- const dated=all.map(x=>({...x,_start:inferredWeekStart(x,all)}))
-   .filter(x=>x._start&&x._start.getTime()===nextStart.getTime())
-   .filter(x=>DAYS.some(d=>(x.days?.[d]?.sessions||[]).length));
- return dated[0]||current;
-}
-function isSundayNextWeekPreview(snapshot){
- if(coachMode||new Date().getDay()!==0)return false;
- return snapshotKey(snapshot?.meta)!==snapshotKey(currentTrainingSnapshot().meta);
-}
-
-function isPlanningAhead(){
-  return snapshotKey(currentTrainingSnapshot().meta)!==snapshotKey(data.meta);
-}
-
-function weekStartingDate(meta=data.meta){
-  return parseWeekDate(meta?.date);
-}
-function formatWeekStart(d){
-  if(!d)return "Week starting date not set";
-  return "Week Starting Monday "+d.toLocaleDateString("en-AU",{day:"numeric",month:"long",year:"numeric"});
-}
-function weekIdentityHtml(meta=data.meta){
-  const season=esc(meta?.season||"Season");
-  const block=Number(meta?.blockNo)||1;
-  const week=Number(meta?.weekNo)||1;
-  const d=weekStartingDate(meta);
-  return `<div class="weekIdentityBanner">
-    <div class="weekIdentityTop">${season} SEASON</div>
-    <div class="weekIdentityMain">BLOCK ${block} • WEEK ${week}</div>
-    <div class="weekIdentityDate">${formatWeekStart(d)}</div>
-  </div>`;
-}
-
-function carnivalDateObj(c){return c?.date?new Date(c.date+"T00:00:00"):null}
-function carnivalDateLabel(c){
- const d=carnivalDateObj(c);if(!d||isNaN(d))return"DATE TBC";
- return d.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).toUpperCase();
-}
-function carnivalShortDate(c){
- const d=carnivalDateObj(c);if(!d||isNaN(d))return"TBC";
- return d.toLocaleDateString("en-AU",{day:"2-digit",month:"short"}).toUpperCase();
-}
-function timeLabel(v){if(!v)return"TBC";const [h,m]=String(v).split(":").map(Number);const d=new Date(2000,0,1,h||0,m||0);return d.toLocaleTimeString("en-AU",{hour:"numeric",minute:"2-digit"})}
-function sortedCarnivals(){return (data.carnivals||[]).slice().sort((a,b)=>String(a.date||"9999").localeCompare(String(b.date||"9999")))}
-
-function toggleCarnivalOther(){
- const sel=document.getElementById("carnivalNameInput"),wrap=document.getElementById("carnivalOtherWrap");
- if(wrap)wrap.style.display=sel?.value==="Other"?"block":"none";
-}
-
-function clearCarnivalForm(){["carnivalEditId","carnivalDateInput","carnivalStartInput","carnivalMeetInput","carnivalLocationInput","carnivalNoteInput","carnivalOtherInput"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=""});const n=document.getElementById("carnivalNameInput");if(n)n.value="Local Premiership";toggleCarnivalOther();const b=document.getElementById("saveCarnivalBtn");if(b)b.textContent="+ ADD CARNIVAL"}
-function saveCarnival(){
- const selectedName=document.getElementById("carnivalNameInput")?.value||"",name=selectedName==="Other"?(document.getElementById("carnivalOtherInput")?.value.trim()||"Other"):selectedName,date=document.getElementById("carnivalDateInput")?.value||"",location=document.getElementById("carnivalLocationInput")?.value.trim()||"";
- if(!name||!date)return alert("Enter the carnival name and date.");
- const id=document.getElementById("carnivalEditId")?.value||Date.now().toString(36);
- const item={id,name,date,startTime:document.getElementById("carnivalStartInput")?.value||"",meetTime:document.getElementById("carnivalMeetInput")?.value||"",location,note:document.getElementById("carnivalNoteInput")?.value.trim()||""};
- const i=(data.carnivals||[]).findIndex(x=>String(x.id)===String(id));if(i>=0)data.carnivals[i]=item;else data.carnivals.push(item);
- persist();syncCoachCloud(false);renderCarnivals();clearCarnivalForm();
-}
-function editCarnival(id){const c=(data.carnivals||[]).find(x=>String(x.id)===String(id));if(!c)return;document.getElementById("carnivalEditId").value=c.id;const known=["Local Premiership","State Selection","Branch","ASRL","State","Aussies"];const nameSel=document.getElementById("carnivalNameInput");if(nameSel){if(known.includes(c.name)){nameSel.value=c.name;document.getElementById("carnivalOtherInput").value=""}else{nameSel.value="Other";document.getElementById("carnivalOtherInput").value=c.name||""}toggleCarnivalOther()}document.getElementById("carnivalDateInput").value=c.date||"";document.getElementById("carnivalStartInput").value=c.startTime||"";document.getElementById("carnivalMeetInput").value=c.meetTime||"";document.getElementById("carnivalLocationInput").value=c.location||"";document.getElementById("carnivalNoteInput").value=c.note||"";document.getElementById("saveCarnivalBtn").textContent="SAVE CHANGES";window.scrollTo(0,0)}
-function deleteCarnival(id){if(!confirm("Delete this carnival?"))return;data.carnivals=(data.carnivals||[]).filter(x=>String(x.id)!==String(id));persist();syncCoachCloud(false);renderCarnivals()}
-function renderCarnivals(){
- const editor=document.getElementById("carnivalCoachEditor"),list=document.getElementById("carnivalSeasonList"),title=document.getElementById("carnivalPageTitle"),notice=document.getElementById("carnivalNotice");if(!list)return;
- const season=data.meta?.season||"2026/27",all=sortedCarnivals(),today=new Date();today.setHours(0,0,0,0),upcoming=all.filter(c=>{const d=carnivalDateObj(c);return d&&d>=today}),past=all.filter(c=>{const d=carnivalDateObj(c);return d&&d<today});
- if(title)title.textContent=coachMode?"Carnival Calendar":"My Carnivals";
- if(notice)notice.textContent=coachMode?`${season} season race calendar. Add or edit dates here; athletes see the same list.`:`${season} season carnival calendar`;
- if(editor)editor.innerHTML=coachMode?`<div class="card"><h2>Add Carnival</h2><input type="hidden" id="carnivalEditId"><div class="carnivalCoachGrid"><div><div class="label">Carnival Name</div><select id="carnivalNameInput" onchange="toggleCarnivalOther()">${["Local Premiership","State Selection","Branch","ASRL","State","Aussies","Other"].map(x=>`<option>${x}</option>`).join("")}</select><div id="carnivalOtherWrap" style="display:none;margin-top:8px"><div class="label">Other Carnival Name</div><input id="carnivalOtherInput" placeholder="Enter carnival name"></div></div><div><div class="label">Location</div><input id="carnivalLocationInput" placeholder="e.g. Freshwater Beach"></div><div><div class="label">Date</div><input id="carnivalDateInput" type="date"></div><div><div class="label">Carnival Start Time</div><input id="carnivalStartInput" type="time"></div><div><div class="label">Crew Meet Time</div><input id="carnivalMeetInput" type="time"></div><div><div class="label">Coach Note</div><input id="carnivalNoteInput" placeholder="e.g. Meet at boatshed 6:15 AM"></div></div><button id="saveCarnivalBtn" class="btn full green" style="margin-top:12px" onclick="saveCarnival()">+ ADD CARNIVAL</button><button class="btn full secondary" style="margin-top:8px" onclick="clearCarnivalForm()">Clear</button></div>`:"";
- if(coachMode){
-   list.innerHTML=`<div class="card"><div class="row"><div><h2>${esc(season)} Carnivals</h2><div class="sub">${all.length} carnival${all.length===1?"":"s"} entered</div></div></div>${all.length?all.map(c=>`<div class="carnivalListCard"><div class="row"><div><div class="carnivalDate">${carnivalShortDate(c)}</div><b>${esc(c.name)}</b><div class="sub">${esc(c.location||"Location TBC")} • Start ${timeLabel(c.startTime)}${c.meetTime?` • Meet ${timeLabel(c.meetTime)}`:""}</div>${c.note?`<div class="mini" style="margin-top:5px">${esc(c.note)}</div>`:""}</div><div class="row"><button class="btn secondary" onclick="editCarnival('${c.id}')">Edit</button><button class="btn red" onclick="deleteCarnival('${c.id}')">Delete</button></div></div></div>`).join(""):'<div class="empty">No carnivals entered yet.</div>'}</div>`;
- }else{
-   const next=upcoming[0];
-   list.innerHTML=`${next?`<div class="sub" style="margin-top:14px">NEXT CARNIVAL</div><div class="carnivalHero"><div class="carnivalDate">${carnivalDateLabel(next)}</div><div class="carnivalName">${esc(next.name)}</div><div class="carnivalInfo">📍 ${esc(next.location||"Location TBC")}<br>⏱ Start ${timeLabel(next.startTime)}${next.meetTime?`<br>👥 Crew meet ${timeLabel(next.meetTime)}`:""}</div>${next.note?`<div class="notice" style="margin-top:12px"><b>Coach Note</b><div style="margin-top:4px">${esc(next.note)}</div></div>`:""}</div>`:'<div class="card empty">No upcoming carnivals entered yet.</div>'}${upcoming.length>1?`<div class="sub" style="margin-top:16px">UPCOMING</div>${upcoming.slice(1).map(c=>`<div class="carnivalListCard"><div class="row"><div><div class="carnivalDate">${carnivalShortDate(c)}</div><b>${esc(c.name)}</b><div class="sub">${esc(c.location||"Location TBC")} • ${timeLabel(c.startTime)}</div></div><span class="folderChev">›</span></div></div>`).join("")}`:""}${past.length?`<div class="sub" style="margin-top:18px">PAST CARNIVALS</div>${past.slice().reverse().map(c=>`<div class="carnivalListCard"><div class="carnivalDate">${carnivalShortDate(c)}</div><b>${esc(c.name)}</b><div class="sub">${esc(c.location||"")} • ${timeLabel(c.startTime)}</div></div>`).join("")}`:""}`;
- }
-}
-
-function renderAll(){renderDashboard();renderPlanner();renderHistory();renderWeeklyResultsDashboard();renderAthletes();renderCheckin();renderTesting();renderWeeksAhead();renderCarnivals();renderReview();renderQuestionEditors()}
+function nav(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
+function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});nav(coachMode?"dashboard":"checkin")}
+function renderAll(){renderDashboard();renderPlanner();renderHistory();renderAthletes();renderCheckin();renderReview();renderQuestionEditors()}
 function renderDashboard(){
-const live=currentTrainingSnapshot(),meta=live.meta||{},days=live.days||emptyDays();
-sAth.textContent=data.athletes.length;sBlock.textContent=meta.blockNo||1;sWeek.textContent=meta.weekNo||1;
-const pd=DAYS.filter(d=>(days[d]?.sessions||[]).some(s=>s.title||s.type||s.instructions||s.exercises?.length)).length;sDays.textContent=pd+"/7";
-const currentKey=snapshotKey(meta);
-const archivedNow=data.archive?.some(x=>x.key===currentKey||snapshotKey(x.meta)===currentKey);
-const planning=isPlanningAhead()?` • Planning ahead: editing Block ${data.meta.blockNo||1} Week ${data.meta.weekNo||1}`:"";
-const dashWeekIdentity=document.getElementById("dashWeekIdentity");if(dashWeekIdentity)dashWeekIdentity.innerHTML=weekIdentityHtml(meta);
-dashMeta.textContent=`${meta.season||""} • Block ${meta.blockNo||1} — Week ${meta.weekNo||1}${meta.blockName?" • "+meta.blockName:""}${archivedNow?" • SAVED IN HISTORY":""}${planning}`;
-dashWeek.innerHTML=DAYS.map(d=>{const ss=days[d]?.sessions||[];return `<div class="sessionline"><b>${d}</b><div class="sub">${ss.length?ss.map(s=>esc(s.title||s.type||"Session")).join(" • "):"No session entered"}</div></div>`}).join("")
-}
-function savePlannerDraftToData(){
-  if(!document.getElementById("planner")?.classList.contains("active"))return;
-  saveAllVisibleSessions();
-  const seasonEl=document.getElementById("season"),blockNameEl=document.getElementById("blockName"),blockNoEl=document.getElementById("blockNo"),weekNoEl=document.getElementById("weekNo"),weekDateEl=document.getElementById("weekDate"),weekNameEl=document.getElementById("weekName");
-  if(seasonEl)data.meta.season=seasonEl.value.trim();
-  if(blockNameEl)data.meta.blockName=blockNameEl.value.trim();
-  if(blockNoEl)data.meta.blockNo=+blockNoEl.value||1;
-  if(weekNoEl)data.meta.weekNo=+weekNoEl.value||1;
-  if(weekDateEl)data.meta.date=weekDateEl.value;
-  if(weekNameEl)data.meta.name=weekNameEl.value.trim()||`Block ${data.meta.blockNo||1} - Week ${data.meta.weekNo||1}`;
-  persist();
-}
-function queuePlannerCloudSync(){
-  if(!coachMode||!localStorage.getItem("robsCoachKey"))return;
-  savePlannerDraftToData();
-  clearTimeout(plannerSyncTimer);
-  plannerSyncTimer=setTimeout(()=>syncCoachCloud(false),700);
-}
-function flushPlannerCloudSync(){
-  if(!coachMode||!localStorage.getItem("robsCoachKey"))return;
-  clearTimeout(plannerSyncTimer);
-  savePlannerDraftToData();
-  syncCoachCloud(false,true);
+sAth.textContent=data.athletes.length;sBlock.textContent=data.meta.blockNo;sWeek.textContent=data.meta.weekNo;
+const pd=DAYS.filter(d=>data.days[d].sessions.some(s=>s.title||s.type||s.instructions||s.exercises?.length)).length;sDays.textContent=pd+"/7";
+const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;
+const archivedNow=data.archive?.some(x=>x.key===currentKey);
+dashMeta.textContent=`${data.meta.season||""} • Block ${data.meta.blockNo} — Week ${data.meta.weekNo}${data.meta.blockName?" • "+data.meta.blockName:""}${archivedNow?" • SAVED IN HISTORY":""}`;
+dashWeek.innerHTML=DAYS.map(d=>{const ss=data.days[d].sessions||[];return `<div class="sessionline"><b>${d}</b><div class="sub">${ss.length?ss.map(s=>esc(s.title||s.type||"Session")).join(" • "):"No session entered"}</div></div>`}).join("")
 }
 function saveWeekDetails(){
 const seasonEl=document.getElementById("season"),blockNameEl=document.getElementById("blockName"),blockNoEl=document.getElementById("blockNo"),weekNoEl=document.getElementById("weekNo"),weekDateEl=document.getElementById("weekDate"),weekNameEl=document.getElementById("weekName");
 data.meta={season:seasonEl.value.trim(),blockName:blockNameEl.value.trim(),blockNo:+blockNoEl.value||1,weekNo:+weekNoEl.value||1,date:weekDateEl.value,name:weekNameEl.value.trim()||`Block ${+blockNoEl.value||1} - Week ${+weekNoEl.value||1}`};
-persist();syncCoachCloud(false);renderAll();alert("Week details saved");
+persist();renderAll();alert("Week details saved");
 }
 function renderPlanner(){
-const coachWeekIdentity=document.getElementById("coachWeekIdentity");
-if(coachWeekIdentity){
-  const live=currentTrainingSnapshot();
-  coachWeekIdentity.innerHTML=weekIdentityHtml(data.meta)+(isPlanningAhead()?`<div class="notice" style="margin-top:-4px;margin-bottom:12px"><b>Current athlete training week:</b> Block ${live.meta?.blockNo||1} • Week ${live.meta?.weekNo||1}. You are editing a future week.</div>`:"");
-}
 season.value=data.meta.season||"";blockName.value=data.meta.blockName||"";blockNo.value=data.meta.blockNo||1;weekNo.value=data.meta.weekNo||1;weekDate.value=data.meta.date||"";weekName.value=data.meta.name||"";
 plannerDays.innerHTML=DAYS.map(day=>`<div class="card day"><div class="row"><div class="dayname">${day}</div><span class="badge">${data.days[day].sessions.length} SESSION${data.days[day].sessions.length===1?"":"S"}</span></div><div>${data.days[day].sessions.map((s,i)=>sessionEditor(day,s,i)).join("")||'<div class="empty" style="padding:10px 0">No sessions added.</div>'}</div><button class="btn full secondary" onclick="addSession('${day}')">+ Add Session</button></div>`).join("")
 }
-function addSession(day){savePlannerDraftToData();data.days[day].sessions.push({id:Date.now()+"_"+Math.random().toString(36).slice(2),title:"",type:"",instructions:"",notes:"",exercises:[]});persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
-function removeSession(day,id){savePlannerDraftToData();data.days[day].sessions=data.days[day].sessions.filter(s=>s.id!==id);persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
+function addSession(day){data.days[day].sessions.push({id:Date.now()+"_"+Math.random().toString(36).slice(2),title:"",type:"",instructions:"",notes:"",exercises:[]});saveRender()}
+function removeSession(day,id){data.days[day].sessions=data.days[day].sessions.filter(s=>s.id!==id);saveRender()}
 function isCardio(t){return ["Erg","Boat","Cycling","Running"].includes(t)}
-function changeSessionType(day,id){
- const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;
- const newType=document.getElementById(`${day}_${id}_type`)?.value||s.type;
- savePlannerDraftToData();
- s.type=newType;
- if(["Erg Testing","Weight Testing"].includes(newType)){
-   const cat=newType==="Erg Testing"?"Erg":"Gym";
-   const allowed=(data.tests||[]).filter(t=>t.category===cat);
-   const allowedIds=new Set(allowed.map(t=>String(t.id)));
-   s.testItems=(s.testItems||[]).filter(t=>allowedIds.has(String(t.testId)));
-   if(!s.testItems.length&&allowed.length){
-     const b=allowed[0];
-     s.testItems=[{testId:b.id,name:b.name,unit:b.unit||"score",target:b.target||""}];
-   }
-   s.exercises=[];
- }
- persist();renderPlanner();renderDashboard();queuePlannerCloudSync()
-}
-function sessionEditor(day,s,i){
- const carnival=s.type==="Carnival",boat=s.type==="Boat",special=carnival||boat,testing=["Erg Testing","Weight Testing"].includes(s.type),testCategory=s.type==="Erg Testing"?"Erg":"Gym";
- const testOptions=(data.tests||[]).filter(t=>t.category===testCategory);
- return `<div class="sessionCard"><div class="row"><b>SESSION ${i+1}</b><button class="btn red" onclick="removeSession('${day}','${s.id}')">Remove</button></div><div class="grid2"><div><div class="label">Session title</div><input id="${day}_${s.id}_title" value="${esc(s.title)}" placeholder="${carnival?"Carnival":boat?"Boat Session":testing?"Testing Session":""}"></div><div><div class="label">Type</div><select id="${day}_${s.id}_type" onchange="changeSessionType('${day}','${s.id}')">${["","Gym","Erg","Boat","Cycling","Running","Carnival","Recovery","Rest","Erg Testing","Weight Testing"].map(x=>`<option ${s.type===x?"selected":""}>${x}</option>`).join("")}</select></div></div>
- ${special?`<div class="specialSessionCoachBox"><div class="grid2">
-   <div><div class="label">${boat?"Boat location":"Carnival location"}</div><input id="${day}_${s.id}_${boat?"boatLocation":"carnivalLocation"}" value="${esc(boat?(s.boatLocation||""):(s.carnivalLocation||""))}" placeholder="e.g. Freshwater Beach"></div>
-   <div>${carnival?`<div class="label">Carnival type</div><select id="${day}_${s.id}_carnivalType">${["Local Premiership","State Selection","Branch","ASRL","State","Aussies","Other"].map(x=>`<option ${s.carnivalType===x?"selected":""}>${x}</option>`).join("")}</select>`:`<div class="label">Session type</div><div class="specialFixedType">🚣 Boat</div>`}</div>
-   <div><div class="label">Start time</div><input id="${day}_${s.id}_${boat?"boatStartTime":"carnivalStartTime"}" type="time" value="${esc(boat?(s.boatStartTime||""):(s.carnivalStartTime||""))}"></div>
-   <div><div class="label">Crew meet time</div><input id="${day}_${s.id}_${boat?"boatMeetTime":"carnivalMeetTime"}" type="time" value="${esc(boat?(s.boatMeetTime||""):(s.carnivalMeetTime||""))}"></div>
- </div></div>`:
- testing?`<div class="carnivalBox"><div class="label">${testCategory} tests for this session</div><div class="sub" style="margin-bottom:8px">Add tests from your existing Testing setup. Edit changes this week only; Remove only removes it from this week's session.</div><div id="${day}_${s.id}_testrows">${(s.testItems||[]).map((ti,j)=>weeklyTestEditorRow(day,s,j,ti,testOptions)).join("")}</div><button type="button" class="btn secondary" onclick="addWeeklyTest('${day}','${s.id}')">+ Add Test</button></div>`:
- `<div class="row" style="margin-top:12px"><h3>${isCardio(s.type)?"Cardio Builder":"Workout Builder"}</h3><button class="btn secondary" onclick="addExercise('${day}','${s.id}')">+ Add</button></div><div class="builderRow builderHead">${isCardio(s.type)?"<span>Piece</span><span>Time</span><span>Rest</span><span>Sets</span><span></span><span></span>":"<span>Exercise</span><span>Sets</span><span>Reps</span><span class='rest'>Rest</span><span></span><span></span>"}</div><div id="${day}_${s.id}_rows">${(s.exercises||[]).map((x,j)=>exerciseRow(day,s,j,x)).join("")}</div>`}
- <div class="label">Session instructions</div><textarea id="${day}_${s.id}_instructions">${esc(s.instructions||"")}</textarea><div class="label">Coach notes</div><textarea id="${day}_${s.id}_notes">${esc(s.notes||"")}</textarea><button class="btn full" onclick="saveSession('${day}','${s.id}',true)">Save Session ${i+1}</button></div>`;
-}
-function weeklyTestEditorRow(day,s,j,ti,options){
- let base=options.find(t=>String(t.id)===String(ti?.testId));
- if(!base)base=options[0];
- const selected=base?.id||"";
- const name=(String(ti?.testId)===String(selected)&&ti?.name)?ti.name:(base?.name||"");
- const unit=(String(ti?.testId)===String(selected)&&ti?.unit)?ti.unit:(base?.unit||"score");
- const target=(String(ti?.testId)===String(selected)&&ti?.target!==undefined)?ti.target:(base?.target||"");
- return `<div class="question"><div class="row"><b>Test ${j+1}</b><button type="button" class="btn red" onclick="removeWeeklyTest('${day}','${s.id}',${j})">Remove</button></div><div class="grid2"><div><div class="label">Test</div><select data-wtf="testId" onchange="updateWeeklyTestBase('${day}','${s.id}',${j},this.value)">${options.map(t=>`<option value="${esc(t.id)}" ${String(t.id)===String(selected)?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div><div><div class="label">Display name / edit for this week</div><input data-wtf="name" value="${esc(name)}" placeholder="Test name"></div><div><div class="label">Score unit</div><input data-wtf="unit" value="${esc(unit)}" placeholder="e.g. time, kg"></div><div><div class="label">Coach target / notes</div><input data-wtf="target" value="${esc(target)}" placeholder="Optional"></div></div></div>`;
-}
-function addWeeklyTest(day,id){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;const cat=s.type==="Erg Testing"?"Erg":"Gym",base=(data.tests||[]).find(t=>t.category===cat);if(!base)return alert(`No ${cat} tests are set up yet. Add one in Testing first.`);s.testItems=s.testItems||[];s.testItems.push({testId:base.id,name:base.name,unit:base.unit||"score",target:base.target||""});persist();renderPlanner();queuePlannerCloudSync()}
-function removeWeeklyTest(day,id,j){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.testItems=s.testItems||[];s.testItems.splice(j,1);persist();renderPlanner();queuePlannerCloudSync()}
-function updateWeeklyTestBase(day,id,j,testId){const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;const base=(data.tests||[]).find(t=>String(t.id)===String(testId));if(!base)return;s.testItems=s.testItems||[];s.testItems[j]={testId:base.id,name:base.name,unit:base.unit||"score",target:base.target||""};persist();renderPlanner();queuePlannerCloudSync()}
-function exerciseRow(day,s,j,x){const c=isCardio(s.type);return `<div class="builderRow"><input data-f="name" value="${esc(x.name||"")}" placeholder="${c?"10-1 ERG":"Back Squat"}"><input data-f="a" value="${esc(x.a||"")}" placeholder="${c?"Time":"Sets"}">${c?`<input class="rest" data-f="c" value="${esc(x.c||"")}" placeholder="Rest"><input data-f="d" value="${esc(x.d||"")}" placeholder="Sets"><input data-f="b" type="hidden" value="">`:`<input data-f="b" value="${esc(x.b||"")}" placeholder="Reps"><input class="rest" data-f="c" value="${esc(x.c||"")}" placeholder="Rest"><input data-f="d" type="hidden" value="">`}<button class="btn red" onclick="removeExercise('${day}','${s.id}',${j})">×</button></div>`}
-function addExercise(day,id){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.exercises.push({name:"",a:"",b:"",c:"",d:""});persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
-function removeExercise(day,id,j){savePlannerDraftToData();const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;s.exercises.splice(j,1);persist();renderPlanner();renderDashboard();queuePlannerCloudSync()}
+function sessionEditor(day,s,i){return `<div class="sessionCard"><div class="row"><b>SESSION ${i+1}</b><button class="btn red" onclick="removeSession('${day}','${s.id}')">Remove</button></div>
+<div class="grid2"><div><div class="label">Session title</div><input id="${day}_${s.id}_title" value="${esc(s.title)}"></div><div><div class="label">Type</div><select id="${day}_${s.id}_type" onchange="saveSession('${day}','${s.id}',false)">${["","Gym","Erg","Boat","Cycling","Running","Recovery","Rest"].map(x=>`<option ${s.type===x?"selected":""}>${x}</option>`).join("")}</select></div></div>
+<div class="row" style="margin-top:12px"><h3>${isCardio(s.type)?"Cardio Builder":"Workout Builder"}</h3><button class="btn secondary" onclick="addExercise('${day}','${s.id}')">+ Add</button></div>
+<div class="builderRow builderHead">${isCardio(s.type)?"<span>Piece</span><span>Time</span><span>Target Pace</span><span class='rest'>Rest</span><span>Sets</span><span></span>":"<span>Exercise</span><span>Sets</span><span>Reps</span><span class='rest'>Rest</span><span></span><span></span>"}</div>
+<div id="${day}_${s.id}_rows">${(s.exercises||[]).map((x,j)=>exerciseRow(day,s,j,x)).join("")}</div>
+<div class="label">Session instructions</div><textarea id="${day}_${s.id}_instructions">${esc(s.instructions||"")}</textarea>
+<div class="label">Coach notes</div><textarea id="${day}_${s.id}_notes">${esc(s.notes||"")}</textarea>
+<button class="btn full" onclick="saveSession('${day}','${s.id}',true)">Save Session ${i+1}</button></div>`}
+function exerciseRow(day,s,j,x){const c=isCardio(s.type);return `<div class="builderRow"><input data-f="name" value="${esc(x.name||"")}" placeholder="${c?"4 x 1km":"Back Squat"}"><input data-f="a" value="${esc(x.a||"")}" placeholder="${c?"Time":"Sets"}"><input data-f="b" value="${esc(x.b||"")}" placeholder="${c?"Pace":"Reps"}"><input class="rest" data-f="c" value="${esc(x.c||"")}" placeholder="Rest">${c?`<input data-f="d" value="${esc(x.d||"")}" placeholder="Sets">`:`<input data-f="d" type="hidden" value=""><span></span>`}<button class="btn red" onclick="removeExercise('${day}','${s.id}',${j})">×</button></div>`}
+function addExercise(day,id){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.push({name:"",a:"",b:"",c:"",d:""});saveRender()}
+function removeExercise(day,id,j){const s=data.days[day].sessions.find(x=>x.id===id);s.exercises.splice(j,1);saveRender()}
 function saveSession(day,id,notify=true){
- const s=data.days[day].sessions.find(x=>x.id===id);if(!s)return;
- s.title=document.getElementById(`${day}_${id}_title`)?.value??s.title;
- s.type=document.getElementById(`${day}_${id}_type`)?.value??s.type;
- s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value??s.instructions;
- s.notes=document.getElementById(`${day}_${id}_notes`)?.value??s.notes;
- if(s.type==="Carnival"){
-   s.carnivalLocation=document.getElementById(`${day}_${id}_carnivalLocation`)?.value??s.carnivalLocation??"";
-   s.carnivalType=document.getElementById(`${day}_${id}_carnivalType`)?.value??s.carnivalType??"Local Premiership";
-   s.carnivalStartTime=document.getElementById(`${day}_${id}_carnivalStartTime`)?.value??s.carnivalStartTime??"";
-   s.carnivalMeetTime=document.getElementById(`${day}_${id}_carnivalMeetTime`)?.value??s.carnivalMeetTime??"";
-   s.exercises=[];
- }
- if(s.type==="Boat"){
-   s.boatLocation=document.getElementById(`${day}_${id}_boatLocation`)?.value??s.boatLocation??"";
-   s.boatStartTime=document.getElementById(`${day}_${id}_boatStartTime`)?.value??s.boatStartTime??"";
-   s.boatMeetTime=document.getElementById(`${day}_${id}_boatMeetTime`)?.value??s.boatMeetTime??"";
-   s.exercises=[];
- }
- if(["Erg Testing","Weight Testing"].includes(s.type)){
-   const rows=[...(document.getElementById(`${day}_${id}_testrows`)?.children||[])];
-   s.testItems=rows.map(r=>{let o={};r.querySelectorAll("[data-wtf]").forEach(el=>o[el.dataset.wtf]=el.value);return o});
-   s.exercises=[];
- }else if(!["Carnival","Boat"].includes(s.type)){
-   const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];
-   if(rows.length)s.exercises=rows.map(r=>{let o={};r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);return o});
- }
- persist();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true);renderDashboard();if(notify)alert(`${day} Session saved and synced`);
+  const s=data.days[day].sessions.find(x=>x.id===id); if(!s)return;
+  s.title=document.getElementById(`${day}_${id}_title`)?.value ?? s.title;
+  s.type=document.getElementById(`${day}_${id}_type`)?.value ?? s.type;
+  s.instructions=document.getElementById(`${day}_${id}_instructions`)?.value ?? s.instructions;
+  s.notes=document.getElementById(`${day}_${id}_notes`)?.value ?? s.notes;
+  const rows=[...(document.getElementById(`${day}_${id}_rows`)?.children||[])];
+  s.exercises=rows.map(r=>{
+    let o={};
+    r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
+    return o;
+  });
+  persist();
+  renderDashboard();
+  if(notify) alert(`${day} Session saved`);
 }
 function snapshot(){return JSON.parse(JSON.stringify({meta:data.meta,days:data.days}))}
-function createNextWeekFromCurrent(){const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;let x=data.archive.find(a=>a.key===currentKey);if(!x){const ok=confirm("This week is not saved in History yet. Save / Archive it first?");if(!ok)return;archiveCurrentWeek();return}createNextWeek(currentKey)}
+
+function createNextWeekFromCurrent(){
+  const currentKey=`${data.meta.season}|${data.meta.blockNo}|${data.meta.weekNo}`;
+  let x=data.archive.find(a=>a.key===currentKey);
+  if(!x){
+    const ok=confirm("This week is not saved in History yet. Save / Archive it first?");
+    if(!ok)return;
+    archiveCurrentWeek();
+    return;
+  }
+  createNextWeek(currentKey);
+}
 function saveAllVisibleSessions(){
- DAYS.forEach(day=>{
-  (data.days[day]?.sessions||[]).forEach(s=>{
-   const title=document.getElementById(`${day}_${s.id}_title`),type=document.getElementById(`${day}_${s.id}_type`),instructions=document.getElementById(`${day}_${s.id}_instructions`),notes=document.getElementById(`${day}_${s.id}_notes`);
-   if(title)s.title=title.value;if(type)s.type=type.value;if(instructions)s.instructions=instructions.value;if(notes)s.notes=notes.value;
-   if(s.type==="Carnival"){
-    const loc=document.getElementById(`${day}_${s.id}_carnivalLocation`),ct=document.getElementById(`${day}_${s.id}_carnivalType`),st=document.getElementById(`${day}_${s.id}_carnivalStartTime`),mt=document.getElementById(`${day}_${s.id}_carnivalMeetTime`);
-    if(loc)s.carnivalLocation=loc.value;if(ct)s.carnivalType=ct.value;if(st)s.carnivalStartTime=st.value;if(mt)s.carnivalMeetTime=mt.value;s.exercises=[];
-   }
-   if(s.type==="Boat"){
-    const loc=document.getElementById(`${day}_${s.id}_boatLocation`),st=document.getElementById(`${day}_${s.id}_boatStartTime`),mt=document.getElementById(`${day}_${s.id}_boatMeetTime`);
-    if(loc)s.boatLocation=loc.value;if(st)s.boatStartTime=st.value;if(mt)s.boatMeetTime=mt.value;s.exercises=[];
-   }
-   if(["Erg Testing","Weight Testing"].includes(s.type)){
-    const testRows=[...(document.getElementById(`${day}_${s.id}_testrows`)?.children||[])];
-    s.testItems=testRows.map(r=>{let o={};r.querySelectorAll("[data-wtf]").forEach(el=>o[el.dataset.wtf]=el.value);return o});s.exercises=[];
-   }
-   if(!["Carnival","Boat","Erg Testing","Weight Testing"].includes(s.type)){
-    const rows=[...(document.getElementById(`${day}_${s.id}_rows`)?.children||[])];
-    if(rows.length)s.exercises=rows.map(r=>{let o={};r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);return o});
-   }
-  })
- })
+  DAYS.forEach(day=>{
+    (data.days[day]?.sessions||[]).forEach(s=>{
+      const title=document.getElementById(`${day}_${s.id}_title`);
+      const type=document.getElementById(`${day}_${s.id}_type`);
+      const instructions=document.getElementById(`${day}_${s.id}_instructions`);
+      const notes=document.getElementById(`${day}_${s.id}_notes`);
+      if(title) s.title=title.value;
+      if(type) s.type=type.value;
+      if(instructions) s.instructions=instructions.value;
+      if(notes) s.notes=notes.value;
+      const rows=[...(document.getElementById(`${day}_${s.id}_rows`)?.children||[])];
+      if(rows.length){
+        s.exercises=rows.map(r=>{
+          let o={};
+          r.querySelectorAll("[data-f]").forEach(el=>o[el.dataset.f]=el.value);
+          return o;
+        });
+      }
+    });
+  });
 }
-function archiveCurrentWeek(){saveAllVisibleSessions();const seasonEl=document.getElementById("season"),blockNameEl=document.getElementById("blockName"),blockNoEl=document.getElementById("blockNo"),weekNoEl=document.getElementById("weekNo"),weekDateEl=document.getElementById("weekDate"),weekNameEl=document.getElementById("weekName");data.meta={season:seasonEl?.value?.trim()||data.meta.season||"",blockName:blockNameEl?.value?.trim()||data.meta.blockName||"",blockNo:+(blockNoEl?.value||data.meta.blockNo||1),weekNo:+(weekNoEl?.value||data.meta.weekNo||1),date:weekDateEl?.value||data.meta.date||"",name:weekNameEl?.value?.trim()||`Block ${+(blockNoEl?.value||data.meta.blockNo||1)} - Week ${+(weekNoEl?.value||data.meta.weekNo||1)}`};const snap=snapshot();const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;data.archive=data.archive.filter(x=>x.key!==key);data.archive.push({key,savedAt:new Date().toISOString(),...snap});persist();syncCoachCloud(false);renderAll();alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);nav("programs")}
-function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season&&+x.meta.blockNo===+data.meta.blockNo&&+x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
-function currentWeekSessionLogs(){const m=currentTrainingSnapshot().meta||data.meta;return(data.sessionLogs||[]).filter(l=>l.season===m.season&&+l.blockNo===+m.blockNo&&+l.weekNo===+m.weekNo)}
-function sessionLogLabel(l){if(l.type==="Carnival")return`🏁 ${l.carnivalResult||"Result"}`;return`✅ ${l.sessionTitle||l.type||"Session"}`}
-function sessionLogDetailHtml(l){if(l.type==="Carnival")return`<div class="resultDetail"><b>${esc(l.carnivalLocation||"Carnival")} — ${esc(l.carnivalType||"")}</b><div class="sub">Result: ${esc(l.carnivalResult||"")}${l.athleteNotes?" • "+esc(l.athleteNotes):""}</div></div>`;return `<div class="resultDetail">${(l.results||[]).map(r=>`<div class="sub"><b>${esc(r.name||"")}</b>${r.sets?.length?" • "+r.sets.map(z=>`Set ${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" / ":""}${z.meters?esc(z.meters)+"m":""}${(z.split||z.meters)&&z.rest?" / ":""}${z.rest?"rest "+esc(z.rest):""}`).join(" | "):""}${r.setWeights?.length?" • "+r.setWeights.map((w,k)=>`Set ${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k])+" reps":""}${(w||r.setReps?.[k])&&r.setRests?.[k]?" / ":""}${r.setRests?.[k]?"rest "+esc(r.setRests[k]):""}`).join(" | "):""}${r.substituted?" • SUBSTITUTE: "+esc(r.substituteName||"")+(r.substituteReason?" ("+esc(r.substituteReason)+")":""):""}${r.exerciseNote?`<br><span class="mini">Athlete note: ${esc(r.exerciseNote)}</span>`:""}</div>`).join("")}${(l.avgHeartRate||l.sessionRpe)?`<div class="mini" style="margin-top:6px">${l.avgHeartRate?`Avg HR: ${esc(l.avgHeartRate)} bpm`:""}${l.avgHeartRate&&l.sessionRpe?" • ":""}${l.sessionRpe?`RPE: ${esc(l.sessionRpe)}/10`:""}</div>`:""}${l.athleteNotes?`<div class="mini" style="margin-top:5px">Notes: ${esc(l.athleteNotes)}</div>`:""}</div>`}
-function toggleWeeklyResultDetail(id){const el=document.getElementById(`weekly_detail_${id}`);if(!el)return;el.style.display=el.style.display==="none"?"block":"none"}
-function renderWeeklyResultsDashboard(){
- const el=document.getElementById("weeklyResultsDashboard");if(!el)return;
- const athletes=data.athletes||[],logs=(data.sessionLogs||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
- if(!athletes.length){el.innerHTML='<div class="card empty">No athletes added yet.</div>';return}
- const weekKey=l=>`${l.season||""}|${l.blockNo||""}|${l.weekNo||""}`;
- const weekLabel=l=>`${esc(l.season||"")} • Block ${l.blockNo||""} • Week ${l.weekNo||""}`;
- el.innerHTML=athletes.map(a=>{
-   const alogs=logs.filter(l=>l.athleteId===a.id);
-   const groups={};alogs.forEach(l=>{const k=weekKey(l);(groups[k]??=[]).push(l)});
-   const weeks=Object.values(groups).sort((x,y)=>(y[0]?.savedAt||0)-(x[0]?.savedAt||0));
-   return `<div class="folderCard">
-    <button class="folderBtn" onclick="toggleFolder('hist_${a.id}')"><div><div class="folderTitle">📁 ${esc(a.name)}</div><div class="folderMeta">${esc(a.squad||"")} • ${alogs.length} training result${alogs.length===1?"":"s"}</div></div><span class="folderChev">›</span></button>
-    <div class="folderBody" id="hist_${a.id}" style="display:none">${weeks.length?weeks.map((w,wi)=>{
-      const first=w[0],wid=`hist_${a.id}_w_${wi}`;
-      return `<div class="weekFolder"><button class="weekFolderBtn" onclick="toggleFolder('${wid}')"><div><b>${weekLabel(first)}</b><div class="mini">${w.length} session result${w.length===1?"":"s"}</div></div><span class="folderChev">›</span></button>
-      <div class="weekFolderBody" id="${wid}" style="display:none">${w.map(l=>`<div class="sessionFolder"><button class="folderBtn" style="padding:4px 0" onclick="toggleFolder('hist_log_${l.id}')"><div><b>${esc(l.day||"")} — ${esc(sessionLogLabel(l))}</b><div class="mini">Tap to view scores & feedback</div></div><span class="folderChev">›</span></button><div id="hist_log_${l.id}" style="display:none">${sessionLogDetailHtml(l)}</div></div>`).join("")}</div></div>`
-    }).join(""):'<div class="empty">No training results submitted yet.</div>'}</div>
-   </div>`
- }).join("")
+function archiveCurrentWeek(){
+  saveAllVisibleSessions();
+  const seasonEl=document.getElementById("season");
+  const blockNameEl=document.getElementById("blockName");
+  const blockNoEl=document.getElementById("blockNo");
+  const weekNoEl=document.getElementById("weekNo");
+  const weekDateEl=document.getElementById("weekDate");
+  const weekNameEl=document.getElementById("weekName");
+  data.meta={
+    season:seasonEl?.value?.trim()||data.meta.season||"",
+    blockName:blockNameEl?.value?.trim()||data.meta.blockName||"",
+    blockNo:+(blockNoEl?.value||data.meta.blockNo||1),
+    weekNo:+(weekNoEl?.value||data.meta.weekNo||1),
+    date:weekDateEl?.value||data.meta.date||"",
+    name:weekNameEl?.value?.trim()||`Block ${+(blockNoEl?.value||data.meta.blockNo||1)} - Week ${+(weekNoEl?.value||data.meta.weekNo||1)}`
+  };
+  const snap=snapshot();
+  const key=`${snap.meta.season}|${snap.meta.blockNo}|${snap.meta.weekNo}`;
+  data.archive=data.archive.filter(x=>x.key!==key);
+  data.archive.push({key,savedAt:new Date().toISOString(),...snap});
+  persist();
+  syncCoachCloud(false);
+  renderAll();
+  alert(`Saved to History: Block ${snap.meta.blockNo} - Week ${snap.meta.weekNo}`);
+  nav("programs");
 }
-function toggleFolder(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==="none"?"block":"none"}
-
+function copyPreviousWeek(){const candidates=data.archive.filter(x=>x.meta.season===data.meta.season && +x.meta.blockNo===+data.meta.blockNo && +x.meta.weekNo<+data.meta.weekNo).sort((a,b)=>b.meta.weekNo-a.meta.weekNo);if(!candidates.length)return alert("No previous archived week found in this block.");data.days=JSON.parse(JSON.stringify(candidates[0].days));persist();renderAll();alert(`Copied Block ${candidates[0].meta.blockNo} Week ${candidates[0].meta.weekNo}`)}
 function renderHistory(){
- const historyEl=document.getElementById("history");if(!historyEl)return;
- const groups={};
- (data.archive||[]).forEach(x=>{
-   const season=x.meta?.season||"",block=Number(x.meta?.blockNo)||1,name=x.meta?.blockName||"";
-   const key=`${season}|${block}|${name}`;
-   (groups[key]??=[]).push(x);
- });
- const entries=Object.entries(groups).sort(([,a],[,b])=>{
-   const aa=a[0]?.meta||{},bb=b[0]?.meta||{};
-   return String(aa.season||"").localeCompare(String(bb.season||""))||(Number(aa.blockNo)||1)-(Number(bb.blockNo)||1);
- });
- if(!entries.length){
-   historyEl.innerHTML='<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
-   return;
- }
- historyEl.innerHTML=entries.map(([key,arr],bi)=>{
-   arr.sort((a,b)=>(Number(a.meta?.weekNo)||1)-(Number(b.meta?.weekNo)||1));
-   const meta=arr[0]?.meta||{},block=Number(meta.blockNo)||1,season=meta.season||"",blockName=meta.blockName||"";
-   const bid=`coachBlock_${bi}`;
-   return `<div class="coachHistoryBlock" id="${bid}">
-     <button class="coachHistoryBlockBtn" type="button" onclick="toggleCoachHistoryFolder('${bid}')">
-       <div>
-         <div class="coachHistoryBlockTitle">BLOCK ${block}</div>
-         <div class="sub">${esc(season)}${blockName?` • ${esc(blockName)}`:""} • ${arr.length} saved week${arr.length===1?"":"s"}</div>
-       </div>
-       <span class="folderChev">›</span>
-     </button>
-     <div class="coachHistoryBlockBody">
-       <div class="coachHistoryBlockActions">
-         <button class="btn secondary" onclick="duplicateBlock('${String(season).replace(/'/g,"\\'")}',${block})">Duplicate Block</button>
-       </div>
-       ${arr.map((x,wi)=>{
-         const wid=`coachBlock_${bi}_week_${wi}`,d=parseWeekDate(x.meta?.date),dateRange=d?formatUpcomingRange(d):"Date not set";
-         return `<div class="coachHistoryWeek" id="${wid}">
-           <button class="coachHistoryWeekBtn" type="button" onclick="toggleCoachHistoryFolder('${wid}')">
-             <div><b>WEEK ${Number(x.meta?.weekNo)||wi+1}</b><div class="sub">${dateRange}${x.meta?.name?` • ${esc(x.meta.name)}`:""}</div></div>
-             <span class="folderChev">›</span>
-           </button>
-           <div class="coachHistoryWeekBody">
-             <div class="coachHistoryWeekActions">
-               <button class="btn secondary" onclick="loadArchive('${String(x.key).replace(/'/g,"\\'")}')">Load</button>
-               <button class="btn" onclick="copyArchive('${String(x.key).replace(/'/g,"\\'")}')">Copy to Current</button>
-               <button class="btn green" onclick="createNextWeek('${String(x.key).replace(/'/g,"\\'")}')">Create Next Week</button>
-             </div>
-           </div>
-         </div>`;
-       }).join("")}
-     </div>
-   </div>`;
- }).join("");
-}
-function toggleCoachHistoryFolder(id){
- const el=document.getElementById(id);if(el)el.classList.toggle("open");
+const groups={};data.archive.forEach(x=>{const k=`${x.meta.season} • Block ${x.meta.blockNo} — ${x.meta.blockName||""}`;(groups[k]??=[]).push(x)});
+const historyEl=document.getElementById("history");
+if(!historyEl)return;
+historyEl.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([k,arr])=>`<div class="card"><div class="row"><h2>${esc(k)}</h2><button class="btn secondary" onclick="duplicateBlock('${esc(arr[0].meta.season)}',${arr[0].meta.blockNo})">Duplicate Block</button></div>${arr.sort((a,b)=>a.meta.weekNo-b.meta.weekNo).map(x=>`<div class="sessionline"><div><b>Week ${x.meta.weekNo}</b><div class="sub">${esc(x.meta.name||"")} ${x.meta.date?"• "+x.meta.date:""}</div></div><div class="row"><button class="btn secondary" onclick="loadArchive('${x.key}')">Load</button><button class="btn" onclick="copyArchive('${x.key}')">Copy to Current</button><button class="btn green" onclick="createNextWeek('${x.key}')">Create Next Week</button></div></div>`).join("")}</div>`).join(""):'<div class="card empty"><b>No archived weeks yet.</b><br><br>Go to Week and tap <b>Save / Archive Week to History</b> after entering your sessions.</div>';
 }
 
-function blankDays(){return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]))}
-function createNextWeek(key){const x=data.archive.find(a=>a.key===key);if(!x)return;const nextWeek=(+x.meta.weekNo||1)+1;const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);data.meta={season:x.meta.season,blockName:x.meta.blockName,blockNo:+x.meta.blockNo||1,weekNo:nextWeek,date:"",name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`};data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();persist();renderAll();nav("planner");alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`)}
+function blankDays(){
+  return Object.fromEntries(DAYS.map(d=>[d,{sessions:[]}]));
+}
+function createNextWeek(key){
+  const x=data.archive.find(a=>a.key===key);
+  if(!x)return;
+  const nextWeek=(+x.meta.weekNo||1)+1;
+  const copyProgram=confirm(`Create Block ${x.meta.blockNo} - Week ${nextWeek}.\n\nPress OK to COPY Week ${x.meta.weekNo}'s sessions.\nPress Cancel to start the new week BLANK.`);
+  data.meta={
+    season:x.meta.season,
+    blockName:x.meta.blockName,
+    blockNo:+x.meta.blockNo||1,
+    weekNo:nextWeek,
+    date:"",
+    name:`Block ${+x.meta.blockNo||1} - Week ${nextWeek}`
+  };
+  data.days=copyProgram?JSON.parse(JSON.stringify(x.days)):blankDays();
+  persist();
+  renderAll();
+  nav("planner");
+  alert(`Block ${data.meta.blockNo} - Week ${nextWeek} created${copyProgram?" from the previous week's program":" as a blank week"}. Week ${x.meta.weekNo} remains saved in History.`);
+}
 function loadArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.meta=JSON.parse(JSON.stringify(x.meta));data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner")}
 function copyArchive(key){const x=data.archive.find(a=>a.key===key);if(!x)return;data.days=JSON.parse(JSON.stringify(x.days));persist();nav("planner");alert("Program copied. Change Block/Week details, then save.")}
 function duplicateBlock(seas,bn){const arr=data.archive.filter(x=>x.meta.season===seas&&+x.meta.blockNo===+bn);if(!arr.length)return;const newSeason=prompt("New season name:",seas)||seas;const newBlock=+(prompt("New block number:",String(bn))||bn);arr.forEach(x=>{const y=JSON.parse(JSON.stringify(x));y.meta.season=newSeason;y.meta.blockNo=newBlock;y.key=`${newSeason}|${newBlock}|${y.meta.weekNo}`;y.savedAt=new Date().toISOString();data.archive=data.archive.filter(a=>a.key!==y.key);data.archive.push(y)});persist();renderAll();alert("Block duplicated")}
-const API="/api";
-function coachDeviceRole(){return localStorage.getItem("robsCoachRole")||"follower"}
-function setCoachDeviceRole(role){
-  localStorage.setItem("robsCoachRole",role);
-  updateCoachRoleStatus();
-}
-function updateCoachRoleStatus(){
-  const el=document.getElementById("deviceRoleStatus");
-  if(!el)return;
-  const role=coachDeviceRole();
-  el.textContent=role==="master"?"THIS DEVICE: MASTER • edits auto-sync":"THIS DEVICE: FOLLOWER • auto-loads latest program";
-}
-async function saveCoachCloudKey(){const v=document.getElementById("coachCloudKey")?.value.trim();if(!v)return alert("Enter the coach key first.");localStorage.setItem("robsCoachKey",v);if(!localStorage.getItem("robsCoachRole"))setCoachDeviceRole("follower");const st=document.getElementById("cloudStatus");if(st)st.textContent="Connecting to Coach Cloud…";const loaded=await loadCoachCloud(false);updateCoachRoleStatus();if(st)st.textContent=loaded?"Coach Cloud connected and latest program loaded.":"Coach key saved, but latest program could not be loaded."}
-async function pushThisDeviceToCloud(){
-  const key=localStorage.getItem("robsCoachKey");
-  if(!key){alert("Enter and save the Coach key first.");return false}
-  if(document.getElementById("planner")?.classList.contains("active"))savePlannerDraftToData();
-  persist();
-  const st=document.getElementById("cloudStatus"),detail=document.getElementById("syncDetail");
-  if(st)st.textContent="Pushing this device to Coach Cloud…";
-  try{
-    const r=await fetch(API+"?action=coach-sync",{
-      method:"POST",
-      headers:{"Content-Type":"application/json","x-coach-key":key},
-      body:JSON.stringify({data})
-    });
-    if(!r.ok)throw new Error(await r.text());
-    const verify=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key},"cache":"no-store"});
-    if(!verify.ok)throw new Error(await verify.text());
-    const j=await verify.json();
-    const localCount=DAYS.reduce((n,d)=>n+(data.days[d]?.sessions||[]).reduce((m,s)=>m+(s.exercises||[]).length,0),0);
-    const cloudCount=DAYS.reduce((n,d)=>n+(j.data?.days?.[d]?.sessions||[]).reduce((m,s)=>m+(s.exercises||[]).length,0),0);
-    if(localCount!==cloudCount)throw new Error(`Verification mismatch: device ${localCount}, cloud ${cloudCount}`);
-    lastCloudUpdatedAt=j.updatedAt||"";
-    setCoachDeviceRole("master");
-    if(st)st.textContent="This device is now the Coach Cloud master.";
-    if(detail)detail.textContent=`Verified: ${cloudCount} exercises in Coach Cloud • ${j.updatedAt?new Date(j.updatedAt).toLocaleString():"just now"}`;
-    alert(`Coach Cloud updated successfully. Verified ${cloudCount} exercises.`);
-    return true;
-  }catch(e){
-    console.error(e);
-    if(st)st.textContent="Coach Cloud push failed — this device was not replaced.";
-    if(detail)detail.textContent=String(e.message||e);
-    alert("Cloud push failed. Your program on this device has NOT been replaced.");
-    return false;
-  }
-}
-async function loadCoachCloud(notify=false){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify)alert("Enter the Coach key in Settings first.");return false}try{const r=await fetch(API+"?action=coach-state",{headers:{"x-coach-key":key},"cache":"no-store"});if(!r.ok)throw new Error(await r.text());const j=await r.json();if(!j.data)throw new Error("No coach program found");if(j.updatedAt&&j.updatedAt===lastCloudUpdatedAt&&!notify)return true;lastCloudUpdatedAt=j.updatedAt||lastCloudUpdatedAt;data=j.data;if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});persist();renderAll();await refreshCoachCloud(false);const st=document.getElementById("cloudStatus");if(st)st.textContent="Latest Coach program loaded from cloud.";if(notify)alert("Latest Coach program loaded.");return true}catch(e){console.error(e);const st=document.getElementById("cloudStatus");if(st)st.textContent="Could not load Coach Cloud.";if(notify)alert("Could not load the Coach program. Check the Coach key and internet connection.");return false}}
-async function syncCoachCloud(notify=false,keepalive=false,force=false){const key=localStorage.getItem("robsCoachKey");if(!key)return false;if(!force&&coachDeviceRole()!=="master")return false;try{const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data}),keepalive});if(!r.ok)throw new Error(await r.text());lastCloudUpdatedAt="";const st=document.getElementById("cloudStatus");if(st)st.textContent="Master device synced to Coach Cloud.";if(notify)alert("Coach program synced online.");return true}catch(e){console.error(e);if(notify)alert("Cloud sync failed. Check the Coach key in Settings.");return false}}
-async function shareAthlete(id){const a=data.athletes.find(x=>x.id===id);if(!a)return;const key=localStorage.getItem("robsCoachKey");if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return}await syncCoachCloud(false);try{const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});if(!r.ok)throw new Error(await r.text());const j=await r.json();const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link})}else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.")}else prompt("Copy this athlete link:",link)}catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.")}}
-async function submitAthleteCloud(kind,payload){const token=new URLSearchParams(location.search).get("athlete");if(!token)return false;try{const r=await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload}),cache:"no-store"});if(!r.ok)throw new Error(await r.text());return true}catch(e){console.error(e);return false}}
-function configureAthleteNavigation(){
- const desktopPlanner=document.querySelector('.sidebar .navbtn[data-screen="planner"]'),
- desktopTesting=document.querySelector('.sidebar .navbtn[data-screen="testing"]'),
- desktopCheckin=document.querySelector('.sidebar .navbtn[data-screen="checkin"]'),
- desktopWeeksAhead=document.querySelector('.sidebar .navbtn[data-screen="weeksahead"]'),
- desktopCarnivals=document.querySelector('.sidebar .navbtn[data-screen="carnivals"]');
- document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="none");
- if(desktopPlanner){desktopPlanner.style.display="";desktopPlanner.dataset.screen="training";desktopPlanner.setAttribute("onclick","nav('training')");desktopPlanner.textContent="▦ Training"}
- if(desktopTesting)desktopTesting.style.display="";
- if(desktopCheckin)desktopCheckin.style.display="";
- if(desktopWeeksAhead)desktopWeeksAhead.style.display="";
- if(desktopCarnivals)desktopCarnivals.style.display="";
 
- const mobilePlanner=document.querySelector('.mobilebar button[data-screen="planner"]'),
- mobileTesting=document.querySelector('.mobilebar button[data-screen="testing"]'),
- mobileCheckin=document.querySelector('.mobilebar button[data-screen="checkin"]'),
- mobileWeeksAhead=document.querySelector('.mobilebar button[data-screen="weeksahead"]'),
- mobileCarnivals=document.querySelector('.mobilebar button[data-screen="carnivals"]');
- document.querySelectorAll(".mobilebar button").forEach(b=>b.style.display="none");
- if(mobilePlanner){mobilePlanner.style.display="block";mobilePlanner.dataset.screen="training";mobilePlanner.setAttribute("onclick","nav('training')");mobilePlanner.innerHTML="<span>▦</span>Training"}
- if(mobileTesting)mobileTesting.style.display="block";
- if(mobileCheckin)mobileCheckin.style.display="block";
- if(mobileWeeksAhead)mobileWeeksAhead.style.display="block";
- if(mobileCarnivals)mobileCarnivals.style.display="block";
- const bar=document.querySelector('.mobilebar');
- if(bar){bar.style.gridTemplateColumns="repeat(5,1fr)";bar.classList.add("carnivalAthleteBar")}
+const API="/api";
+function saveCoachCloudKey(){
+  const v=document.getElementById("coachCloudKey")?.value.trim();
+  if(!v)return alert("Enter the coach key first.");
+  localStorage.setItem("robsCoachKey",v);
+  const st=document.getElementById("cloudStatus"); if(st)st.textContent="Coach Cloud connected on this device.";
+  syncCoachCloud(false);
 }
-let athleteAccessTimer=null;
-async function validateAthleteAccess(){
-  const token=new URLSearchParams(location.search).get("athlete");
-  if(!token)return true;
+async function syncCoachCloud(notify=false){
+  const key=localStorage.getItem("robsCoachKey"); if(!key)return false;
   try{
-    const r=await fetch(API+"?action=invite-check&token="+encodeURIComponent(token)+"&_="+Date.now(),{cache:"no-store"});
-    if(!r.ok)throw new Error("revoked");
+    const r=await fetch(API+"?action=coach-sync",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({data})});
+    if(!r.ok)throw new Error(await r.text());
+    if(notify)alert("Coach program synced online.");
     return true;
-  }catch(e){
-    if(athleteAccessTimer){clearInterval(athleteAccessTimer);athleteAccessTimer=null}
-    document.body.innerHTML=`<div style="padding:30px;font-family:Arial;background:#071019;color:#fff;min-height:100vh"><h2>Athlete access removed</h2><p>This athlete link is no longer active. Contact your coach if you need a new link.</p></div>`;
-    return false;
-  }
+  }catch(e){console.error(e); if(notify)alert("Cloud sync failed. Check the Coach key in Settings."); return false;}
 }
-function startAthleteAccessWatch(){
-  if(athleteAccessTimer)clearInterval(athleteAccessTimer);
-  athleteAccessTimer=setInterval(validateAthleteAccess,10000);
-  window.addEventListener("focus",validateAthleteAccess);
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden)validateAthleteAccess()});
+async function shareAthlete(id){
+  const a=data.athletes.find(x=>x.id===id); if(!a)return;
+  const key=localStorage.getItem("robsCoachKey");
+  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
+  await syncCoachCloud(false);
+  try{
+    const r=await fetch(API+"?action=create-invite",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({athlete:a})});
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    const link=location.origin+location.pathname+"?athlete="+encodeURIComponent(j.token);
+    if(navigator.share){await navigator.share({title:"ROB'S TRAINING",text:`${a.name}'s training link`,url:link});}
+    else if(navigator.clipboard){await navigator.clipboard.writeText(link);alert("Athlete link copied.");}
+    else prompt("Copy this athlete link:",link);
+  }catch(e){console.error(e);alert("Could not create athlete link. Check Coach Cloud in Settings.");}
 }
-async function loadAthleteInvite(token){try{const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token)+"&_="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(await r.text());const j=await r.json();data=j.data;data.athletes=[j.athlete];const hist=j.history||[];data.checkins=hist.filter(x=>x.kind==="checkin").map(x=>x.payload);data.sessionLogs=hist.filter(x=>x.kind==="session").map(x=>x.payload);data.testResults=hist.filter(x=>x.kind==="test").map(x=>x.payload);if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));activeAthlete=j.athlete.id;coachMode=false;activeTrainingDay="";configureAthleteNavigation();startAthleteAccessWatch();if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";if(typeof modeBtn!=="undefined")modeBtn.style.display="none";renderAll();nav("training")}catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`}}
+async function submitAthleteCloud(kind,payload){
+  const token=new URLSearchParams(location.search).get("athlete"); if(!token)return;
+  try{await fetch(API+"?action=athlete-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,kind,payload})});}catch(e){console.error(e)}
+}
+async function loadAthleteInvite(token){
+  try{
+    const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token));
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    data=j.data;
+    data.athletes=[j.athlete];
+    data.checkins=[];
+    data.sessionLogs=[];
+    activeAthlete=j.athlete.id;
+    coachMode=false;
+    document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display="none"});
+    if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";
+    if(typeof modeBtn!=="undefined")modeBtn.style.display="none";
+    renderAll(); nav("checkin");
+  }catch(e){console.error(e);document.body.innerHTML='<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB\'S TRAINING athlete link.</p></div>';}
+}
 function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
 function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
-async function removeAthlete(id){
-  const a=data.athletes.find(x=>x.id===id);
-  if(!a)return;
-  if(!confirm(`Remove ${a.name} and disable their athlete link?`))return;
-
-  const key=localStorage.getItem("robsCoachKey");
-  if(key){
-    try{
-      const r=await fetch(API+"?action=revoke-athlete",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","x-coach-key":key},
-        body:JSON.stringify({athleteId:id})
-      });
-      if(!r.ok)throw new Error(await r.text());
-    }catch(e){
-      console.error(e);
-      alert("Could not disable the athlete link. Athlete was NOT removed. Check Coach Cloud and try again.");
-      return;
-    }
+function removeAthlete(id){data.athletes=data.athletes.filter(a=>a.id!==id);saveRender();syncCoachCloud(false)}
+function athleteReminderHtml(){
+  if(!activeAthlete)return "";
+  const now=new Date();
+  const today=DAYS[(now.getDay()+6)%7];
+  const todaysSessions=data.days?.[today]?.sessions||[];
+  const currentLogs=(data.sessionLogs||[]).filter(l=>l.athleteId===activeAthlete&&l.season===data.meta.season&&+l.blockNo===+data.meta.blockNo&&+l.weekNo===+data.meta.weekNo&&l.day===today);
+  const outstanding=todaysSessions.filter(s=>!currentLogs.some(l=>String(l.sessionId)===String(s.id)));
+  const checkedIn=(data.checkins||[]).some(c=>c.athleteId===activeAthlete&&c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
+  const parts=[];
+  if(todaysSessions.length){
+    if(outstanding.length)parts.push(`<div class="reminderCard"><div class="reminderTitle">⏰ Today’s training reminder</div><div class="reminderText">You have ${outstanding.length} session${outstanding.length===1?'':'s'} to log for ${today}: ${outstanding.map(s=>esc(s.title||s.type||'Session')).join(', ')}.</div></div>`);
+    else parts.push(`<div class="reminderCard good"><div class="reminderTitle">✓ Today’s training logged</div><div class="reminderText">Your ${today} session results are up to date.</div></div>`);
   }
-
-  data.athletes=data.athletes.filter(x=>x.id!==id);
-  if(activeAthlete===id)activeAthlete="";
-  persist();
-  await syncCoachCloud(false);
-  renderAll();
-  alert(`${a.name} removed. Their athlete link has been disabled.`);
-}
-function toggleTrainingDay(day){
-  activeTrainingDay=activeTrainingDay===day?"":day;
-  renderCheckin();
-  if(activeTrainingDay){
-    requestAnimationFrame(()=>document.getElementById("athleteDay_"+activeTrainingDay)?.scrollIntoView({behavior:"smooth",block:"start"}));
+  if(!checkedIn){
+    const dueText=now.getDay()===1?"Your Monday weekly check-in is due today.":"Your weekly check-in has not been submitted for this week yet.";
+    parts.push(`<div class="reminderCard"><div class="reminderTitle">☑ Weekly check-in reminder</div><div class="reminderText">${dueText}</div><div class="reminderActions"><button class="btn secondary" onclick="document.getElementById('competed')?.scrollIntoView({behavior:'smooth',block:'center'})">Go to Check-In</button></div></div>`);
+  }else{
+    parts.push(`<div class="reminderCard good"><div class="reminderTitle">✓ Weekly check-in complete</div><div class="reminderText">Your check-in for Block ${data.meta.blockNo}, Week ${data.meta.weekNo} has been submitted.</div></div>`);
   }
-}
-
-function weeklySessionDate(day){
- const live=window.__athleteTrainingLive||currentTrainingSnapshot(),start=parseWeekDate(live.meta?.date);
- if(!start)return"";
- const d=new Date(start);d.setDate(d.getDate()+Math.max(0,DAYS.indexOf(day)));
- return d.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).toUpperCase();
-}
-function weeklySpecialSessionMeta(s){
- if(s.type==="Boat")return {icon:"🚣",label:"BOAT SESSION",title:s.title||"Boat Session",location:s.boatLocation||"",start:s.boatStartTime||"",meet:s.boatMeetTime||""};
- if(s.type==="Carnival")return {icon:"🏁",label:"CARNIVAL",title:s.carnivalType||s.title||"Carnival",location:s.carnivalLocation||"",start:s.carnivalStartTime||"",meet:s.carnivalMeetTime||""};
- return null;
-}
-
-function athleteDaySummary(day){
-  const live=window.__athleteTrainingLive||currentTrainingSnapshot();
-  const ss=live.days?.[day]?.sessions||[];
-  if(!ss.length)return "Rest / No Session";
-  return ss.map(s=>{
-    const sp=weeklySpecialSessionMeta(s);
-    if(sp)return `${sp.icon} ${sp.title}${sp.location?` • ${sp.location}`:""}${sp.start?` • ${timeLabel(sp.start)}`:""}`;
-    return s.title||s.type||"Session";
-  }).join(" • ");
-}
-function formatUpcomingRange(start){
- if(!start)return"Date not set";
- const end=new Date(start);end.setDate(end.getDate()+6);
- const sameMonth=start.getMonth()===end.getMonth();
- const startTxt=start.toLocaleDateString("en-AU",{day:"numeric",month:sameMonth?undefined:"short"});
- const endTxt=end.toLocaleDateString("en-AU",{day:"numeric",month:"short"});
- return `${startTxt}–${endTxt}`.toUpperCase();
-}
-function futureTrainingSnapshots(){
- const all=allProgramSnapshots();
- const current=currentTrainingSnapshot(),currentStart=inferredWeekStart(current,all);
- if(!currentStart)return[];
- const currentKey=snapshotKey(current.meta);
- return all.map(x=>({...x,_start:inferredWeekStart(x,all)}))
-   .filter(x=>x._start&&x._start>currentStart&&snapshotKey(x.meta)!==currentKey)
-   .filter(x=>DAYS.some(d=>(x.days?.[d]?.sessions||[]).length))
-   .sort((a,b)=>a._start-b._start);
-}
-function toggleUpcomingWeek(id){
- const el=document.getElementById(id);if(el)el.classList.toggle("open");
-}
-function upcomingSessionLabel(s){
- if(!s)return"";
- if(["Erg Testing","Weight Testing"].includes(s.type)){
-   const tests=(s.testItems||[]).map(t=>t.name).filter(Boolean);
-   return tests.length?`${s.title||s.type} — ${tests.join(", ")}`:(s.title||s.type);
- }
- const sp=weeklySpecialSessionMeta(s);
- if(sp)return `${sp.icon} ${sp.title}${sp.location?` • ${sp.location}`:""}${sp.start?` • ${timeLabel(sp.start)}`:""}`;
- return s.title||s.type||"Session";
-}
-function toggleAheadFolder(id){
- const el=document.getElementById(id);if(el)el.classList.toggle("open");
-}
-function renderWeeksAhead(){
- const el=document.getElementById("weeksAheadBlocks");if(!el)return;
- if(coachMode){el.innerHTML='<div class="card empty">Weeks Ahead is the athlete view of your programmed training blocks.</div>';return}
- const all=allProgramSnapshots().map(x=>({...x,_start:inferredWeekStart(x,allProgramSnapshots())}))
-   .filter(x=>DAYS.some(d=>(x.days?.[d]?.sessions||[]).length))
-   .sort((a,b)=>(Number(a.meta?.blockNo)||1)-(Number(b.meta?.blockNo)||1)||(Number(a.meta?.weekNo)||1)-(Number(b.meta?.weekNo)||1));
- const groups=new Map();
- all.forEach(w=>{const b=Number(w.meta?.blockNo)||1;if(!groups.has(b,))groups.set(b,[]);groups.get(b).push(w)});
- if(!groups.size){el.innerHTML='<div class="card empty">No training blocks have been programmed yet.</div>';return}
- el.innerHTML=[...groups.entries()].map(([block,weeks])=>{
-   const bid=`aheadBlock_${block}`;
-   return `<div class="aheadBlock" id="${bid}">
-    <button type="button" class="aheadBlockBtn" onclick="toggleAheadFolder('${bid}')">
-      <div><div class="aheadBlockTitle">BLOCK ${block}</div><div class="sub">${weeks.length} programmed week${weeks.length===1?"":"s"}</div></div><span class="folderChev">›</span>
-    </button>
-    <div class="aheadBlockBody">${weeks.map((w,i)=>{
-      const wid=`aheadBlock_${block}_week_${Number(w.meta?.weekNo)||i+1}`;
-      return `<div class="aheadWeek" id="${wid}">
-       <button type="button" class="aheadWeekBtn" onclick="toggleAheadFolder('${wid}')">
-        <div><b>WEEK ${Number(w.meta?.weekNo)||i+1}</b><div class="sub">${formatUpcomingRange(w._start)}</div></div><span class="folderChev">›</span>
-       </button>
-       <div class="aheadWeekBody">${DAYS.map(d=>{const ss=w.days?.[d]?.sessions||[];return `<div class="upcomingDay"><div class="upcomingDayName">${d.toUpperCase()}</div><div class="upcomingDaySessions">${ss.length?ss.map(upcomingSessionLabel).map(esc).join(" • "):"Rest / No Session"}</div></div>`}).join("")}</div>
-      </div>`;
-    }).join("")}</div>
-   </div>`;
- }).join("");
+  return parts.join("");
 }
 function renderCheckin(){
-  const currentLive=currentTrainingSnapshot();
-  const live=athleteTrainingSnapshot();
-  window.__athleteTrainingLive=live;
-  const sundayPreview=isSundayNextWeekPreview(live);
-  const athleteWeekIdentity=document.getElementById("athleteWeekIdentity");
-  if(athleteWeekIdentity)athleteWeekIdentity.innerHTML=weekIdentityHtml(live.meta);
-  const athletePreviewNotice=document.getElementById("athletePreviewNotice");
-  if(athletePreviewNotice)athletePreviewNotice.innerHTML=sundayPreview?`<div class="sundayPreviewNotice"><b>👀 NEXT WEEK PREVIEW</b><div>Starting Monday • View only today. Your coach may still update session times or details before Monday.</div></div>`:(!activeAthlete&&!coachMode?'<div class="sub" style="margin:0 0 10px">Previewing the current training week. Athlete-specific results save when an athlete opens their personal link.</div>':"");
+checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
+if(!activeAthlete){checkinForm.innerHTML='<div class="card empty">Select an athlete to view training and complete the check-in.</div>';return}
+const athleteSessionHtml = DAYS.map(day=>{
+  const ss=data.days[day].sessions||[];
+  if(!ss.length) return "";
+  return `<div class="card"><h2>${day}</h2>${ss.map(sess=>athleteSessionLogger(day,sess)).join("")}</div>`;
+}).join("");
+checkinForm.innerHTML=`${athleteReminderHtml()}${athleteSessionHtml}<div class="card"><h2>Weekly Training Check-In</h2>${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}
+<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div>
+<div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div>
+<div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`
+}
+function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select>`;else if(q.type==="ratingnote")input=`<div class="grid2"><select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join("")}</select><input id="${p}${i}_note" placeholder="Optional soreness / niggle note"></div>`;else if(q.type==="focus")input=`<select id="${p}${i}">${["Starts","Power","Rating","Rhythm","Timing","Runs / Finishes","Fitness","Strength","Recovery","Communication","Other"].map(x=>`<option>${x}</option>`).join("")}</select>`;else input=`<textarea id="${p}${i}"></textarea>`;return `<div class="question"><b>${i+1}. ${esc(q.q)}</b><div class="answerbox">${input}</div></div>`}
 
-  checkinAthletePicker.style.display=coachMode?"":"none";
-  checkinAthletePicker.innerHTML=`<div class="label">Athlete</div><select id="ciAth" onchange="activeAthlete=this.value;renderCheckin()"><option value="">Select athlete</option>${data.athletes.map(a=>`<option value="${a.id}" ${a.id===activeAthlete?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`;
-
-  const athleteSessionHtml=DAYS.map(day=>{
-    const ss=live.days?.[day]?.sessions||[];
-    const open=activeTrainingDay===day;
-    return `<div class="athleteDayCard ${open?"open":""}" id="athleteDay_${day}">
-      <button class="athleteDayToggle" type="button" onclick="toggleTrainingDay('${day}')">
-        <div>
-          <div class="dayTitle">${day}</div>
-          <div class="dayMeta">${ss.length?`${ss.length} Session${ss.length===1?"":"s"} • ${esc(athleteDaySummary(day))}`:"Rest / No Session"}</div>
-        </div>
-        <div class="chev">›</div>
-      </button>
-      <div class="athleteDayBody">
-        ${ss.length?ss.map((sess,idx)=>`<div class="athleteSessionBox"><div class="athleteSessionHead"><div class="mini">SESSION ${idx+1}</div></div>${athleteSessionLogger(day,sess)}</div>`).join(""):'<div class="empty" style="padding:14px 2px">No training programmed for this day.</div>'}
-      </div>
-    </div>`;
-  }).join("");
-
-  if(typeof trainingSessions!=="undefined"){
-    trainingSessions.innerHTML=athleteSessionHtml||'<div class="card empty">No training sessions programmed for this week.</div>';
-    trainingSessions.classList.toggle("sundayPreviewMode",sundayPreview);
-    if(sundayPreview){
-      trainingSessions.querySelectorAll(".athleteDayBody input,.athleteDayBody textarea,.athleteDayBody select,.athleteDayBody button").forEach(el=>{el.disabled=true});
-    }
-  }
-
-
-  if(!activeAthlete){
-    checkinForm.innerHTML='<div class="card empty">Select an athlete to complete the weekly check-in.</div>';
-    return;
-  }
-
-  checkinForm.innerHTML=`<div class="card"><h2>Monday Weekly Check-In</h2>${bodyWeightHistoryHtml()}${data.weeklyQuestions.map((q,i)=>questionInput(q,"w",i)).join("")}<div class="question"><b>Did you compete this week?</b><div class="answerbox"><select id="competed" onchange="document.getElementById('raceBox').style.display=this.value==='yes'?'block':'none'"><option value="no">No</option><option value="yes">Yes</option></select></div></div></div><div class="card" id="raceBox" style="display:none"><h2>Competition / Carnival Review</h2>${data.raceQuestions.map((q,i)=>questionInput(q,"r",i)).join("")}</div><div class="card"><button class="btn full green" onclick="submitCheckin()">Submit Weekly Check-In</button></div>`;
-}
-function questionInput(q,p,i){let input;if(q.type==="rating")input=`<select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">${n}</option>`).join("")}</select>`;else if(q.type==="ratingnote")input=`<div class="grid2"><select id="${p}${i}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">${n}</option>`).join("")}</select><input id="${p}${i}_note" placeholder="Optional soreness / niggle note"></div>`;else if(q.type==="focus")input=`<select id="${p}${i}">${["Starts","Power","Rating","Rhythm","Timing","Runs / Finishes","Fitness","Strength","Recovery","Communication","Other"].map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>`;else input=`<textarea id="${p}${i}"></textarea>`;return`<div class="question"><b>${i+1}. ${esc(q.q)}</b><div class="answerbox">${input}</div></div>`}
-
-function exerciseHistoryForAthlete(name){
-  const n=String(name||"").trim().toLowerCase();
-  if(!n||!activeAthlete)return[];
-  const out=[];
-  (data.sessionLogs||[]).forEach(log=>{
-    if(String(log.athleteId)!==String(activeAthlete))return;
-    (log.results||[]).forEach(r=>{
-      if(String(r.name||"").trim().toLowerCase()===n)out.push({log,result:r});
-    });
-  });
-  return out.sort((a,b)=>(b.log.savedAt||0)-(a.log.savedAt||0));
-}
-function exerciseResultSummary(r){
-  if(!r)return"";
-  if(Array.isArray(r.sets)&&r.sets.length){
-    return r.sets.map(z=>`S${z.set}: ${z.split?esc(z.split)+" split":""}${z.split&&z.meters?" • ":""}${z.meters?esc(z.meters)+"m":""}`).join(" • ");
-  }
-  if(Array.isArray(r.setWeights)&&r.setWeights.length){
-    return r.setWeights.map((w,k)=>`S${k+1}: ${w?esc(w)+"kg":""}${w&&r.setReps?.[k]?" × ":""}${r.setReps?.[k]?esc(r.setReps[k]):""}`).join(" • ");
-  }
-  return"";
-}
-function exercisePreviousHtml(name){
-  const h=exerciseHistoryForAthlete(name),p=h[0];
-  if(!p)return`<div class="exercisePrev"><div class="exercisePrevTitle">Previous Session</div><div class="exercisePrevText">No previous result recorded for this exercise yet.</div></div>`;
-  return`<div class="exercisePrev"><div class="exercisePrevTitle">Previous Session</div><div class="exercisePrevText">${exerciseResultSummary(p.result)||"Result recorded"}${p.result.exerciseNote?`<br><span class="mini">Athlete note: ${esc(p.result.exerciseNote)}</span>`:""}</div></div>`;
-}
-function exerciseHistoryHtml(day,sid,j,name){
-  const h=exerciseHistoryForAthlete(name);
-  return`<div class="exerciseTools"><button type="button" class="btn secondary" onclick="toggleExerciseHistory('${day}','${sid}',${j})">History ▾</button></div>
-  <div class="exerciseHistoryBox" id="exhist_${day}_${sid}_${j}">
-    <b>${esc(name||"Exercise")} History</b>
-    ${h.length?h.slice(0,12).map(x=>`<div class="exerciseHistoryItem"><div class="mini">${esc(x.log.season||"")} • Block ${x.log.blockNo||""} Week ${x.log.weekNo||""} • ${esc(x.log.day||"")}</div><div class="sub">${exerciseResultSummary(x.result)||"Result recorded"}</div>${x.result.exerciseNote?`<div class="mini" style="margin-top:3px">Athlete note: ${esc(x.result.exerciseNote)}</div>`:""}</div>`).join(""):'<div class="empty" style="padding-top:8px">No previous history for this exercise yet.</div>'}
-  </div>`;
-}
-function toggleExerciseHistory(day,sid,j){
-  const el=document.getElementById(`exhist_${day}_${sid}_${j}`);
-  if(el)el.style.display=el.style.display==="block"?"none":"block";
-}
-function athleteSetCount(day,id,j){
-  return document.querySelectorAll(`[id^="setrow_${day}_${id}_${j}_"]`).length;
-}
-function addedSetRowHtml(day,s,j,k){
-  const x=(s.exercises||[])[j]||{},c=isCardio(s.type);
-  if(c)return`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="Enter" oninput="updateCardioSessionSummary('${day}','${s.id}')"></div><div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="320" oninput="updateCardioSessionSummary('${day}','${s.id}')"></div><div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${esc(x.c||"1:30")}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`;
-  return`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="kg"></div><div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${esc(x.b||"reps")}"></div><div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${esc(x.c||"1:30")}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`;
-}
-function addAthleteSet(day,id,j){
-  const live=currentTrainingSnapshot(),s=live.days?.[day]?.sessions?.find(x=>x.id===id);
-  if(!s)return;
-  const table=document.getElementById(`scoretable_${day}_${id}_${j}`);
-  if(!table)return;
-  const k=athleteSetCount(day,id,j);
-  table.insertAdjacentHTML("beforeend",addedSetRowHtml(day,s,j,k));
-}
-function bodyWeightHistoryForAthlete(){
-  if(!activeAthlete)return[];
-  return(data.checkins||[]).filter(c=>String(c.athleteId)===String(activeAthlete)&&c.bodyWeight).sort((a,b)=>(b.savedAt||b.id||0)-(a.savedAt||a.id||0));
-}
-function bodyWeightHistoryHtml(){
-  const h=bodyWeightHistoryForAthlete();
-  return`<div class="bodyWeightCard"><div class="bodyWeightRow"><div><div class="label">Body Weight</div><div style="display:flex;align-items:center;gap:8px"><input id="bodyWeight" type="number" step="0.1" min="20" max="300" placeholder="e.g. 92.4"><span class="sub">kg</span></div></div><button type="button" class="btn secondary" onclick="toggleBodyWeightHistory()">Weight History ▾</button></div><div class="weightHistoryBox" id="weightHistoryBox">${h.length?h.map(c=>`<div class="weightHistoryItem"><b>${esc(c.bodyWeight)} kg</b><div class="mini">${esc(c.season||"")} • Block ${c.blockNo||""} Week ${c.weekNo||""} • ${esc(c.date||"")}</div></div>`).join(""):'<div class="empty">No previous body weights recorded yet.</div>'}</div></div>`;
-}
-function toggleBodyWeightHistory(){const el=document.getElementById("weightHistoryBox");if(el)el.style.display=el.style.display==="block"?"none":"block"}
-
-
-function parseRowingPaceSeconds(v){v=String(v||"").trim();if(!v)return null;if(v.includes(":")){const p=v.split(":");if(p.length!==2)return null;const m=Number(p[0]),s=Number(p[1]);return Number.isFinite(m)&&Number.isFinite(s)?m*60+s:null}const n=Number(v);return Number.isFinite(n)?n:null}
-function formatRowingPace(sec){if(!Number.isFinite(sec))return"—";let m=Math.floor(sec/60),s=sec-m*60;if(s>=59.95){m++;s=0}return`${m}:${s.toFixed(1).padStart(4,"0")}`}
-function updateCardioSessionSummary(day,id){const p=[...document.querySelectorAll(`[id^="split_${day}_${id}_"]`)].map(x=>parseRowingPaceSeconds(x.value)).filter(x=>x!==null),m=[...document.querySelectorAll(`[id^="meters_${day}_${id}_"]`)].map(x=>Number(x.value)||0),avg=p.length?p.reduce((a,b)=>a+b,0)/p.length:null,total=m.reduce((a,b)=>a+b,0),ae=document.getElementById(`cardioAvg_${day}_${id}`),me=document.getElementById(`cardioMetres_${day}_${id}`),fe=document.getElementById(`cardioSummaryFoot_${day}_${id}`);if(ae)ae.textContent=avg===null?"—":formatRowingPace(avg)+" /500m";if(me)me.textContent=total?Math.round(total).toLocaleString()+" m":"—";if(fe)fe.textContent=p.length?`Calculated from ${p.length} entered set${p.length===1?"":"s"}`:"Enter set pace and metres to calculate"}
-function cardioSessionSummaryHtml(day,id){return`<div class="cardioSessionSummary" id="cardioSummary_${day}_${id}"><div class="cardioSessionSummaryTitle">Erg Session Summary</div><div class="cardioSessionSummaryGrid"><div class="cardioSessionSummaryStat"><span>Average Pace</span><b id="cardioAvg_${day}_${id}">—</b></div><div class="cardioSessionSummaryStat"><span>Total Metres</span><b id="cardioMetres_${day}_${id}">—</b></div></div><div class="cardioSessionSummaryFoot" id="cardioSummaryFoot_${day}_${id}">Enter set pace and metres to calculate</div></div>`}
-
-
-function weeklyTestingLogger(day,s){
- const items=s.testItems||[],cat=s.type==="Erg Testing"?"Erg":"Gym";
- return `<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type)}</b><div class="sub">${esc(s.type)}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}${items.length?items.map((ti,j)=>{const base=(data.tests||[]).find(t=>String(t.id)===String(ti.testId))||{},history=(data.testResults||[]).filter(r=>String(r.athleteId)===String(activeAthlete)&&String(r.testId)===String(ti.testId)).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)),last=history[0];return`<div class="question"><span class="badge">${esc(cat)}</span><h3 style="margin-top:8px">${esc(ti.name||base.name||"Test")}</h3>${ti.target?`<div class="sub">Coach target / notes: ${esc(ti.target)}</div>`:""}${last?`<div class="notice" style="margin-top:8px"><b>Previous:</b> ${esc(last.score)} ${esc(ti.unit||base.unit||"")} • ${esc(last.date||"")}</div>`:""}<div class="grid2" style="margin-top:10px"><div><div class="label">Your score (${esc(ti.unit||base.unit||"score")})</div><input id="weektestscore_${day}_${s.id}_${j}" placeholder="Enter result"></div><div><div class="label">Date</div><input id="weektestdate_${day}_${s.id}_${j}" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div><div class="label">Notes</div><textarea id="weektestnote_${day}_${s.id}_${j}" placeholder="Optional notes"></textarea><button class="btn full green" onclick="saveWeeklyTestResult('${day}','${s.id}',${j})">Save Test Score</button><button type="button" class="btn secondary full testHistoryBtn" onclick="toggleTestingHistory('weektesthist_${day}_${s.id}_${j}')">Testing History ▾</button><div class="testHistoryBox" id="weektesthist_${day}_${s.id}_${j}">${history.length?history.map(r=>`<div class="testHistoryItem"><b>${esc(r.score)} ${esc(r.unit||ti.unit||base.unit||"")}</b><div class="mini">${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`).join(""):'<div class="empty">No previous scores for this test yet.</div>'}</div></div>`}).join(""):'<div class="empty">No tests added to this session.</div>'}</div>`;
-}
-function saveWeeklyTestResult(day,sid,j){
- const live=currentTrainingSnapshot(),s=live.days?.[day]?.sessions?.find(x=>String(x.id)===String(sid));if(!s||!activeAthlete)return;
- const ti=(s.testItems||[])[j];if(!ti)return;const base=(data.tests||[]).find(t=>String(t.id)===String(ti.testId))||{};
- const score=document.getElementById(`weektestscore_${day}_${sid}_${j}`)?.value.trim();if(!score)return alert("Enter your test score.");
- const athlete=data.athletes.find(a=>String(a.id)===String(activeAthlete)),result={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,athleteName:athlete?.name||"",testId:ti.testId,testName:ti.name||base.name||"Test",category:base.category||(s.type==="Erg Testing"?"Erg":"Gym"),unit:ti.unit||base.unit||"score",score,date:document.getElementById(`weektestdate_${day}_${sid}_${j}`)?.value||new Date().toISOString().slice(0,10),notes:document.getElementById(`weektestnote_${day}_${sid}_${j}`)?.value||""};
- data.testResults.push(result);submitAthleteCloud("test",result);persist();renderCheckin();alert("Testing score saved");
-}
 function athleteSessionLogger(day,s){
- if(["Erg Testing","Weight Testing"].includes(s.type))return weeklyTestingLogger(day,s);
- if(s.type==="Boat"){
-   const sp=weeklySpecialSessionMeta(s);
-   return `<div class="sessionCard specialAthleteSession"><div class="specialDate">${esc(weeklySessionDate(day))}</div><div class="specialSessionTitle">${esc(sp.title)}</div><div class="specialInfo">📍 ${esc(sp.location||"Location TBC")}</div><div class="specialInfo">⏱ Start ${sp.start?timeLabel(sp.start):"TBC"}</div><div class="specialInfo">👥 Crew meet ${sp.meet?timeLabel(sp.meet):"TBC"}</div><div class="specialInfo">🚣 Type: Boat</div>${s.notes?`<div class="specialCoachNote"><b>Coach Note</b><div>${esc(s.notes)}</div></div>`:""}${s.instructions?`<div class="notice" style="margin-top:10px">${esc(s.instructions)}</div>`:""}</div>`;
- }
- if(s.type==="Carnival"){
-   const sp=weeklySpecialSessionMeta(s);
-   return `<div class="sessionCard specialAthleteSession"><div class="specialDate">${esc(weeklySessionDate(day))}</div><div class="specialSessionTitle">${esc(sp.title)}</div><div class="specialInfo">📍 ${esc(sp.location||"Location TBC")}</div><div class="specialInfo">⏱ Start ${sp.start?timeLabel(sp.start):"TBC"}</div><div class="specialInfo">👥 Crew meet ${sp.meet?timeLabel(sp.meet):"TBC"}</div><div class="specialInfo">🏁 Carnival Type: ${esc(s.carnivalType||"Carnival")}</div>${s.notes?`<div class="specialCoachNote"><b>Coach Note</b><div>${esc(s.notes)}</div></div>`:""}${s.instructions?`<div class="notice" style="margin-top:10px">${esc(s.instructions)}</div>`:""}<div class="carnivalBox"><div class="label">Result</div><input id="carnivalResult_${day}_${s.id}" placeholder="e.g. 2nd"><div class="label">Notes</div><textarea id="carnivalNotes_${day}_${s.id}" placeholder="Optional carnival notes"></textarea><button class="btn full green" onclick="saveCarnivalResult('${day}','${s.id}')">Save Carnival Result</button></div></div>`;
- }
- const c=isCardio(s.type),prior=latestPriorSessionForAthlete(activeAthlete,s);return`<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>${s.instructions?`<div class="notice" style="margin-top:10px"><b>Session instructions</b><div style="margin-top:4px">${esc(s.instructions)}</div></div>`:""}${s.notes?`<div class="sub" style="margin-top:8px"><b>Coach notes:</b> ${esc(s.notes)}</div>`:""}${c?`<div class="cardioTopTools"><button type="button" class="btn secondary" onclick="toggleCardioHistory('${day}','${s.id}')">History ▾</button><label class="cardioSubstitute"><input type="checkbox" id="cardiosub_${day}_${s.id}" onchange="toggleCardioSubstitute('${day}','${s.id}')"><b>Substitute this session</b></label><div id="cardiosubbox_${day}_${s.id}" class="cardioSubBox" style="display:none"><div class="grid2"><div><div class="label">Substitute with</div><input id="cardiosubname_${day}_${s.id}" placeholder="Alternative cardio session"></div><div><div class="label">Reason</div><input id="cardiosubreason_${day}_${s.id}" placeholder="e.g. injury / equipment unavailable"></div></div></div><div id="cardiohist_${day}_${s.id}" class="exerciseHistoryBox">${cardioSessionHistoryHtml(s)}</div></div>`:""}${(s.exercises||[]).length?(s.exercises||[]).map((x,j)=>{const previous=prior?.results?.[j]||{},substitution=`<div class="substituteBox"><label class="row" style="justify-content:flex-start"><input type="checkbox" style="width:auto" id="sub_${day}_${s.id}_${j}" onchange="toggleSubstitute('${day}','${s.id}',${j})"><b>Substitute this exercise / piece</b></label><div id="subbox_${day}_${s.id}_${j}" style="display:none"><div class="grid2"><div><div class="label">Substitute with</div><input id="subname_${day}_${s.id}_${j}" placeholder="Alternative exercise / piece"></div><div><div class="label">Reason</div><input id="subreason_${day}_${s.id}_${j}" placeholder="e.g. injury / equipment unavailable"></div></div></div></div>`;if(c){const sets=Math.max(1,parseInt(x.d)||1),oldSets=previous.sets||[];return`<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b><div class="sub">${x.a?`<span style="font-weight:900;color:#f7f9fb">${esc(x.a)} MIN</span>`:""}${x.c?` • Rest ${esc(x.c)}`:""}${sets>1?` • ${sets} sets`:""}</div><div class="scoreTable" id="scoretable_${day}_${s.id}_${j}"><div class="scoreRow scoreHead"><div>Set</div><div>Avg Split / Pace</div><div>Metres</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>{const old=oldSets[k]||{};return`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input id="split_${day}_${s.id}_${j}_${k}" placeholder="${old.split||"Enter"}"></div><div class="scoreCell"><input id="meters_${day}_${s.id}_${j}_${k}" type="number" min="0" placeholder="${old.meters||"320"}"></div><div class="scoreCell"><input id="rest_${day}_${s.id}_${j}_${k}" placeholder="${old.rest||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`}).join("")}</div></div>`}const sets=Math.max(1,parseInt(x.a)||1),oldWeights=previous.setWeights||[],oldReps=previous.setReps||[],oldRests=previous.setRests||[];return`<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b><div class="sub">Coach prescription: ${sets} set${sets===1?"":"s"} × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>${exercisePreviousHtml(x.name||("Exercise "+(j+1)))}${exerciseHistoryHtml(day,s.id,j,x.name||("Exercise "+(j+1)))}<div class="exerciseNoteBox"><div class="label">Athlete note for this exercise</div><input id="exnote_${day}_${s.id}_${j}" placeholder="Optional note for coach"></div><div class="scoreTable" id="scoretable_${day}_${s.id}_${j}"><div class="scoreRow scoreHead"><div>Set</div><div>Weight</div><div>Reps</div><div>Rest</div><div>Done</div></div>${Array.from({length:sets},(_,k)=>`<div class="scoreRow" id="setrow_${day}_${s.id}_${j}_${k}"><div class="scoreSet">${k+1}</div><div class="scoreCell"><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${oldWeights[k]||"kg"}"></div><div class="scoreCell"><input type="number" min="0" id="reps_${day}_${s.id}_${j}_${k}" placeholder="${oldReps[k]||x.b||"reps"}"></div><div class="scoreCell"><input id="grest_${day}_${s.id}_${j}_${k}" placeholder="${oldRests[k]||x.c||"1:30"}"><div class="restTimer" id="timer_${day}_${s.id}_${j}_${k}"></div></div><div><button type="button" class="doneBtn" id="done_${day}_${s.id}_${j}_${k}" onclick="completeSet('${day}','${s.id}',${j},${k},'${esc((x.c||"").replace(/'/g,"\\'"))}')">✓</button></div></div>`).join("")}</div><button type="button" class="btn secondary addSetBtn" onclick="addAthleteSet('${day}','${s.id}',${j})">+ Add Set</button>${substitution}</div>`}).join(""):'<div class="empty">Coach session details entered with no exercises / pieces.</div>'}${c?`<div class="cardioBottomTools"><button type="button" class="btn secondary addSetBtn" onclick="addCardioSessionSet('${day}','${s.id}')">+ Add Set</button><div class="exerciseNoteBox"><div class="label">Athlete note for this session</div><input id="cardionote_${day}_${s.id}" placeholder="Optional note for coach"></div></div>`:""}${c?cardioSessionSummaryHtml(day,s.id):""}<div class="card" style="margin-top:12px;padding:12px"><h3>Session Summary</h3><div class="grid2" style="margin-top:8px"><div><div class="label">Average Heart Rate (bpm)</div><input id="avghr_${day}_${s.id}" type="number" min="30" max="240" placeholder="e.g. 162"></div><div><div class="label">Session RPE (1–10)</div><input id="sessionrpe_${day}_${s.id}" type="number" min="1" max="10" placeholder="e.g. 8"></div></div><div class="label">Athlete session notes</div><textarea id="athnote_${day}_${s.id}" placeholder="How did the session go? Any pain, changes or comments?"></textarea></div><button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session Results</button></div>`
+ const c=isCardio(s.type);
+ const prior = latestPriorSessionForAthlete(activeAthlete,s);
+ return `<div class="sessionCard"><div class="row"><div><b>${esc(s.title||s.type||"Session")}</b><div class="sub">${esc(s.type||"")}</div></div></div>
+ ${(s.exercises||[]).map((x,j)=>{
+   if(c){
+     const last=prior?.results?.[j]||{};
+     return `<div class="question"><b>${esc(x.name||("Piece "+(j+1)))}</b><div class="sub">Target: ${esc(x.b||"—")} ${x.a?"• Time "+esc(x.a):""} ${x.c?"• Rest "+esc(x.c):""}</div>
+     <div class="grid2" style="margin-top:8px"><div><div class="label">Your goal split</div><input id="goal_${day}_${s.id}_${j}" placeholder="e.g. 1:42.5" value=""></div><div><div class="label">Actual / average split</div><input id="actual_${day}_${s.id}_${j}" placeholder="${last.actualSplit?esc(last.actualSplit):"Enter after session"}"></div></div></div>`
+   } else {
+     const sets=parseInt(x.a)||1;
+     const last=prior?.results?.[j]?.setWeights||[];
+     return `<div class="question"><b>${esc(x.name||("Exercise "+(j+1)))}</b><div class="sub">${esc(x.a||"—")} sets × ${esc(x.b||"—")} reps ${x.c?"• Rest "+esc(x.c):""}</div>
+     ${last.length?`<div class="sub" style="margin-top:6px">Last time: ${last.map(v=>esc(v)+"kg").join(" / ")}</div>`:""}
+     <div class="grid2" style="margin-top:8px">${Array.from({length:sets},(_,k)=>`<div><div class="label">Set ${k+1} weight (kg)</div><input type="number" step="0.5" id="wt_${day}_${s.id}_${j}_${k}" placeholder="${last[k]||""}"></div>`).join("")}</div></div>`
+   }
+ }).join("")}
+ <button class="btn full green" onclick="saveAthleteSession('${day}','${s.id}')">Save My Session</button></div>`;
 }
-function cardioSessionHistoryHtml(s){
- const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===activeAthlete&&l.type===s.type&&l.sessionTitle===(s.title||s.type||"Session")).sort((a,b)=>b.savedAt-a.savedAt).slice(0,8);
- if(!logs.length)return'<div class="mini">No previous session history recorded yet.</div>';
- return logs.map(l=>`<div class="exerciseHistoryItem"><b>${esc(l.day||"")} • Block ${l.blockNo||""} Week ${l.weekNo||""}</b>${(l.results||[]).map(r=>`<div class="mini">${esc(r.name||"Piece")}: ${(r.sets||[]).map(z=>`${z.split?esc(z.split):"—"}${z.meters?` • ${esc(z.meters)}m`:""}`).join(" | ")}</div>`).join("")}</div>`).join("");
+function latestPriorSessionForAthlete(athleteId,s){
+ const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===athleteId && l.sessionTitle===(s.title||s.type||"Session") && l.type===s.type);
+ return logs.sort((a,b)=>b.savedAt-a.savedAt)[0]||null;
 }
-function toggleCardioHistory(day,id){const el=document.getElementById(`cardiohist_${day}_${id}`);if(el)el.style.display=el.style.display==="block"?"none":"block"}
-function toggleCardioSubstitute(day,id){const on=document.getElementById(`cardiosub_${day}_${id}`)?.checked,box=document.getElementById(`cardiosubbox_${day}_${id}`);if(box)box.style.display=on?"block":"none"}
-function addCardioSessionSet(day,id){
- const live=currentTrainingSnapshot(),s=live.days?.[day]?.sessions?.find(x=>x.id===id);
- if(!s||!(s.exercises||[]).length)return;
- const j=s.exercises.length-1;
- addAthleteSet(day,id,j);
-}
-
-function toggleSubstitute(day,id,j){const on=document.getElementById(`sub_${day}_${id}_${j}`)?.checked,box=document.getElementById(`subbox_${day}_${id}_${j}`);if(box)box.style.display=on?"block":"none"}
-const restTimers={};
-function parseRestSeconds(v){const t=String(v||"").trim().toLowerCase();if(!t)return 0;if(/^\d+:\d{1,2}$/.test(t)){const[m,sec]=t.split(":").map(Number);return m*60+sec}if(/^\d+(\.\d+)?$/.test(t))return Math.round(Number(t));let total=0;const mm=t.match(/(\d+(?:\.\d+)?)\s*m/),ss=t.match(/(\d+(?:\.\d+)?)\s*s/);if(mm)total+=Math.round(Number(mm[1])*60);if(ss)total+=Math.round(Number(ss[1]));return total}
-function formatRestSeconds(n){n=Math.max(0,Math.round(n));return`${Math.floor(n/60)}:${String(n%60).padStart(2,"0")}`}
-let restAudioCtx=null;
-function armRestSound(){
-  try{
-    if(!restAudioCtx)restAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    if(restAudioCtx.state==="suspended")restAudioCtx.resume();
-  }catch(e){console.error(e)}
-}
-function playRestCompleteSound(){
-  try{
-    armRestSound();
-    if(!restAudioCtx)return;
-    const now=restAudioCtx.currentTime;
-    [0,0.18,0.36].forEach((delay,i)=>{
-      const osc=restAudioCtx.createOscillator();
-      const gain=restAudioCtx.createGain();
-      osc.type="sine";
-      osc.frequency.value=i===2?1046:880;
-      gain.gain.setValueAtTime(0.0001,now+delay);
-      gain.gain.exponentialRampToValueAtTime(0.22,now+delay+0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.13);
-      osc.connect(gain);gain.connect(restAudioCtx.destination);
-      osc.start(now+delay);osc.stop(now+delay+0.14);
-    });
-  }catch(e){console.error(e)}
-}
-function completeSet(day,id,j,k,prescribedRest){armRestSound();const key=`${day}_${id}_${j}_${k}`,btn=document.getElementById(`done_${key}`),row=document.getElementById(`setrow_${key}`),timer=document.getElementById(`timer_${key}`);if(!btn||!row||!timer)return;if(btn.classList.contains("done")){btn.classList.remove("done");row.classList.remove("completed");timer.textContent="";timer.classList.remove("go");if(restTimers[key]){clearInterval(restTimers[key]);delete restTimers[key]}return}btn.classList.add("done");row.classList.add("completed");const restInput=document.getElementById(`rest_${key}`)||document.getElementById(`grest_${key}`),source=(restInput?.value||prescribedRest||restInput?.placeholder||"").trim();let remaining=parseRestSeconds(source);if(restTimers[key])clearInterval(restTimers[key]);if(remaining<=0){timer.textContent="DONE";return}timer.textContent=`REST ${formatRestSeconds(remaining)}`;restTimers[key]=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(restTimers[key]);delete restTimers[key];timer.textContent="GO";timer.classList.add("go");playRestCompleteSound();if(navigator.vibrate)navigator.vibrate([120,80,120])}else timer.textContent=`REST ${formatRestSeconds(remaining)}`},1000)}
-function saveCarnivalResult(day,id){if(!data.sessionLogs)data.sessionLogs=[];const live=currentTrainingSnapshot(),s=live.days?.[day]?.sessions?.find(x=>x.id===id);if(!s||!activeAthlete)return;const result=document.getElementById(`carnivalResult_${day}_${id}`)?.value.trim()||"";if(!result)return alert("Enter the carnival result.");const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:live.meta.season,blockNo:live.meta.blockNo,weekNo:live.meta.weekNo,day,sessionId:id,sessionTitle:s.title||"Carnival",type:"Carnival",carnivalLocation:s.carnivalLocation||"",carnivalType:s.carnivalType||"",carnivalResult:result,athleteNotes:document.getElementById(`carnivalNotes_${day}_${id}`)?.value||"",results:[]};data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Carnival result saved")}
-function latestPriorSessionForAthlete(athleteId,s){const logs=(data.sessionLogs||[]).filter(l=>l.athleteId===athleteId&&l.sessionTitle===(s.title||s.type||"Session")&&l.type===s.type);return logs.sort((a,b)=>b.savedAt-a.savedAt)[0]||null}
 function saveAthleteSession(day,id){
  if(!data.sessionLogs)data.sessionLogs=[];
- const live=currentTrainingSnapshot(),s=live.days?.[day]?.sessions?.find(x=>x.id===id);
- if(!s||!activeAthlete)return;
+ const s=data.days[day].sessions.find(x=>x.id===id); if(!s||!activeAthlete)return;
  const c=isCardio(s.type);
  const results=(s.exercises||[]).map((x,j)=>{
-   const substituted=document.getElementById(`sub_${day}_${id}_${j}`)?.checked||false;
-   const base={name:x.name||"",exerciseNote:document.getElementById(`exnote_${day}_${id}_${j}`)?.value||"",substituted,substituteName:substituted?(document.getElementById(`subname_${day}_${id}_${j}`)?.value||""):"",substituteReason:substituted?(document.getElementById(`subreason_${day}_${id}_${j}`)?.value||""):""};
-   const actualSets=Math.max(1,athleteSetCount(day,id,j));
-   if(c)return{...base,prescribedTime:x.a||"",prescribedRest:x.c||"",sets:Array.from({length:actualSets},(_,k)=>({set:k+1,split:document.getElementById(`split_${day}_${id}_${j}_${k}`)?.value||"",meters:document.getElementById(`meters_${day}_${id}_${j}_${k}`)?.value||"",rest:document.getElementById(`rest_${day}_${id}_${j}_${k}`)?.value||"",completed:document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false}))};
-   return{...base,prescribedReps:x.b||"",prescribedRest:x.c||"",setWeights:Array.from({length:actualSets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||""),setReps:Array.from({length:actualSets},(_,k)=>document.getElementById(`reps_${day}_${id}_${j}_${k}`)?.value||""),setRests:Array.from({length:actualSets},(_,k)=>document.getElementById(`grest_${day}_${id}_${j}_${k}`)?.value||""),setCompleted:Array.from({length:actualSets},(_,k)=>document.getElementById(`done_${day}_${id}_${j}_${k}`)?.classList.contains("done")||false)};
+   if(c){
+     return {name:x.name||"",goalSplit:document.getElementById(`goal_${day}_${id}_${j}`)?.value||"",actualSplit:document.getElementById(`actual_${day}_${id}_${j}`)?.value||""};
+   }
+   const sets=parseInt(x.a)||1;
+   return {name:x.name||"",setWeights:Array.from({length:sets},(_,k)=>document.getElementById(`wt_${day}_${id}_${j}_${k}`)?.value||"")};
  });
- const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:live.meta.season,blockNo:live.meta.blockNo,weekNo:live.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,avgHeartRate:document.getElementById(`avghr_${day}_${id}`)?.value||"",sessionRpe:document.getElementById(`sessionrpe_${day}_${id}`)?.value||"",athleteNotes:document.getElementById(`athnote_${day}_${id}`)?.value||"",sessionAveragePace:c?(document.getElementById(`cardioAvg_${day}_${id}`)?.textContent||""):"",sessionTotalMetres:c?(document.getElementById(`cardioMetres_${day}_${id}`)?.textContent||""):"",results};
- data.sessionLogs.push(log);submitAthleteCloud("session",log);persist();alert("Session results saved");
+ const log={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,day,sessionId:id,sessionTitle:s.title||s.type||"Session",type:s.type,results};data.sessionLogs.push(log);submitAthleteCloud("session",log);
+ persist(); renderCheckin(); alert("Session results saved");
 }
-async function submitCheckin(){
-  const a=data.athletes.find(x=>x.id===activeAthlete);
-  if(!a)return;
-
-  const readAnswer=(prefix,i)=>{
-    const el=document.getElementById(prefix+i);
-    if(!el)return "";
-    if(el.tagName==="SELECT"){
-      const opt=el.options[el.selectedIndex];
-      return String(opt?.value ?? opt?.text ?? "");
-    }
-    return String(el.value ?? "");
-  };
-
-  const wa=data.weeklyQuestions.map((q,i)=>({
-    q:q.q,
-    a:readAnswer("w",i),
-    note:document.getElementById("w"+i+"_note")?.value||""
-  }));
-
-  const raced=document.getElementById("competed")?.value==="yes";
-  const ra=raced?data.raceQuestions.map((q,i)=>({
-    q:q.q,
-    a:readAnswer("r",i)
-  })):[];
-
-  const liveMeta=currentTrainingSnapshot().meta||data.meta;
-  const ci={
-    id:Date.now(),
-    athleteId:a.id,
-    athlete:a.name,
-    season:liveMeta.season,
-    blockNo:liveMeta.blockNo,
-    weekNo:liveMeta.weekNo,
-    date:new Date().toLocaleDateString(),
-    savedAt:Date.now(),
-    bodyWeight:document.getElementById("bodyWeight")?.value||"",
-    weekly:wa,
-    raced,
-    race:ra
-  };
-
-  const sent=await submitAthleteCloud("checkin",ci);
-  if(!sent){
-    alert("Check-in could not be sent. Please check your internet connection and try again.");
-    return;
-  }
-
-  data.checkins.push(ci);
-  persist();
-  renderAll();
-  alert("Weekly check-in submitted");
-}
-function addTestingItem(){if(!coachMode)return;const category=document.getElementById("testCategory")?.value||"Erg",name=document.getElementById("testName")?.value.trim();if(!name)return alert("Enter a test name.");data.tests.push({id:"test_"+Date.now().toString(36),category,name,unit:document.getElementById("testUnit")?.value.trim()||"score",target:document.getElementById("testTarget")?.value.trim()||""});document.getElementById("testName").value="";document.getElementById("testUnit").value="";document.getElementById("testTarget").value="";persist();renderTesting();syncCoachCloud(false)}
-function removeTestingItem(id){if(!coachMode)return;if(!confirm("Remove this test? Existing athlete results will remain in history."))return;data.tests=data.tests.filter(t=>t.id!==id);persist();renderTesting();syncCoachCloud(false)}
-function latestTestResult(athleteId,testId){return(data.testResults||[]).filter(r=>r.athleteId===athleteId&&r.testId===testId).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))[0]||null}
-function testingCard(t){
- const last=latestTestResult(activeAthlete,t.id);
- const history=(data.testResults||[]).filter(r=>String(r.athleteId)===String(activeAthlete)&&String(r.testId)===String(t.id)).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
- return`<div class="card"><div class="row"><div><span class="badge">${esc(t.category)}</span><h2 style="margin-top:8px">${esc(t.name)}</h2></div>${coachMode?`<button class="btn red" onclick="removeTestingItem('${t.id}')">Remove</button>`:""}</div>${t.target?`<div class="sub">Coach target / notes: ${esc(t.target)}</div>`:""}${coachMode?`<div class="mini" style="margin-top:10px">Unit: ${esc(t.unit||"score")}</div>`:`<div class="grid2" style="margin-top:10px"><div><div class="label">Your score (${esc(t.unit||"score")})</div><input id="testscore_${t.id}" placeholder="Enter result"></div><div><div class="label">Date</div><input id="testdate_${t.id}" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div><div class="label">Notes</div><textarea id="testnote_${t.id}" placeholder="Optional notes"></textarea>${last?`<div class="mini">Previous: ${esc(last.score)} ${esc(t.unit||"")} • ${esc(last.date||"")}</div>`:""}<button class="btn full green" style="margin-top:10px" onclick="saveTestResult('${t.id}')">Save Test Score</button><button type="button" class="btn secondary full testHistoryBtn" onclick="toggleTestingHistory('ath_test_${t.id}')">Testing History ▾</button><div class="testHistoryBox" id="ath_test_${t.id}">${history.length?history.map(r=>`<div class="testHistoryItem"><b>${esc(r.score)} ${esc(r.unit||t.unit||"")}</b><div class="mini">${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`).join(""):'<div class="empty">No previous scores for this test yet.</div>'}</div>`}</div>`}
-function toggleTestingHistory(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==="block"?"none":"block"}
-function renderTesting(){
- const setup=document.getElementById("coachTestingSetup"),content=document.getElementById("testingContent");
- if(!content)return;
- if(setup)setup.style.display=coachMode?"block":"none";
- const title=document.getElementById("testingTitle"),sub=document.getElementById("testingSub"),notice=document.getElementById("testingNotice");
- if(title)title.textContent=coachMode?"Testing":"My Testing";
- if(sub)sub.textContent=coachMode?"PERFORMANCE TESTING":"ATHLETE PERFORMANCE";
- if(notice)notice.textContent=coachMode?"Set Erg and Gym tests, then open an athlete folder to review their testing history.":"Enter your Erg and Gym testing scores and open the History dropdown to review your previous results.";
- const tests=data.tests||[];
-
- if(coachMode){
-   const groups=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Tests</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests in this category.</div>'}</div>`).join("");
-   const athletes=data.athletes||[];
-   const results=(data.testResults||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
-   const folders=athletes.length?`<div class="card"><h2>Athlete Testing History</h2><div class="sub">Open an athlete, then open any test to see all saved scores.</div>${athletes.map(a=>{
-     const ar=results.filter(r=>String(r.athleteId)===String(a.id));
-     const byTest={};ar.forEach(r=>{const k=String(r.testId||r.testName||"test");(byTest[k]??=[]).push(r)});
-     return`<div class="folderCard"><button class="folderBtn" onclick="toggleFolder('test_ath_${a.id}')"><div><div class="folderTitle">📁 ${esc(a.name)}</div><div class="folderMeta">${esc(a.squad||"")} • ${ar.length} test result${ar.length===1?"":"s"}</div></div><span class="folderChev">›</span></button><div class="folderBody" id="test_ath_${a.id}" style="display:none">${Object.keys(byTest).length?Object.entries(byTest).map(([k,arr],i)=>{const first=arr[0],t=tests.find(x=>String(x.id)===String(first.testId));const tid=`test_${a.id}_${i}`;return`<div class="weekFolder"><button class="weekFolderBtn" onclick="toggleFolder('${tid}')"><div><b>${esc(t?.name||first.testName||"Test")}</b><div class="mini">${arr.length} saved score${arr.length===1?"":"s"}</div></div><span class="folderChev">›</span></button><div class="weekFolderBody" id="${tid}" style="display:none">${arr.map(r=>`<div class="testHistoryItem"><b>${esc(r.score)} ${esc(r.unit||t?.unit||"")}</b><div class="mini">${esc(r.date||"")}${r.notes?" • "+esc(r.notes):""}</div></div>`).join("")}</div></div>`}).join(""):'<div class="empty">No testing scores submitted yet.</div>'}</div></div>`
-   }).join("")}</div>`:'<div class="card empty">No athletes added yet.</div>';
-   content.innerHTML=groups+folders;
- }else{
-   if(!activeAthlete){content.innerHTML='<div class="card empty">No athlete selected.</div>';return}
-   content.innerHTML=["Erg","Gym"].map(cat=>`<div class="card"><h2>${cat} Testing</h2>${tests.filter(t=>t.category===cat).map(testingCard).join("")||'<div class="empty">No tests set by coach.</div>'}</div>`).join("");
- }
-}
-function saveTestResult(testId){if(!activeAthlete)return;const t=(data.tests||[]).find(x=>x.id===testId);if(!t)return;const score=document.getElementById(`testscore_${testId}`)?.value.trim();if(!score)return alert("Enter your test score.");const athlete=data.athletes.find(a=>a.id===activeAthlete),result={id:Date.now(),savedAt:Date.now(),athleteId:activeAthlete,athleteName:athlete?.name||"",testId,testName:t.name,category:t.category,unit:t.unit||"score",score,date:document.getElementById(`testdate_${testId}`)?.value||new Date().toISOString().slice(0,10),notes:document.getElementById(`testnote_${testId}`)?.value||""};data.testResults.push(result);submitAthleteCloud("test",result);persist();renderTesting();alert("Testing score saved")}
-async function refreshCoachCloud(notify=true){const key=localStorage.getItem("robsCoachKey");if(!key){if(notify){alert("Open Settings and connect Coach Cloud first.");nav("settings")}return}try{const r=await fetch(API+"?action=coach-submissions&_="+Date.now(),{headers:{"x-coach-key":key},cache:"no-store"});if(!r.ok)throw new Error(await r.text());const j=await r.json(),items=j.items||[],withAthlete=x=>({...x.payload,athleteId:String(x.payload?.athleteId||x.athlete_id||"")}),remoteCheckins=items.filter(x=>x.kind==="checkin").map(withAthlete),remoteSessions=items.filter(x=>x.kind==="session").map(withAthlete),remoteTests=items.filter(x=>x.kind==="test").map(withAthlete),mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return[...m.values()]};data.checkins=mergeUnique(data.checkins||[],remoteCheckins);data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);data.testResults=mergeUnique(data.testResults||[],remoteTests);persist();renderTesting();renderWeeklyResultsDashboard();renderReview();if(notify)alert("Latest athlete results loaded.")}catch(e){console.error(e);if(notify)alert("Could not load athlete results. Check Coach Cloud in Settings.")}}
-function renderReview(){
- const history=document.getElementById("checkinHistory");if(!history)return;
- const athletes=data.athletes||[],checkins=(data.checkins||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
- if(!athletes.length){history.innerHTML='<div class="card empty">No athletes added yet.</div>';return}
- history.innerHTML=athletes.map(a=>{
-   const ac=checkins.filter(c=>(c.athleteId&&String(c.athleteId)===String(a.id)) || (!c.athleteId && String(c.athlete||"").trim().toLowerCase()===String(a.name||"").trim().toLowerCase()));
-   return `<div class="folderCard">
-    <button class="folderBtn" onclick="toggleFolder('check_${a.id}')"><div><div class="folderTitle">📁 ${esc(a.name)}</div><div class="folderMeta">${esc(a.squad||"")} • ${ac.length} check-in${ac.length===1?"":"s"}</div></div><span class="folderChev">›</span></button>
-    <div class="folderBody" id="check_${a.id}" style="display:none">${(()=>{const wh=ac.filter(c=>c.bodyWeight);return wh.length?`<div class="weekFolder"><button class="weekFolderBtn" onclick="toggleFolder('weight_${a.id}')"><div><b>Body Weight History</b><div class="mini">${wh.length} recorded week${wh.length===1?"":"s"}</div></div><span class="folderChev">›</span></button><div class="weekFolderBody" id="weight_${a.id}" style="display:none">${wh.map(c=>`<div class="weightHistoryItem"><b>${esc(c.bodyWeight)} kg</b><div class="mini">${esc(c.season||"")} • Block ${c.blockNo||""} Week ${c.weekNo||""} • ${esc(c.date||"")}</div></div>`).join("")}</div></div>`:""})()}${ac.length?ac.map((c,i)=>{
-      const body=+c.weekly?.[4]?.a<=4||+c.weekly?.[2]?.a<=4,cid=`check_${a.id}_${i}`;
-      return `<div class="weekFolder ${body?"flag":""}"><button class="weekFolderBtn" onclick="toggleFolder('${cid}')"><div><b>${esc(c.season||"")} • Block ${c.blockNo||""} • Week ${c.weekNo||""}</b><div class="mini">${esc(c.date||"")}</div></div>${body?'<span class="badge amber">CHECK RECOVERY</span>':'<span class="badge green">SUBMITTED</span>'}</button>
-      <div class="weekFolderBody" id="${cid}" style="display:none">${c.bodyWeight?`<div class="question"><b>Body Weight</b><div class="sub">${esc(c.bodyWeight)} kg</div></div>`:""}${(c.weekly||[]).map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}${x.note?" • "+esc(x.note):""}</div></div>`).join("")}${c.raced?`<h3 style="margin-top:14px">Competition Review</h3>${(c.race||[]).map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}</div></div>`).join("")}`:""}</div></div>`
-    }).join(""):'<div class="empty">No weekly check-ins submitted yet.</div>'}</div>
-   </div>`
- }).join("")
-}
-function renderQuestionEditors(){weeklyQuestionEditor.innerHTML=data.weeklyQuestions.map((q,i)=>editorRow("weekly",q,i)).join("");raceQuestionEditor.innerHTML=data.raceQuestions.map((q,i)=>editorRow("race",q,i)).join("")}
-function editorRow(kind,q,i){return`<div class="question"><div class="grid2"><input value="${esc(q.q)}" onchange="editQuestion('${kind}',${i},this.value)"><select onchange="editQuestionType('${kind}',${i},this.value)">${["rating","ratingnote","text","focus"].map(t=>`<option ${q.type===t?"selected":""}>${t}</option>`).join("")}</select></div><div class="row" style="margin-top:8px"><button class="btn secondary" onclick="moveQuestion('${kind}',${i},-1)">↑</button><button class="btn secondary" onclick="moveQuestion('${kind}',${i},1)">↓</button><button class="btn red" onclick="deleteQuestion('${kind}',${i})">Delete</button></div></div>`}
-function qarr(k){return k==="weekly"?data.weeklyQuestions:data.raceQuestions}function editQuestion(k,i,v){qarr(k)[i].q=v;persist();syncCoachCloud(false)}function editQuestionType(k,i,v){qarr(k)[i].type=v;saveRender()}function deleteQuestion(k,i){qarr(k).splice(i,1);saveRender()}function moveQuestion(k,i,d){const a=qarr(k),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];saveRender()}function addWeeklyQuestion(){data.weeklyQuestions.push({q:"New weekly question",type:"text"});saveRender()}function addRaceQuestion(){data.raceQuestions.push({q:"New racing question",type:"text"});saveRender()}
-function exportData(){importBox.value=JSON.stringify(data,null,2);navigator.clipboard?.writeText(importBox.value);alert("Backup copied")}
-function importData(){try{data=JSON.parse(importBox.value);persist();syncCoachCloud(false);renderAll();alert("Imported")}catch(e){alert("Invalid backup")}}
-renderAll();
-const plannerEl=document.getElementById("planner");
-if(plannerEl){
-  plannerEl.addEventListener("input",e=>{if(e.target.matches("input,textarea,select"))queuePlannerCloudSync();});
-  plannerEl.addEventListener("change",e=>{if(e.target.matches("input,textarea,select"))queuePlannerCloudSync();});
-}
-window.addEventListener("pagehide",flushPlannerCloudSync);
-document.addEventListener("visibilitychange",()=>{if(document.hidden&&document.getElementById("planner")?.classList.contains("active"))flushPlannerCloudSync();});
-const savedCloudKey=localStorage.getItem("robsCoachKey");
-if(savedCloudKey&&document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device.";updateCoachRoleStatus()}
-const inviteToken=new URLSearchParams(location.search).get("athlete");
-if(inviteToken)loadAthleteInvite(inviteToken);else if(savedCloudKey){
-  if(!localStorage.getItem("robsCoachRole"))setCoachDeviceRole("follower");
-  updateCoachRoleStatus();
-  const st=document.getElementById("cloudStatus");
-  if(coachDeviceRole()==="master"){
-    if(st)st.textContent="MASTER device connected. Local program protected; edits auto-sync.";
-  }else{
-    if(st)st.textContent="FOLLOWER device connected. Loading latest Coach Cloud program…";
-    loadCoachCloud(false);
-  }
+function submitCheckin(){
+const a=data.athletes.find(x=>x.id===activeAthlete);if(!a)return;const wa=data.weeklyQuestions.map((q,i)=>({q:q.q,a:document.getElementById("w"+i)?.value||"",note:document.getElementById("w"+i+"_note")?.value||""}));const raced=document.getElementById("competed").value==="yes";const ra=raced?data.raceQuestions.map((q,i)=>({q:q.q,a:document.getElementById("r"+i)?.value||""})):[];const ci={id:Date.now(),athleteId:a.id,athlete:a.name,season:data.meta.season,blockNo:data.meta.blockNo,weekNo:data.meta.weekNo,date:new Date().toLocaleDateString(),weekly:wa,raced,race:ra};data.checkins.push(ci);submitAthleteCloud("checkin",ci);persist();renderAll();alert("Weekly check-in submitted")
 }
 
-async function backgroundCoachCloudSync(){
+async function refreshCoachCloud(){
   const key=localStorage.getItem("robsCoachKey");
-  if(!key||coachDeviceRole()==="master"||inviteToken)return false;
-  if(document.hidden)return false;
-  return loadCoachCloud(false);
+  if(!key){alert("Open Settings and connect Coach Cloud first.");nav("settings");return;}
+  try{
+    const r=await fetch(API+"?action=coach-submissions",{headers:{"x-coach-key":key}});
+    if(!r.ok)throw new Error(await r.text());
+    const j=await r.json();
+    const items=j.items||[];
+    const remoteCheckins=items.filter(x=>x.kind==="checkin").map(x=>({...x.payload,_submissionId:x.id}));
+    const remoteSessions=items.filter(x=>x.kind==="session").map(x=>({...x.payload,_submissionId:x.id}));
+    const mergeUnique=(local,remote)=>{const m=new Map();[...local,...remote].forEach(x=>m.set(String(x.id||JSON.stringify(x)),x));return [...m.values()]};
+    data.checkins=mergeUnique(data.checkins||[],remoteCheckins);
+    data.sessionLogs=mergeUnique(data.sessionLogs||[],remoteSessions);
+    persist();renderReview();alert("Latest athlete results loaded.");
+  }catch(e){console.error(e);alert("Could not load athlete results. Check Coach Cloud in Settings.");}
 }
-if(!inviteToken&&savedCloudKey){
-  setInterval(backgroundCoachCloudSync,10000);
-  window.addEventListener("focus",backgroundCoachCloudSync);
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden)backgroundCoachCloudSync();});
-}
-
-document.addEventListener("input",function(e){
-  const id=e.target?.id||"";
-  if(!id.startsWith("split_")&&!id.startsWith("meters_"))return;
-  document.querySelectorAll(".cardioSessionSummary[id^='cardioSummary_']").forEach(box=>{
-    const key=box.id.replace("cardioSummary_","");
-    if(id.startsWith("split_"+key+"_")||id.startsWith("meters_"+key+"_")){
-      const cut=key.indexOf("_");
-      if(cut>0)updateCardioSessionSummary(key.slice(0,cut),key.slice(cut+1));
+async function updateTrainingResult(logId){
+  const log=(data.sessionLogs||[]).find(x=>String(x.id)===String(logId));
+  if(!log)return;
+  const updated=JSON.parse(JSON.stringify(log));
+  for(let i=0;i<(updated.results||[]).length;i++){
+    const r=updated.results[i];
+    if(Array.isArray(r.setWeights)){
+      for(let k=0;k<r.setWeights.length;k++){
+        const v=prompt(`${r.name||"Exercise"} — Set ${k+1} weight (kg)`,r.setWeights[k]||"");
+        if(v===null)return;
+        r.setWeights[k]=v.trim();
+      }
+    }else{
+      const goal=prompt(`${r.name||"Piece"} — Goal split`,r.goalSplit||"");
+      if(goal===null)return;
+      const actual=prompt(`${r.name||"Piece"} — Actual / average split`,r.actualSplit||"");
+      if(actual===null)return;
+      r.goalSplit=goal.trim(); r.actualSplit=actual.trim();
     }
-  });
-});
-
+  }
+  const key=localStorage.getItem("robsCoachKey");
+  if(updated._submissionId && key){
+    const payload={...updated}; delete payload._submissionId;
+    try{
+      const r=await fetch(API+"?action=coach-update-submission",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({submissionId:updated._submissionId,payload})});
+      if(!r.ok)throw new Error(await r.text());
+    }catch(e){console.error(e);alert("Could not update this result in Coach Cloud.");return;}
+  }
+  const idx=(data.sessionLogs||[]).findIndex(x=>String(x.id)===String(logId));
+  if(idx>=0)data.sessionLogs[idx]=updated;
+  persist(); renderReview(); alert("Training result updated.");
+}
+async function deleteTrainingResult(logId){
+  const log=(data.sessionLogs||[]).find(x=>String(x.id)===String(logId));
+  if(!log)return;
+  const ath=data.athletes.find(a=>a.id===log.athleteId)?.name||"this athlete";
+  if(!confirm(`Delete ${ath}'s ${log.sessionTitle||log.type||"training"} result? This cannot be undone.`))return;
+  const key=localStorage.getItem("robsCoachKey");
+  if(log._submissionId && key){
+    try{
+      const r=await fetch(API+"?action=coach-delete-submission",{method:"POST",headers:{"Content-Type":"application/json","x-coach-key":key},body:JSON.stringify({submissionId:log._submissionId})});
+      if(!r.ok)throw new Error(await r.text());
+    }catch(e){console.error(e);alert("Could not delete this result from Coach Cloud.");return;}
+  }
+  data.sessionLogs=(data.sessionLogs||[]).filter(x=>String(x.id)!==String(logId));
+  persist(); renderReview(); alert("Training result deleted.");
+}
+function toggleHistoryAthlete(id){
+  const el=document.getElementById(`histAth_${id}`); if(el)el.classList.toggle("open");
+}
+function showHistoryBlock(athleteId,blockKey){
+  document.querySelectorAll(`[data-history-block-group="${athleteId}"]`).forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(`[data-history-block-tab="${athleteId}"]`).forEach(x=>x.classList.remove("active"));
+  document.getElementById(`histBlock_${athleteId}_${blockKey}`)?.classList.add("active");
+  document.getElementById(`histBlockTab_${athleteId}_${blockKey}`)?.classList.add("active");
+}
+function showHistoryWeek(athleteId,blockKey,weekKey){
+  document.querySelectorAll(`[data-history-week-group="${athleteId}_${blockKey}"]`).forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(`[data-history-week-tab="${athleteId}_${blockKey}"]`).forEach(x=>x.classList.remove("active"));
+  document.getElementById(`histWeek_${athleteId}_${blockKey}_${weekKey}`)?.classList.add("active");
+  document.getElementById(`histWeekTab_${athleteId}_${blockKey}_${weekKey}`)?.classList.add("active");
+}
+function renderReview(){
+const logs=data.sessionLogs||[];
+const logEl=document.getElementById("sessionResults");
+if(logEl){
+  if(!logs.length){
+    logEl.innerHTML='<div class="card empty">No athlete training results submitted yet.</div>';
+  }else{
+    const byAthlete={};
+    logs.forEach(l=>{(byAthlete[l.athleteId]??=[]).push(l)});
+    const athleteOrder=[...data.athletes].sort((a,b)=>a.name.localeCompare(b.name));
+    logEl.innerHTML=athleteOrder.map(a=>{
+      const alogs=(byAthlete[a.id]||[]).slice().sort((x,y)=>(y.savedAt||0)-(x.savedAt||0));
+      const blocks={};
+      alogs.forEach(l=>{const key=`${l.season||"Season"}|${l.blockNo||1}`;(blocks[key]??=[]).push(l)});
+      const blockEntries=Object.entries(blocks).sort(([,aa],[,bb])=>{
+        const a0=aa[0],b0=bb[0]; return (+b0.blockNo||0)-(+a0.blockNo||0);
+      });
+      const body=blockEntries.length?`<div class="historyTabs">${blockEntries.map(([bk,arr],i)=>{const safe=encodeURIComponent(bk).replace(/%/g,'_');return `<button id="histBlockTab_${a.id}_${safe}" data-history-block-tab="${a.id}" class="historyTab ${i===0?'active':''}" onclick="showHistoryBlock('${a.id}','${safe}')">Block ${arr[0].blockNo||1}</button>`}).join("")}</div>${blockEntries.map(([bk,arr],bi)=>{
+        const safe=encodeURIComponent(bk).replace(/%/g,'_');
+        const weeks={}; arr.forEach(l=>{const w=String(l.weekNo||1);(weeks[w]??=[]).push(l)});
+        const weekEntries=Object.entries(weeks).sort((a,b)=>(+b[0]||0)-(+a[0]||0));
+        return `<div id="histBlock_${a.id}_${safe}" data-history-block-group="${a.id}" class="historyBlockPanel ${bi===0?'active':''}"><div class="historyTabs">${weekEntries.map(([wk],wi)=>`<button id="histWeekTab_${a.id}_${safe}_${wk}" data-history-week-tab="${a.id}_${safe}" class="historyTab ${wi===0?'active':''}" onclick="showHistoryWeek('${a.id}','${safe}','${wk}')">Week ${wk}</button>`).join("")}</div>${weekEntries.map(([wk,wlogs],wi)=>`<div id="histWeek_${a.id}_${safe}_${wk}" data-history-week-group="${a.id}_${safe}" class="historyWeekPanel ${wi===0?'active':''}">${wlogs.sort((x,y)=>(y.savedAt||0)-(x.savedAt||0)).map(l=>`<div class="sessionline"><div><b>${esc(l.day||"")} — ${esc(l.sessionTitle||l.type||"Session")}</b><div class="sub">${esc(l.season||"")} • Block ${l.blockNo||""} • Week ${l.weekNo||""}</div>${(l.results||[]).map(r=>`<div class="sub">${esc(r.name||"")}${r.actualSplit?" • Actual "+esc(r.actualSplit):""}${r.goalSplit?" • Goal "+esc(r.goalSplit):""}${r.setWeights?.length?" • Weights "+esc(r.setWeights.filter(Boolean).join(", ")):""}</div>`).join("")}</div><div class="row"><button class="btn secondary" onclick="updateTrainingResult('${String(l.id)}')">Update</button><button class="btn red" onclick="deleteTrainingResult('${String(l.id)}')">Delete</button></div></div>`).join("")}</div>`).join("")}</div>`;
+      }).join("")}`:'<div class="empty">No training results submitted yet.</div>';
+      const currentPlanned=(DAYS.flatMap(day=>(data.days[day]?.sessions||[]).map(s=>({day,s}))))
+        .filter(x=>x.s.title||x.s.type||x.s.instructions||(x.s.exercises||[]).length);
+      const currentLogs=alogs.filter(l=>l.season===data.meta.season&&+l.blockNo===+data.meta.blockNo&&+l.weekNo===+data.meta.weekNo);
+      const loggedKeys=new Set(currentLogs.map(l=>`${l.day||""}|${l.sessionId||l.sessionTitle||l.type||""}`));
+      const loggedCount=currentPlanned.filter(x=>loggedKeys.has(`${x.day}|${x.s.id||x.s.title||x.s.type||""}`)).length;
+      const plannedCount=currentPlanned.length;
+      const progressIcon=plannedCount>0&&loggedCount>=plannedCount?'✅':loggedCount>0?'🟡':'○';
+      const progressText=plannedCount?`Week ${data.meta.weekNo} — ${loggedCount} of ${plannedCount} sessions logged ${progressIcon}`:`Week ${data.meta.weekNo} — no sessions programmed`;
+      return `<div id="histAth_${a.id}" class="historyAthleteCard"><button class="historyAthleteBtn" onclick="toggleHistoryAthlete('${a.id}')"><div><div class="folderTitle">📁 ${esc(a.name)}</div><div class="folderMeta">${esc(a.squad||"")} • ${progressText}</div><div class="folderMeta">${alogs.length} total training result${alogs.length===1?'':'s'}</div></div><div class="folderChev">›</div></button><div class="historyAthleteBody">${body}</div></div>`;
+    }).join("");
+  }
+}
+if(!data.checkins.length){summary.innerHTML='<div class="empty">No weekly check-ins submitted yet.</div>';checkinHistory.innerHTML="";return}
+const latest=data.checkins.filter(c=>c.season===data.meta.season&&+c.blockNo===+data.meta.blockNo&&+c.weekNo===+data.meta.weekNo);
+const num=(idx)=>latest.map(c=>+c.weekly[idx]?.a).filter(n=>!isNaN(n));const avg=a=>a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):"—";
+summary.innerHTML=`<h2>Current Week Summary</h2><div class="grid4"><div class="stat"><span class="sub">Responses</span><b>${latest.length}</b></div><div class="stat"><span class="sub">Training</span><b>${avg(num(0))}</b></div><div class="stat"><span class="sub">Recovery</span><b>${avg(num(2))}</b></div><div class="stat"><span class="sub">Motivation</span><b>${avg(num(3))}</b></div></div>`;
+checkinHistory.innerHTML=data.checkins.slice().reverse().map(c=>{const body=+c.weekly[4]?.a<=4||+c.weekly[2]?.a<=4;return `<div class="card ${body?"flag":""}"><div class="row"><div><h2>${esc(c.athlete)}</h2><div class="sub">${esc(c.season)} • Block ${c.blockNo} Week ${c.weekNo} • ${c.date}</div></div>${body?'<span class="badge amber">CHECK RECOVERY</span>':'<span class="badge green">SUBMITTED</span>'}</div>${c.weekly.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}${x.note?" • "+esc(x.note):""}</div></div>`).join("")}${c.raced?`<h3 style="margin-top:14px">Competition Review</h3>${c.race.map(x=>`<div class="question"><b>${esc(x.q)}</b><div class="sub">${esc(x.a)}</div></div>`).join("")}`:""}</div>`}).join("")
+}
+function renderQuestionEditors(){
+weeklyQuestionEditor.innerHTML=data.weeklyQuestions.map((q,i)=>editorRow("weekly",q,i)).join("");raceQuestionEditor.innerHTML=data.raceQuestions.map((q,i)=>editorRow("race",q,i)).join("")
+}
+function editorRow(kind,q,i){return `<div class="question"><div class="grid2"><input value="${esc(q.q)}" onchange="editQuestion('${kind}',${i},this.value)"><select onchange="editQuestionType('${kind}',${i},this.value)">${["rating","ratingnote","text","focus"].map(t=>`<option ${q.type===t?"selected":""}>${t}</option>`).join("")}</select></div><div class="row" style="margin-top:8px"><button class="btn secondary" onclick="moveQuestion('${kind}',${i},-1)">↑</button><button class="btn secondary" onclick="moveQuestion('${kind}',${i},1)">↓</button><button class="btn red" onclick="deleteQuestion('${kind}',${i})">Delete</button></div></div>`}
+function qarr(k){return k==="weekly"?data.weeklyQuestions:data.raceQuestions}function editQuestion(k,i,v){qarr(k)[i].q=v;persist()}function editQuestionType(k,i,v){qarr(k)[i].type=v;saveRender()}function deleteQuestion(k,i){qarr(k).splice(i,1);saveRender()}function moveQuestion(k,i,d){const a=qarr(k),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];saveRender()}function addWeeklyQuestion(){data.weeklyQuestions.push({q:"New weekly question",type:"text"});saveRender()}function addRaceQuestion(){data.raceQuestions.push({q:"New racing question",type:"text"});saveRender()}
+function exportData(){importBox.value=JSON.stringify(data,null,2);navigator.clipboard?.writeText(importBox.value);alert("Backup copied")}
+function importData(){try{data=JSON.parse(importBox.value);persist();renderAll();alert("Imported")}catch(e){alert("Invalid backup")}}
+renderAll();
+const savedCloudKey=localStorage.getItem("robsCoachKey");
+if(savedCloudKey && document.getElementById("coachCloudKey")){document.getElementById("coachCloudKey").value=savedCloudKey;document.getElementById("cloudStatus").textContent="Coach Cloud connected on this device.";}
+const inviteToken=new URLSearchParams(location.search).get("athlete");
+if(inviteToken)loadAthleteInvite(inviteToken);
 </script>
 </body>
 </html>
