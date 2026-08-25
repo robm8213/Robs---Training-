@@ -24,10 +24,57 @@ async function body(req){
   try{return JSON.parse(raw)}catch{return {}}
 }
 
+const DAY_NAMES=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function sydneyDateParts(date=new Date()){
+  const parts=Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:"Australia/Sydney",year:"numeric",month:"2-digit",day:"2-digit",weekday:"long"}).formatToParts(date).filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));
+  return{date:`${parts.year}-${parts.month}-${parts.day}`,weekday:parts.weekday};
+}
+function addIsoDays(iso,days){const d=new Date(iso+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)}
+function programSnapshots(data){return[...(data.archive||[]).map(x=>({meta:x.meta||{},days:x.days||{}})),{meta:data.meta||{},days:data.days||{}}]}
+function snapshotForDate(data,iso){
+ const dated=programSnapshots(data).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x.meta?.date||"")).map(x=>({x,start:x.meta.date,end:addIsoDays(x.meta.date,6)})).filter(x=>x.start<=iso&&x.end>=iso).sort((a,b)=>b.start.localeCompare(a.start));
+ return dated[0]?.x||null;
+}
+async function sendTwilioSms(to,message){
+ const sid=process.env.TWILIO_ACCOUNT_SID,token=process.env.TWILIO_AUTH_TOKEN,from=process.env.TWILIO_FROM_NUMBER;
+ if(!sid||!token||!from)throw new Error("Twilio environment variables are missing");
+ const form=new URLSearchParams({To:to,From:from,Body:message}),r=await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,{method:"POST",headers:{Authorization:"Basic "+Buffer.from(`${sid}:${token}`).toString("base64"),"Content-Type":"application/x-www-form-urlencoded"},body:form.toString()});
+ if(!r.ok)throw new Error(`Twilio ${r.status}: ${await r.text()}`);return r.json();
+}
+async function reminderAlreadySent(athleteId,type,date){const q=await pool.query(`select 1 from athlete_submissions where athlete_id=$1 and kind='reminder' and payload->>'type'=$2 and payload->>'date'=$3 limit 1`,[athleteId,type,date]);return q.rowCount>0}
+async function recordReminder(athleteId,payload){await pool.query(`insert into athlete_submissions(athlete_id,kind,payload) values($1,'reminder',$2)`,[athleteId,payload])}
+
 module.exports=async(req,res)=>{
   try{
     const u=new URL(req.url,"https://robs-training.local");
     const action=u.searchParams.get("action");
+
+    if((action==="session-reminders"||action==="checkin-reminders")&&req.method==="GET"){
+      if(!process.env.CRON_SECRET||req.headers.authorization!==`Bearer ${process.env.CRON_SECRET}`)return send(res,401,{error:"Cron authorization invalid"});
+      const st=await pool.query(`select data from app_state where id='master'`);if(!st.rowCount)return send(res,404,{error:"No coach program found"});
+      const data=st.rows[0].data||{},athletes=(data.athletes||[]).filter(a=>a.smsConsent&&/^\+[1-9]\d{7,14}$/.test(String(a.phone||"").replace(/\s/g,""))),today=sydneyDateParts(),sent=[],skipped=[];
+      if(action==="session-reminders"){
+        const snap=snapshotForDate(data,today.date),sessions=(snap?.days?.[today.weekday]?.sessions||[]).filter(s=>s.type!=="Rest");
+        if(!snap||!sessions.length)return send(res,200,{ok:true,sent,reason:"No programmed sessions today"});
+        for(const a of athletes){
+          const q=await pool.query(`select payload from athlete_submissions where athlete_id=$1 and kind='session' and payload->>'season'=$2 and payload->>'blockNo'=$3 and payload->>'weekNo'=$4 and payload->>'day'=$5`,[String(a.id),String(snap.meta.season||""),String(Number(snap.meta.blockNo)||1),String(Number(snap.meta.weekNo)||1),today.weekday]);
+          const completed=new Set(q.rows.map(x=>String(x.payload?.sessionId||""))),missing=sessions.filter(s=>!completed.has(String(s.id)));
+          if(!missing.length||await reminderAlreadySent(String(a.id),"session",today.date)){skipped.push(a.id);continue}
+          const titles=missing.map(s=>s.title||s.type||"training session").join(", "),message=`ROB'S TRAINING: Hi ${a.name}, please complete today's ${today.weekday} training${missing.length>1?" sessions":" session"}: ${titles}.`;
+          await sendTwilioSms(String(a.phone).replace(/\s/g,""),message);await recordReminder(String(a.id),{type:"session",date:today.date,season:snap.meta.season,blockNo:snap.meta.blockNo,weekNo:snap.meta.weekNo,day:today.weekday,sessionIds:missing.map(s=>s.id)});sent.push(a.id);
+        }
+      }else{
+        if(today.weekday!=="Monday")return send(res,200,{ok:true,sent,reason:"Not Monday in Australia/Sydney"});
+        const previousDate=addIsoDays(today.date,-7),snap=snapshotForDate(data,previousDate);if(!snap)return send(res,200,{ok:true,sent,reason:"Previous training week not found"});
+        for(const a of athletes){
+          const q=await pool.query(`select 1 from athlete_submissions where athlete_id=$1 and kind='checkin' and payload->>'season'=$2 and payload->>'blockNo'=$3 and payload->>'weekNo'=$4 limit 1`,[String(a.id),String(snap.meta.season||""),String(Number(snap.meta.blockNo)||1),String(Number(snap.meta.weekNo)||1)]);
+          if(q.rowCount||await reminderAlreadySent(String(a.id),"checkin",today.date)){skipped.push(a.id);continue}
+          const message=`ROB'S TRAINING: Hi ${a.name}, please complete your weekly check-in for Block ${Number(snap.meta.blockNo)||1}, Week ${Number(snap.meta.weekNo)||1}.`;
+          await sendTwilioSms(String(a.phone).replace(/\s/g,""),message);await recordReminder(String(a.id),{type:"checkin",date:today.date,season:snap.meta.season,blockNo:snap.meta.blockNo,weekNo:snap.meta.weekNo});sent.push(a.id);
+        }
+      }
+      return send(res,200,{ok:true,sent:sent.length,skipped:skipped.length});
+    }
 
     if(action==="coach-sync" && req.method==="POST"){
       if(!coach(req)) return send(res,401,{error:"Coach key invalid"});
