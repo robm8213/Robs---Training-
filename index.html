@@ -402,11 +402,11 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
 
 <section id="athletes" class="screen">
 <div class="sub">TEAM MANAGEMENT</div><h1>Athletes</h1>
-<div class="card"><div class="grid2"><div><div class="label">Athlete name</div><input id="athleteName"></div><div><div class="label">Crew / Squad</div><input id="athleteSquad" placeholder="Open Men"></div></div><button class="btn full" style="margin-top:12px" onclick="addAthlete()">Add Athlete</button></div>
+<div class="card"><div class="grid2"><div><div class="label">Athlete name</div><input id="athleteName"></div><div><div class="label">Crew / Squad</div><input id="athleteSquad" placeholder="Open Men"></div><div><div class="label">Mobile number</div><input id="athletePhone" type="tel" placeholder="+61412345678"></div><div><div class="label">SMS reminders</div><label class="sub"><input id="athleteSmsConsent" type="checkbox" style="width:auto;margin-right:7px">Athlete has agreed to receive training reminders</label></div></div><button class="btn full" style="margin-top:12px" onclick="addAthlete()">Add Athlete</button></div>
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
+<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div id="athleteWeekIdentity"></div><div id="athleteReminders"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
 <section id="weeksahead" class="screen"><div class="sub">UPCOMING TRAINING</div><h1>Weeks Ahead</h1><div class="notice">View only — open a training block, then choose a week to see the programmed sessions.</div><div id="weeksAheadBlocks"></div></section>
 
 <section id="checkin" class="screen">
@@ -593,6 +593,13 @@ function isSundayNextWeekPreview(snapshot){
  return snapshotKey(snapshot?.meta)!==snapshotKey(currentTrainingSnapshot().meta);
 }
 
+function weeklyCheckinSnapshot(){
+ const current=currentTrainingSnapshot();if(new Date().getDay()!==1)return current;
+ const all=allProgramSnapshots(),start=inferredWeekStart(current,all);if(!start)return current;
+ const previous=new Date(start);previous.setDate(previous.getDate()-7);
+ return all.map(x=>({...x,_start:inferredWeekStart(x,all)})).find(x=>x._start&&x._start.getTime()===previous.getTime())||current;
+}
+
 function isPlanningAhead(){
   return snapshotKey(currentTrainingSnapshot().meta)!==snapshotKey(data.meta);
 }
@@ -658,7 +665,7 @@ function renderCarnivals(){
  }
 }
 
-function renderAll(){renderDashboard();renderPlanner();renderHistory();renderWeeklyResultsDashboard();renderAthletes();renderCheckin();renderTesting();renderWeeksAhead();renderCarnivals();renderReview();renderQuestionEditors()}
+function renderAll(){renderDashboard();renderPlanner();renderHistory();renderWeeklyResultsDashboard();renderAthletes();renderCheckin();renderTesting();renderWeeksAhead();renderCarnivals();renderReview();renderQuestionEditors();renderAthleteReminders()}
 function renderDashboard(){
 const live=currentTrainingSnapshot(),meta=live.meta||{},days=live.days||emptyDays();
 sAth.textContent=data.athletes.length;sBlock.textContent=meta.blockNo||1;sWeek.textContent=meta.weekNo||1;
@@ -1039,8 +1046,19 @@ function startAthleteAccessWatch(){
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)validateAthleteAccess()});
 }
 async function loadAthleteInvite(token){try{const r=await fetch(API+"?action=invite&token="+encodeURIComponent(token)+"&_="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(await r.text());const j=await r.json();data=j.data;data.athletes=[j.athlete];const hist=j.history||[];data.checkins=hist.filter(x=>x.kind==="checkin").map(x=>x.payload);data.sessionLogs=hist.filter(x=>x.kind==="session").map(x=>x.payload);data.testResults=hist.filter(x=>x.kind==="test").map(x=>x.payload);if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));activeAthlete=j.athlete.id;coachMode=false;activeTrainingDay="";configureAthleteNavigation();startAthleteAccessWatch();if(typeof modePill!=="undefined")modePill.textContent="ATHLETE VIEW";if(typeof modeBtn!=="undefined")modeBtn.style.display="none";renderAll();nav("training")}catch(e){console.error(e);document.body.innerHTML=`<div style="padding:30px;font-family:Arial"><h2>Invite link unavailable</h2><p>Ask your coach to send you a new ROB'S TRAINING athlete link.</p></div>`}}
-function addAthlete(){const n=athleteName.value.trim();if(!n)return;data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim()});athleteName.value="";athleteSquad.value="";saveRender();syncCoachCloud(false)}
-function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div></div><div class="row"><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
+function validSmsPhone(v){return /^\+[1-9]\d{7,14}$/.test(String(v||"").replace(/\s/g,""))}
+function addAthlete(){const n=athleteName.value.trim(),phone=(document.getElementById("athletePhone")?.value||"").replace(/\s/g,""),smsConsent=document.getElementById("athleteSmsConsent")?.checked||false;if(!n)return;if(smsConsent&&!validSmsPhone(phone))return alert("Enter the mobile number in international format, for example +61412345678.");data.athletes.push({id:Date.now().toString(36),name:n,squad:athleteSquad.value.trim(),phone,smsConsent});athleteName.value="";athleteSquad.value="";if(document.getElementById("athletePhone"))document.getElementById("athletePhone").value="";if(document.getElementById("athleteSmsConsent"))document.getElementById("athleteSmsConsent").checked=false;saveRender();syncCoachCloud(false)}
+function saveAthleteReminderDetails(id){const a=data.athletes.find(x=>x.id===id);if(!a)return;const phone=(document.getElementById(`athletePhone_${id}`)?.value||"").replace(/\s/g,""),smsConsent=document.getElementById(`athleteSms_${id}`)?.checked||false;if(smsConsent&&!validSmsPhone(phone))return alert("Enter the mobile number in international format, for example +61412345678.");a.phone=phone;a.smsConsent=smsConsent;persist();syncCoachCloud(false,true);renderAthletes();alert(`${a.name}'s reminder settings saved.`)}
+function renderAthletes(){athleteList.innerHTML=data.athletes.length?data.athletes.map(a=>`<div class="sessionline"><div style="width:100%"><b>${esc(a.name)}</b><div class="sub">${esc(a.squad||"")}</div><div class="grid2" style="margin-top:9px"><div><div class="label">Mobile number</div><input id="athletePhone_${a.id}" type="tel" value="${esc(a.phone||"")}" placeholder="+61412345678"></div><div><div class="label">SMS reminders</div><label class="sub"><input id="athleteSms_${a.id}" type="checkbox" style="width:auto;margin-right:7px" ${a.smsConsent?"checked":""}>Consent confirmed and reminders enabled</label></div></div><div class="row" style="margin-top:9px"><button class="btn secondary" onclick="saveAthleteReminderDetails('${a.id}')">Save Reminder Details</button><button class="btn green" onclick="shareAthlete('${a.id}')">Share Athlete Link</button><button class="btn red" onclick="removeAthlete('${a.id}')">Remove</button></div></div></div>`).join(""):'<div class="empty">No athletes yet.</div>'}
+function renderAthleteReminders(){
+ const el=document.getElementById("athleteReminders");if(!el)return;if(coachMode||!activeAthlete){el.innerHTML="";return}
+ const live=athleteTrainingSnapshot(),meta=live.meta||{},todayIndex=(new Date().getDay()+6)%7,day=DAYS[todayIndex],sessions=(live.days?.[day]?.sessions||[]).filter(s=>s.type!=="Rest"),logs=data.sessionLogs||[];
+ const incomplete=sessions.filter(s=>!logs.some(l=>String(l.athleteId)===String(activeAthlete)&&String(l.season||"")===String(meta.season||"")&&Number(l.blockNo)===Number(meta.blockNo)&&Number(l.weekNo)===Number(meta.weekNo)&&l.day===day&&String(l.sessionId)===String(s.id)));
+ const reminders=[];
+ if(incomplete.length)reminders.push(`<div class="notice" style="margin-bottom:10px"><b>Today’s training reminder</b><div style="margin-top:5px">You still have ${incomplete.length} ${day} session${incomplete.length===1?"":"s"} to complete: ${incomplete.map(s=>esc(s.title||s.type||"Session")).join(" • ")}</div></div>`);
+ if(new Date().getDay()===1){const checkMeta=weeklyCheckinSnapshot().meta||meta,checkedIn=(data.checkins||[]).some(c=>String(c.athleteId)===String(activeAthlete)&&String(c.season||"")===String(checkMeta.season||"")&&Number(c.blockNo)===Number(checkMeta.blockNo)&&Number(c.weekNo)===Number(checkMeta.weekNo));if(!checkedIn)reminders.push(`<div class="notice" style="margin-bottom:10px"><b>Weekly check-in reminder</b><div style="margin:5px 0 9px">Please complete your check-in for Block ${Number(checkMeta.blockNo)||1}, Week ${Number(checkMeta.weekNo)||1}.</div><button class="btn" onclick="nav('checkin')">Complete Weekly Check-In</button></div>`)}
+ el.innerHTML=reminders.join("");
+}
 async function removeAthlete(id){
   const a=data.athletes.find(x=>x.id===id);
   if(!a)return;
@@ -1390,7 +1408,7 @@ async function submitCheckin(){
     a:readAnswer("r",i)
   })):[];
 
-  const liveMeta=currentTrainingSnapshot().meta||data.meta;
+  const liveMeta=weeklyCheckinSnapshot().meta||data.meta;
   const ci={
     id:Date.now(),
     athleteId:a.id,
