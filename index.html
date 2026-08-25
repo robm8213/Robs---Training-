@@ -860,17 +860,19 @@ function renderWeeklyResultsDashboard(){
  const athletes=data.athletes||[],logs=(data.sessionLogs||[]).slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
  if(!athletes.length){el.innerHTML='<div class="card empty">No athletes added yet.</div>';return}
  const weekKey=l=>`${l.season||""}|${l.blockNo||""}|${l.weekNo||""}`;
- const weekLabel=l=>`${esc(l.season||"")} • Block ${l.blockNo||""} • Week ${l.weekNo||""}`;
  el.innerHTML=athletes.map(a=>{
    const alogs=logs.filter(l=>l.athleteId===a.id);
-   const groups={};alogs.forEach(l=>{const k=weekKey(l);(groups[k]??=[]).push(l)});
-   const weeks=Object.values(groups).sort((x,y)=>(y[0]?.savedAt||0)-(x[0]?.savedAt||0));
+   const blockGroups={};alogs.forEach(l=>{const k=`${l.season||""}|${Number(l.blockNo)||1}`;(blockGroups[k]??=[]).push(l)});
+   const blocks=Object.values(blockGroups).sort((x,y)=>String(x[0]?.season||"").localeCompare(String(y[0]?.season||""))||(Number(x[0]?.blockNo)||1)-(Number(y[0]?.blockNo)||1));
    return `<div class="folderCard">
     <button class="folderBtn" onclick="toggleFolder('hist_${a.id}')"><div><div class="folderTitle">📁 ${esc(a.name)}</div><div class="folderMeta">${esc(a.squad||"")} • ${alogs.length} training result${alogs.length===1?"":"s"}</div></div><span class="folderChev">›</span></button>
-    <div class="folderBody" id="hist_${a.id}" style="display:none">${weeks.length?weeks.map((w,wi)=>{
-      const first=w[0],wid=`hist_${a.id}_w_${wi}`;
-      return `<div class="weekFolder"><button class="weekFolderBtn" onclick="toggleFolder('${wid}')"><div><b>${weekLabel(first)}</b><div class="mini">${w.length} session result${w.length===1?"":"s"}</div></div><span class="folderChev">›</span></button>
-      <div class="weekFolderBody" id="${wid}" style="display:none">${w.slice().sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||(a.savedAt||0)-(b.savedAt||0)).map(l=>`<div class="sessionFolder"><button class="folderBtn" style="padding:4px 0" onclick="toggleFolder('hist_log_${l.id}')"><div><b>${esc(l.day||"")} — ${esc(sessionLogLabel(l))}</b><div class="mini">Tap to view scores & feedback</div></div><span class="folderChev">›</span></button><div id="hist_log_${l.id}" style="display:none">${sessionLogDetailHtml(l)}<button type="button" class="btn red" style="margin-top:10px" onclick="deleteAthleteResult('${String(l.id).replace(/'/g,"\\'")}','${String(l.athleteId).replace(/'/g,"\\'")}')">Delete Result</button></div></div>`).join("")}</div></div>`
+    <div class="folderBody" id="hist_${a.id}" style="display:none">${blocks.length?blocks.map((block,bi)=>{
+      const first=block[0],bid=`hist_${a.id}_b_${bi}`,weekGroups={};block.forEach(l=>{const k=weekKey(l);(weekGroups[k]??=[]).push(l)});
+      const weeks=Object.values(weekGroups).sort((x,y)=>(Number(x[0]?.weekNo)||1)-(Number(y[0]?.weekNo)||1));
+      return `<div class="folderCard"><button class="folderBtn" onclick="toggleFolder('${bid}')"><div><div class="folderTitle">📁 BLOCK ${Number(first.blockNo)||1}</div><div class="folderMeta">${esc(first.season||"")} • ${block.length} session result${block.length===1?"":"s"}</div></div><span class="folderChev">›</span></button><div class="folderBody" id="${bid}" style="display:none">${weeks.map((w,wi)=>{
+       const wf=w[0],wid=`${bid}_w_${wi}`;
+       return `<div class="weekFolder"><button class="weekFolderBtn" onclick="toggleFolder('${wid}')"><div><b>WEEK ${Number(wf.weekNo)||1}</b><div class="mini">${w.length} session result${w.length===1?"":"s"}</div></div><span class="folderChev">›</span></button><div class="weekFolderBody" id="${wid}" style="display:none">${w.slice().sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||(a.savedAt||0)-(b.savedAt||0)).map(l=>`<div class="sessionFolder"><button class="folderBtn" style="padding:4px 0" onclick="toggleFolder('hist_log_${l.id}')"><div><b>${esc(l.day||"")} — ${esc(sessionLogLabel(l))}</b><div class="mini">Tap to view scores & feedback</div></div><span class="folderChev">›</span></button><div id="hist_log_${l.id}" style="display:none">${sessionLogDetailHtml(l)}<button type="button" class="btn red" style="margin-top:10px" onclick="deleteAthleteResult('${String(l.id).replace(/'/g,"\\'")}','${String(l.athleteId).replace(/'/g,"\\'")}')">Delete Result</button></div></div>`).join("")}</div></div>`
+      }).join("")}</div></div>`
     }).join(""):'<div class="empty">No training results submitted yet.</div>'}</div>
    </div>`
  }).join("")
