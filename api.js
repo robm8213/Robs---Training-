@@ -92,6 +92,19 @@ if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,40
       return send(res,200,{items:q.rows});
     }
 
+    if(action==="delete-athlete-result" && req.method==="POST"){
+      if(!coach(req)) return send(res,401,{error:"Coach key invalid"});
+      const b=await body(req),athleteId=String(b.athleteId||"").trim(),resultId=String(b.resultId||"").trim();
+      if(!athleteId||!resultId) return send(res,400,{error:"Athlete and result are required"});
+      const q=await pool.query(
+        `delete from athlete_submissions
+         where athlete_id=$1 and kind='session' and payload->>'id'=$2
+         returning id`,
+        [athleteId,resultId]
+      );
+      return send(res,200,{ok:true,deleted:q.rowCount});
+    }
+
     return send(res,404,{error:"Unknown action"});
   }catch(e){
     console.error(e);
