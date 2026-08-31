@@ -122,10 +122,14 @@ if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,40
         [b.token]
       );
       if(!q.rowCount) return send(res,401,{error:"Invite unavailable"});
+      const athleteId=q.rows[0].athlete_id,kind=b.kind||"unknown",payload=b.payload||{},resultId=String(payload.id||"");
+      if(resultId)await pool.query(
+        `delete from athlete_submissions where athlete_id=$1 and kind=$2 and payload->>'id'=$3`,
+        [athleteId,kind,resultId]
+      );
       await pool.query(
-        `insert into athlete_submissions(athlete_id,kind,payload)
-         values($1,$2,$3)`,
-        [q.rows[0].athlete_id,b.kind||"unknown",b.payload||{}]
+        `insert into athlete_submissions(athlete_id,kind,payload) values($1,$2,$3)`,
+        [athleteId,kind,payload]
       );
       return send(res,200,{ok:true});
     }
@@ -137,6 +141,18 @@ if(action==="coach-state"&&req.method==="GET"){if(!coach(req))return send(res,40
          from athlete_submissions order by created_at desc limit 500`
       );
       return send(res,200,{items:q.rows});
+    }
+
+    if(action==="coach-upsert-result" && req.method==="POST"){
+      if(!coach(req)) return send(res,401,{error:"Coach key invalid"});
+      const b=await body(req),athleteId=String(b.athleteId||"").trim(),kind=String(b.kind||"unknown"),payload=b.payload||{},resultId=String(payload.id||"");
+      if(!athleteId) return send(res,400,{error:"Athlete is required"});
+      if(resultId)await pool.query(
+        `delete from athlete_submissions where athlete_id=$1 and kind=$2 and payload->>'id'=$3`,
+        [athleteId,kind,resultId]
+      );
+      await pool.query(`insert into athlete_submissions(athlete_id,kind,payload) values($1,$2,$3)`,[athleteId,kind,payload]);
+      return send(res,200,{ok:true});
     }
 
     if(action==="delete-athlete-result" && req.method==="POST"){
