@@ -46,7 +46,7 @@ async function recordReminder(athleteId,payload){await pool.query(`insert into a
 
 module.exports=async(req,res)=>{
   try{
-    const u=new URL(req.url,"https://robs-training.local");
+    const u=new URL(req.url,"https://stroke-lab.local");
     const action=u.searchParams.get("action");
 
     if((action==="session-reminders"||action==="checkin-reminders")&&req.method==="GET"){
@@ -60,7 +60,7 @@ module.exports=async(req,res)=>{
           const q=await pool.query(`select payload from athlete_submissions where athlete_id=$1 and kind='session' and payload->>'season'=$2 and payload->>'blockNo'=$3 and payload->>'weekNo'=$4 and payload->>'day'=$5`,[String(a.id),String(snap.meta.season||""),String(Number(snap.meta.blockNo)||1),String(Number(snap.meta.weekNo)||1),today.weekday]);
           const completed=new Set(q.rows.map(x=>String(x.payload?.sessionId||""))),missing=sessions.filter(s=>!completed.has(String(s.id)));
           if(!missing.length||await reminderAlreadySent(String(a.id),"session",today.date)){skipped.push(a.id);continue}
-          const titles=missing.map(s=>s.title||s.type||"training session").join(", "),message=`ROB'S TRAINING: Hi ${a.name}, please complete today's ${today.weekday} training${missing.length>1?" sessions":" session"}: ${titles}.`;
+          const titles=missing.map(s=>s.title||s.type||"training session").join(", "),message=`STROKE LAB: Hi ${a.name}, please complete today's ${today.weekday} training${missing.length>1?" sessions":" session"}: ${titles}.`;
           await sendTwilioSms(String(a.phone).replace(/\s/g,""),message);await recordReminder(String(a.id),{type:"session",date:today.date,season:snap.meta.season,blockNo:snap.meta.blockNo,weekNo:snap.meta.weekNo,day:today.weekday,sessionIds:missing.map(s=>s.id)});sent.push(a.id);
         }
       }else{
@@ -69,7 +69,7 @@ module.exports=async(req,res)=>{
         for(const a of athletes){
           const q=await pool.query(`select 1 from athlete_submissions where athlete_id=$1 and kind='checkin' and payload->>'season'=$2 and payload->>'blockNo'=$3 and payload->>'weekNo'=$4 limit 1`,[String(a.id),String(snap.meta.season||""),String(Number(snap.meta.blockNo)||1),String(Number(snap.meta.weekNo)||1)]);
           if(q.rowCount||await reminderAlreadySent(String(a.id),"checkin",today.date)){skipped.push(a.id);continue}
-          const message=`ROB'S TRAINING: Hi ${a.name}, please complete your weekly check-in for Block ${Number(snap.meta.blockNo)||1}, Week ${Number(snap.meta.weekNo)||1}.`;
+          const message=`STROKE LAB: Hi ${a.name}, please complete your weekly check-in for Block ${Number(snap.meta.blockNo)||1}, Week ${Number(snap.meta.weekNo)||1}.`;
           await sendTwilioSms(String(a.phone).replace(/\s/g,""),message);await recordReminder(String(a.id),{type:"checkin",date:today.date,season:snap.meta.season,blockNo:snap.meta.blockNo,weekNo:snap.meta.weekNo});sent.push(a.id);
         }
       }
