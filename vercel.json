@@ -22,12 +22,12 @@
   ],
   "crons": [
     {
-      "path": "/api?action=session-reminders",
+      "path": "/api?action=daily-reminders",
       "schedule": "0 6 * * *"
     },
     {
-      "path": "/api?action=checkin-reminders",
-      "schedule": "0 22 * * 0"
+      "path": "/api?action=auto-create-week",
+      "schedule": "0 16 * * 6"
     }
   ]
 }
